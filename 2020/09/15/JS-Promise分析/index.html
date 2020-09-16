@@ -70,7 +70,7 @@
   <time datetime="2020-09-15T08:40:11.000Z" itemprop="datePublished">2020-09-15</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/web%E5%89%8D%E7%AB%AF/">web前端</a>
+    <a class="article-category-link" href="/categories/JavaScript/">JavaScript</a> / <a class="article-category-link" href="/categories/JavaScript/es6/">es6+</a>
   </div>
   
 <div class="word_count">
@@ -78,7 +78,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">4</span>
+            <span class="post-count">469</span>
         </span>
     </span>
 
@@ -87,7 +87,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">1 min</span>
+            <span class="post-count">2 min</span>
         </span>
     </span>
 </div>
@@ -102,7 +102,41 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="JS-Promise分析"><a href="#JS-Promise分析" class="headerlink" title="JS-Promise分析"></a>JS-Promise分析</h1> 
+  <h1 id="JS-Promise分析"><a href="#JS-Promise分析" class="headerlink" title="JS-Promise分析"></a>JS-Promise分析</h1><h3 id="Promises-A"><a href="#Promises-A" class="headerlink" title="Promises/A+"></a>Promises/A+</h3><blockquote>
+<h4 id="Promise是基于Promises-A-标准实现的一套API"><a href="#Promise是基于Promises-A-标准实现的一套API" class="headerlink" title="Promise是基于Promises/A+标准实现的一套API"></a>Promise是基于Promises/A+标准实现的一套API</h4><ul>
+<li>promise是一个有符合此标准的 <code>then</code> 方法的 <code>object</code> 或 function</li>
+<li>promise有pending，fulfilled，rejected三种状态，开始时为pending，可转fulfilled和rejected，但是fulfilled和rejected状态无法再转变</li>
+<li>then方法传入两个回调函数，监听promise的fulfilled和rejected两种状态，返回一个新的promise</li>
+<li>catch方法捕获异常或者回调rejected状态</li>
+</ul>
+</blockquote>
+<h2 id="手写MyPromise"><a href="#手写MyPromise" class="headerlink" title="手写MyPromise"></a>手写MyPromise</h2><h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><ul>
+<li>构造函数传入一个执行器函数</li>
+<li>指定记录状态，记录值属性</li>
+<li>callback表示then回调函数数组，通过该数据真正联系起来了then和promise对象之间的调用</li>
+<li>resolve函数回调then中的onResolved</li>
+<li>reject函数回到then中的onRejcted</li>
+</ul>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyPromise</span> </span>&#123;</span><br><span class="line">	<span class="keyword">const</span> PENDING = <span class="string">&#x27;pending&#x27;</span></span><br><span class="line">	<span class="keyword">const</span> RESOLVED = <span class="string">&#x27;fulfilled&#x27;</span></span><br><span class="line">	<span class="keyword">const</span> REJECTED = <span class="string">&#x27;rejected&#x27;</span></span><br><span class="line">	<span class="keyword">constructor</span>(executor) &#123;</span><br><span class="line">		<span class="built_in">this</span>.status = PENDING <span class="comment">//状态</span></span><br><span class="line">		<span class="built_in">this</span>.callback = [] <span class="comment">//保存then方法中参数的回调函数</span></span><br><span class="line">		<span class="built_in">this</span>.value = <span class="string">&#x27;&#x27;</span> <span class="comment">//记录值</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">//回调then中onResolved函数</span></span><br><span class="line">		resolve(value) &#123;</span><br><span class="line">			<span class="built_in">this</span>.status = RESOLVED</span><br><span class="line">			<span class="built_in">this</span>.value = value</span><br><span class="line">			<span class="comment">//异步执行我们回调的函数，毕竟Promise就是用来做异步回调用的</span></span><br><span class="line">			<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">				<span class="built_in">this</span>.callback.forEach(<span class="function"><span class="params">onResolved</span> =&gt;</span> &#123;</span><br><span class="line">					onResolved(<span class="built_in">this</span>.value)</span><br><span class="line">				&#125;)</span><br><span class="line">			&#125;,<span class="number">0</span>)</span><br><span class="line">		</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//回调then中onRejcted函数</span></span><br><span class="line">		reject(reason) &#123;</span><br><span class="line">			<span class="built_in">this</span>.status = REJECTED</span><br><span class="line">			<span class="built_in">this</span>.value = reason</span><br><span class="line">			<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">				<span class="built_in">this</span>.callback.forEach(<span class="function"><span class="params">onRejcted</span> =&gt;</span> &#123;</span><br><span class="line">					onJected(<span class="built_in">this</span>.value)</span><br><span class="line">				&#125;)</span><br><span class="line">			&#125;,<span class="number">0</span>)</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//传入代回调的函数</span></span><br><span class="line">		executor(resolve, reject)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="then"><a href="#then" class="headerlink" title="then"></a>then</h3><h4 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//同步执行</span></span><br><span class="line"><span class="keyword">new</span> MyPromise(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</span><br><span class="line">  resolve(<span class="number">1</span>)</span><br><span class="line">&#125;).then(<span class="function"><span class="params">res</span>=&gt;</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(res)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//异步执行</span></span><br><span class="line"><span class="keyword">new</span> MyPromise(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</span><br><span class="line">	<span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">	  resolve(<span class="number">1</span>)</span><br><span class="line">	&#125;,<span class="number">1000</span>)</span><br><span class="line">&#125;).then(<span class="function"><span class="params">res</span>=&gt;</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(res)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h4><ul>
+<li>假设使用我们自定义的MyPromise，异步代码通过setTimeout来延时实现</li>
+<li>同步执行时，先执行resolve，再执行console</li>
+<li>异步执行时，先执行console，再执行resolve</li>
+<li>resolve中传入的参数既可以是普通值，也可以是一个promise对象</li>
+<li>then返回值必须是一个promise对象</li>
+</ul>
+<h4 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+ 
       <!-- reward -->
       
       <div id="reword-out">
@@ -177,13 +211,22 @@
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jQuery/" rel="tag">jQuery</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/" rel="tag">表单验证</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%A1%A8%E6%A0%BC/" rel="tag">表格</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/promise/" rel="tag">promise</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
 
     </footer>
   </div>
 
    
   <nav class="article-nav">
+    
+      <a href="/2020/09/15/js%E5%9F%BA%E7%A1%80/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JS Promise分析
+          
+        </div>
+      </a>
     
     
       <a href="/2020/08/30/hexo-github-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99/" class="article-nav-link">
