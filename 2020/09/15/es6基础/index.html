@@ -68,13 +68,17 @@
     <div class="article-meta">
       <a href="/2020/09/15/es6%E5%9F%BA%E7%A1%80/" class="article-date">
   <time datetime="2020-09-15T15:57:27.000Z" itemprop="datePublished">2020-09-15</time>
-</a>   
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/JavaScript/">JavaScript</a> / <a class="article-category-link" href="/categories/JavaScript/es6/">es6+</a>
+  </div>
+  
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.2k</span>
+            <span class="post-count">1.9k</span>
         </span>
     </span>
 
@@ -83,7 +87,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">5 min</span>
+            <span class="post-count">9 min</span>
         </span>
     </span>
 </div>
@@ -224,6 +228,64 @@
 <li>原理：通过指针对象不断next遍历即可</li>
 </ul>
 </blockquote>
+<h3 id="自定义结构迭代"><a href="#自定义结构迭代" class="headerlink" title="自定义结构迭代"></a>自定义结构迭代</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">const obj &#x3D; &#123;</span><br><span class="line">	name:&#39;a&#39;,</span><br><span class="line">	stus:[1,2,3,4],</span><br><span class="line">	&#x2F;&#x2F;为该数据结构添加迭代器函数</span><br><span class="line">	[Symbol.iterator]()&#123;</span><br><span class="line">		let index &#x3D; 0</span><br><span class="line">		&#x2F;&#x2F;必须返回一个对象value，done</span><br><span class="line">		return &#123;</span><br><span class="line">			&#x2F;&#x2F;必须实现next函数</span><br><span class="line">			next:()&#x3D;&gt;&#123;</span><br><span class="line">				if(index&lt;this.stus.length)&#123;</span><br><span class="line">					const result&#x3D;&#123;value:this.stus[index],done:false&#125;</span><br><span class="line">					index++</span><br><span class="line">					return result</span><br><span class="line">				&#125;else&#123;</span><br><span class="line">					const result&#x3D;&#123;value:undefined,done:true&#125;</span><br><span class="line">					return result</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="生成器函数"><a href="#生成器函数" class="headerlink" title="生成器函数"></a>生成器函数</h2><ul>
+<li>异步编程</li>
+</ul>
+<blockquote>
+<ul>
+<li><p>语法</p>
+<p>function * name(){}</p>
+<p>在function和函数名字之间加*来表示生成器函数</p>
+</li>
+<li><p>函数返回一个iterator对象，通过next执行</p>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function * gen()&#123;</span><br><span class="line">	console.log(111)</span><br><span class="line">	yield &#39;a&#39;</span><br><span class="line">	console.log(222)</span><br><span class="line">	yield &#39;b&#39;</span><br><span class="line">	console.log(333)</span><br><span class="line">	yield &#39;c&#39;</span><br><span class="line">	console.log(444)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;配合yield将函数执行体分隔为4个部分</span><br><span class="line">&#x2F;&#x2F;四次next进行执行</span><br><span class="line"></span><br><span class="line">let iter&#x3D;gen()</span><br><span class="line">iter.next()</span><br><span class="line">iter.next()</span><br><span class="line">iter.next()</span><br><span class="line">iter.next()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="集合Set"><a href="#集合Set" class="headerlink" title="集合Set"></a>集合Set</h2><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><ul>
+<li>new Set()；空集合</li>
+<li>new Set([])；接收一个可迭代数据，可以用for of迭代</li>
+<li>集合内的数据不会重复，会自动去重</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">let s1&#x3D;([1,2,3,4])</span><br><span class="line">&#x2F;&#x2F;长度</span><br><span class="line">s1.size</span><br><span class="line">&#x2F;&#x2F;添加</span><br><span class="line">s1.add(5)</span><br><span class="line">&#x2F;&#x2F;去除</span><br><span class="line">s1.delete(5)</span><br><span class="line">&#x2F;&#x2F;检测</span><br><span class="line">s1.has(1)</span><br><span class="line">&#x2F;&#x2F;清空</span><br><span class="line">s1.clear</span><br><span class="line">&#x2F;&#x2F;遍历</span><br><span class="line">for(let v of s1)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><ul>
+<li>键值对</li>
+<li>升级版本的对象</li>
+<li>键可以是任意类型的数据</li>
+<li>值也是可以任意类型的数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">let m &#x3D; Map()</span><br><span class="line">m.set(&#39;name&#39;,&#39;zs&#39;)</span><br><span class="line">m.set(&#39;ch&#39;,function()&#123;&#125;)</span><br><span class="line"></span><br><span class="line">let obj &#x3D; &#123;age:18&#125;</span><br><span class="line">m.set(obj,&#39;person&#39;)</span><br><span class="line"></span><br><span class="line">m.size</span><br><span class="line">m.delete(&#39;name&#39;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="class"><a href="#class" class="headerlink" title="class"></a>class</h2><ul>
+<li>constructor构造函数，可以在构造函数中添加属性</li>
+<li>普通成员函数</li>
+<li>静态类函数 static，不是实例对象，和java等不一样，不可混用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Phone&#123;</span><br><span class="line">	&#x2F;&#x2F;构造方法，名字不能修改</span><br><span class="line">	constructor(brand,price)&#123;</span><br><span class="line">		this.brand&#x3D;brand;</span><br><span class="line">		this.price&#x3D;price;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	&#x2F;&#x2F;方法必使用该语法，不能使用ES5的对象完整形式</span><br><span class="line">	call()&#123;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	static change()&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class SmartPhone extends Phone&#123;</span><br><span class="line">	constructor(brand,price,color,size)&#123;</span><br><span class="line">		&#x2F;&#x2F;调用父类构造函数</span><br><span class="line">		super(brand,price)</span><br><span class="line">		this.color&#x3D;color</span><br><span class="line">		this.size&#x3D;&#39;5.5&#39;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	photo()&#123;&#125;</span><br><span class="line">	playGame()&#123;&#125;</span><br><span class="line">	call()&#123;</span><br><span class="line">		&#x2F;&#x2F; super.call() 父类的同名方法不可以调用</span><br><span class="line">		console.log(&#39;aaa&#39;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="对象方法扩展"><a href="#对象方法扩展" class="headerlink" title="对象方法扩展"></a>对象方法扩展</h2><ul>
+<li>Object.is     判断两个对象是否相等</li>
+<li>Object.assign    两对象合并</li>
+<li>Object.setPrototypeOf   设置对象原型</li>
+<li>Object.getPrototypeOf    获取对象原型</li>
+</ul>
+<h2 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h2><ul>
+<li>ES6采用的是export和import方式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export function add()&#123;&#125;</span><br><span class="line">export const name&#x3D;&#39;name&#39;</span><br><span class="line"></span><br><span class="line">import * as a from &#39;&#x2F;a.js&#39;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function add()&#123;&#125;</span><br><span class="line">const name&#x3D;&#39;name&#39;</span><br><span class="line">export &#123;add , name&#125;</span><br><span class="line"> </span><br><span class="line">import &#123;add&#125; from &#39;.&#x2F;a.js&#39; 	</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export default &#123;</span><br><span class="line">		add:function()&#123;&#125;,</span><br><span class="line">		name:&#39;name&#39;,</span><br><span class="line">		divide()&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">import &#123;add&#125; from &#39;.&#x2F;a.js&#39; 	</span><br></pre></td></tr></table></figure>
+
+
+
  
       <!-- reward -->
       
@@ -299,7 +361,7 @@
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/es6/" rel="tag">es6</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/es6/" rel="tag">es6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li></ul>
 
     </footer>
   </div>
