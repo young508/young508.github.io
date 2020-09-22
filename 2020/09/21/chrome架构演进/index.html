@@ -78,7 +78,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.7k</span>
+            <span class="post-count">1.8k</span>
         </span>
     </span>
 
@@ -87,7 +87,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">5 min</span>
+            <span class="post-count">6 min</span>
         </span>
     </span>
 </div>
@@ -102,7 +102,8 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h1><h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><ul>
+  <h1 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h1><p><img src="../../../../images/wy/wy-03.png" alt="Image text"></p>
+<h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><ul>
 <li><p>进程：进程是资源（cpu，内存等）分配的基本单位，它是程序执行时的一个实例</p>
 </li>
 <li><p>程序运行时，系统会创建一个进程，并为他分配资源，然后把改进程放人进程就绪队列，线程调度器选择它的时候就会为它分配cpu时间，程序开始真正运行</p>
@@ -114,7 +115,15 @@
 <li><p>一个进程可以由很多线程组成，线程间共享进程的所有资源，每个线程有自己的堆栈和局部变量线程由cpu独立调度执行，在多cpu的环境下允许多个线程同时运行</p>
 </li>
 </ul>
-<h1 id="浏览器架构模型"><a href="#浏览器架构模型" class="headerlink" title="浏览器架构模型"></a>浏览器架构模型</h1><h2 id="单进程模型"><a href="#单进程模型" class="headerlink" title="单进程模型"></a>单进程模型</h2><ul>
+<h2 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h2><p><img src="../../../../images/wy/wy-04.png" alt="Image text"></p>
+<ul>
+<li>进程中任意一个线程出现错误都会导致进程的崩溃</li>
+<li>进程之间的线程可以对进程公共的内存区域进行读写操作</li>
+<li>当一个进程关闭退出后，操作系统会回收为该进程开辟的内存区域</li>
+<li>进程之间的内存区域是相互隔离的，进程A的崩溃是不会影响进程B的运行，不同进程一般是通过IPC进行通信，需要操作系统的支持</li>
+</ul>
+<h1 id="浏览器架构模型"><a href="#浏览器架构模型" class="headerlink" title="浏览器架构模型"></a>浏览器架构模型</h1><h2 id="单进程模型"><a href="#单进程模型" class="headerlink" title="单进程模型"></a>单进程模型</h2><p><img src="../../../../images/wy/wy-02.png" alt="Image text"></p>
+<ul>
 <li><p>早在2007年之前，浏览器架构是单进程多线程模型，浏览器的网络，渲染，插件等都是运行在同一个进程中</p>
 </li>
 <li><p>一般有三个以上线程配合工作，比如网络线程，页面线程，其他线程等，页面线程做的事情包括：页面渲染，页面展示，JavaScript环境，插件等，网络线程主要就是处理网络相关的工作。</p>
@@ -154,7 +163,7 @@
 <li>采用多进程架构的额外好处是可以使用安全沙箱，你可以把沙箱看成是操作系统给进程上了一把锁，沙箱里面的程序可以运行，但是不能在你的硬盘上写入任何数据，也不能在敏感位置读取任何数据，例如你的文档和桌面。Chrome把插件进程和渲染进程锁在沙箱里面，这样即使在渲染进程或者插件进程里面执行了恶意程序，恶意程序也无法突破沙箱去获取系统权限。</li>
 </ul>
 <h3 id="进程解析"><a href="#进程解析" class="headerlink" title="进程解析"></a>进程解析</h3><p><img src="../../../../images/wy/wy-01.png" alt="Image text"></p>
-<p>目前最新的chrome浏览器是由一个浏览器主进程，多个渲染进程，一个网络进程，多个插件进程和一个GPU进程</p>
+<p>如上图所示，可以看到Chrome浏览器是由一个浏览器主进程，多个渲染进程，一个网络进程，多个插件进程和一个GPU进程</p>
 <ul>
 <li><p>浏览器主进程：主要来负责页面显示；用户的页面交互，比如鼠标点击；管理其他子进程，数据存储等</p>
 </li>
