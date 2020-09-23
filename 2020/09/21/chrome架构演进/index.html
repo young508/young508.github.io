@@ -78,7 +78,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">2.9k</span>
+            <span class="post-count">3.4k</span>
         </span>
     </span>
 
@@ -87,7 +87,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">9 min</span>
+            <span class="post-count">11 min</span>
         </span>
     </span>
 </div>
@@ -215,7 +215,25 @@
 <li>如果返回code为200，表示数据正常返回</li>
 <li>返回字段Content-type表示返回值内容，一般有网页内容，json内容，文件下载内容等</li>
 </ul>
-<h3 id="3-准备渲染进程"><a href="#3-准备渲染进程" class="headerlink" title="3.准备渲染进程"></a>3.准备渲染进程</h3> 
+<h3 id="3-准备渲染进程"><a href="#3-准备渲染进程" class="headerlink" title="3.准备渲染进程"></a>3.准备渲染进程</h3><ul>
+<li>默认情况下，浏览器会为每个tab页面页面分配一个渲染进程，也就是说，每打开一个新的页面，就会创建一个新的渲染进程。但是如果打开的页面的域名在已经在别的页面中打开过了，那么此时是不会重新创建新的渲染进程，而是直接复用同域名下的渲染进程，这种机制称为：process-per-site-instance。</li>
+<li>总结来说，打开一个新页面采用的渲染进程策略就是：<ul>
+<li>通常情况下，打开新的页面都会使用单独的渲染进程；</li>
+<li>如果从A页面打开B页面，且A和B都属于同一站点的话，那么B页面复用A页面的渲染进程；如果是其他情况，浏览器进程则会为B创建一个新的渲染进程。</li>
+</ul>
+</li>
+<li>渲染进程准备好后，还不会立即进入文档解析阶段，因为此时的文档数据还在网络进程中，并没有提交给渲染进程，所以下一步就进入了文档提交阶段。</li>
+</ul>
+<h3 id="4-文档提交"><a href="#4-文档提交" class="headerlink" title="4.文档提交"></a>4.文档提交</h3><p>首先明确一点，这里的“文档”指的是URL请求返回的数据</p>
+<ul>
+<li>“提交文档”是浏览器线程发出来的，渲染线程收到消息后，和网络现场建立传输通道</li>
+<li>等文档数据传输完成后，渲染线程会通知浏览器线程确认接收完成</li>
+<li>浏览器线程在“确认接收”后，会更新浏览器的界面状态，包括了安全状态，地址栏的URL，前进后退的历史状态，更新页面等</li>
+<li>如下图示，这也就说明了输入一个url后，为何状态栏没有立即更新过来</li>
+</ul>
+<p><img src="../../../../images/wy/wy-08.png" alt="Image text"></p>
+<h3 id="5-渲染阶段"><a href="#5-渲染阶段" class="headerlink" title="5.渲染阶段"></a>5.渲染阶段</h3><p>一旦文件被渲染进程接收，便开始了页面解析和子资源的加载。一旦这个阶段的完成，状态栏的loading图标就会停止，变成网站配置的logo</p>
+ 
       <!-- reward -->
       
       <div id="reword-out">
