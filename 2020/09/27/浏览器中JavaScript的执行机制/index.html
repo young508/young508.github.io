@@ -78,7 +78,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.6k</span>
+            <span class="post-count">3.1k</span>
         </span>
     </span>
 
@@ -87,7 +87,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">6 min</span>
+            <span class="post-count">11 min</span>
         </span>
     </span>
 </div>
@@ -102,7 +102,7 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="函数调用栈"><a href="#函数调用栈" class="headerlink" title="函数调用栈"></a>函数调用栈</h1><h2 id="变量提升（Hoisting）"><a href="#变量提升（Hoisting）" class="headerlink" title="变量提升（Hoisting）"></a>变量提升（Hoisting）</h2><p>JavaScript中，var变量变量声明会有一个顺序上的提升</p>
+  <h1 id="函数调用栈"><a href="#函数调用栈" class="headerlink" title="函数调用栈"></a>函数调用栈</h1><h2 id="变量提升（Hoisting）"><a href="#变量提升（Hoisting）" class="headerlink" title="变量提升（Hoisting）"></a>变量提升（Hoisting）</h2><p>JavaScript中，var变量声明会有一个顺序上的提升</p>
 <p>比如我们的属性变量：</p>
 <p><img src="../../../../images/02/wy-01.png" alt="Image text"></p>
 <p>再比如我们的函数变量：</p>
@@ -187,7 +187,54 @@
 <p><strong>这样我们代码块中的变量就实现了只在代码块中起作用。</strong></p>
 <h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h3><p>通过词法环境的小型栈来实现了代码块中let和const变量的块级作用域效果</p>
 <h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><p>理解作用域链是理解闭包的基础</p>
-<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2> 
+<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><p><strong>每个执行上下文的变量环境中，都包含了一个外部引用，用来指向外部的执行上下文，我们把这个外部引用称为outer。</strong></p>
+<p>当一段JS代码使用了一个变量时，引擎会在“当前执行上下文”中寻找该变量，如果没有找到，会寻找其外部引用里的“执行上下文”中变量，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function bar() &#123;</span><br><span class="line">    console.log(myName)</span><br><span class="line">&#125;</span><br><span class="line">function foo() &#123;</span><br><span class="line">    var myName &#x3D; &quot; 极客邦 &quot;</span><br><span class="line">    bar()</span><br><span class="line">&#125;</span><br><span class="line">var myName &#x3D; &quot; 极客时间 &quot;</span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
+
+<p>比如上面代码，bar中的myName没有找到，会寻找全局中的myName，分析入下图示：</p>
+<p><img src="../../../../images/02/wy-15.png" alt="Image text"></p>
+<p><img src="../../../../images/02/wy-16.png" alt="Image text"></p>
+<p>此时，你可能又会疑惑，为啥bar函数不是引用foo函数里面的myName变量，这就有涉及到外部引用out的引用规则</p>
+<h2 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h2><blockquote>
+<p>词法作用域就是指作用域是由代码中函数声明的位置来决定的，所以词法作用域是静态的作用域，通过它就能够预测代码在执行过程中如何查找标识符</p>
+</blockquote>
+<p>看下面这张图：</p>
+<p><img src="../../../../images/02/wy-17.png" alt="Image text"></p>
+<p>从图中可以看出，<strong>词法作用域就是根据代码的位置来决定的</strong>，其中 main 函数包含了 bar 函数，bar 函数中包含了 foo 函数，因为 JavaScript 作用域链是由词法作用域决定的，所以整个词法作用域链的顺序是：foo 函数作用域—&gt;bar 函数作用域—&gt;main 函数作用域—&gt; 全局作用域。</p>
+<h2 id="块级作用域中变量查找"><a href="#块级作用域中变量查找" class="headerlink" title="块级作用域中变量查找"></a>块级作用域中变量查找</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">function bar() &#123;</span><br><span class="line">    var myName &#x3D; &quot; 极客世界 &quot;</span><br><span class="line">    let test1 &#x3D; 100</span><br><span class="line">    if (1) &#123;</span><br><span class="line">        let myName &#x3D; &quot;Chrome 浏览器 &quot;</span><br><span class="line">        console.log(test)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">function foo() &#123;</span><br><span class="line">    var myName &#x3D; &quot; 极客邦 &quot;</span><br><span class="line">    let test &#x3D; 2</span><br><span class="line">    &#123;</span><br><span class="line">        let test &#x3D; 3</span><br><span class="line">        bar()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">var myName &#x3D; &quot; 极客时间 &quot;</span><br><span class="line">let myAge &#x3D; 10</span><br><span class="line">let test &#x3D; 1</span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
+
+<p>直接上图：</p>
+<p><img src="../../../../images/02/wy-18.png" alt="Image text"></p>
+<p>也是正常的理解：顺序为 ：自己的块级作用域-&gt;自己的上下文变量环境-&gt;out的块级作用域-&gt;out上下文变量环境</p>
+<h2 id="闭包-1"><a href="#闭包-1" class="headerlink" title="闭包"></a>闭包</h2><p>闭包的最直观解释就是函数内嵌套了函数，并且内部函数引用了外部函数的变量</p>
+<p>我们来看下面的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function foo() &#123;</span><br><span class="line">    var myName &#x3D; &quot; 极客时间 &quot;</span><br><span class="line">    let test1 &#x3D; 1</span><br><span class="line">    const test2 &#x3D; 2</span><br><span class="line">    var innerBar &#x3D; &#123;</span><br><span class="line">        getName:function()&#123;</span><br><span class="line">            console.log(test1)</span><br><span class="line">            return myName</span><br><span class="line">        &#125;,</span><br><span class="line">        setName:function(newName)&#123;</span><br><span class="line">            myName &#x3D; newName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return innerBar</span><br><span class="line">&#125;</span><br><span class="line">var bar &#x3D; foo()</span><br><span class="line">bar.setName(&quot; 极客邦 &quot;)</span><br><span class="line">bar.getName()</span><br><span class="line">console.log(bar.getName())</span><br></pre></td></tr></table></figure>
+
+<p>首先我们看看当执行到 foo 函数内部的return innerBar这行代码时调用栈的情况，你可以参考下图：</p>
+<p><img src="../../../../images/02/wy-19.png" alt="Image text"></p>
+<p>根据词法作用域的规则，内部函数 getName 和 setName 总是可以访问它们的外部函数 foo 中的变量，所以当 innerBar 对象返回给全局变量 bar 时，虽然 foo 函数已经执行结束，但是 getName 和 setName 函数依然可以使用 foo 函数中的变量 myName 和 test1。所以当 foo 函数执行完成之后，其整个调用栈的状态如下图所示：</p>
+<p><img src="../../../../images/02/wy-20.png" alt="Image text"></p>
+<p>从上图可以看出，foo 函数执行完成之后，其执行上下文从栈顶弹出了，但是由于返回的 setName 和 getName 方法中使用了 foo 函数内部的变量 myName 和 test1，所以这两个变量依然保存在内存中。这像极了 setName 和 getName 方法背的一个专属背包，无论在哪里调用了 setName 和 getName 方法，它们都会背着这个 foo 函数的专属背包。</p>
+<p>之所以是专属背包，是因为除了 setName 和 getName 函数之外，其他任何地方都是无法访问该背包的，我们就可以把这个背包称为 foo 函数的<strong>闭包</strong>。</p>
+<ul>
+<li><strong>在 JavaScript 中，根据词法作用域的规则，内部函数总是可以访问其外部函数中声明的变量，当通过调用一个外部函数返回一个内部函数后，即使该外部函数已经执行结束了，但是内部函数引用外部函数的变量依然保存在内存中，我们就把这些变量的集合称为闭包</strong></li>
+</ul>
+<p>那这些闭包是如何使用的呢？当执行到 bar.setName 方法中的myName = “极客邦”这句代码时，JavaScript 引擎会沿着“当前执行上下文–&gt;foo 函数闭包–&gt; 全局执行上下文”的顺序来查找 myName 变量，你可以参考下面的调用栈状态图：</p>
+<p><img src="../../../../images/02/wy-21.png" alt="Image text"></p>
+<h1 id="this的认识"><a href="#this的认识" class="headerlink" title="this的认识"></a>this的认识</h1><p>关于 this，我们还是得先从执行上下文说起。在前面几篇文章中，我们提到执行上下文中包含了变量环境、词法环境、外部环境，但其实还有一个 this 没有提及，具体你可以参考下图：</p>
+<p><img src="../../../../images/02/wy-22.png" alt="Image text"></p>
+<p>从图中可以看出，this 是和执行上下文绑定的，也就是说每个执行上下文中都有一个 this。中我们提到过，执行上下文主要分为三种——全局执行上下文、函数执行上下文和 eval 执行上下文，所以对应的 this 也只有这三种——全局执行上下文中的 this、函数中的 this 和 eval 中的 this。</p>
+<p>实际上，this是不固定的，一般而言，<strong>对象.方法</strong>使用的时候，函数中this指向的就是该对象，如果是直接调用，一般默认都是window对象</p>
+<p>比如，如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var myObj &#x3D; &#123;</span><br><span class="line">  name : &quot; 极客时间 &quot;, </span><br><span class="line">  showThis: function()&#123;</span><br><span class="line">    console.log(this)</span><br><span class="line">    function bar()&#123;console.log(this)&#125;</span><br><span class="line">    bar()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">myObj.showThis()</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，showThis由myObj调用，所以this就是myObj，但是showThis内部的函数bar被调用的时候，前面没有对象引用，默认是window，所以bar函数中的this指向的就是window</p>
+<h2 id="避免this问题"><a href="#避免this问题" class="headerlink" title="避免this问题"></a>避免this问题</h2><ul>
+<li>call，bind，apply</li>
+<li>定义变量改变，比如外部定义变量 let that=this</li>
+<li>使用箭头函数</li>
+</ul>
+ 
       <!-- reward -->
       
       <div id="reword-out">
