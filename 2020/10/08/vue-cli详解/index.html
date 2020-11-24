@@ -78,7 +78,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">2</span>
+            <span class="post-count">1.5k</span>
         </span>
     </span>
 
@@ -87,7 +87,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">1 min</span>
+            <span class="post-count">6 min</span>
         </span>
     </span>
 </div>
@@ -102,7 +102,104 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1> 
+  <h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><blockquote>
+<p>Vue CLI 是一个基于 Vue.js 进行快速开发的完整系统，提供：</p>
+<ul>
+<li>通过 <code>@vue/cli</code> 实现的交互式的项目脚手架。</li>
+<li>通过 <code>@vue/cli</code> + <code>@vue/cli-service-global</code> 实现的零配置原型开发。</li>
+<li>一个运行时依赖 <ul>
+<li>可升级；</li>
+<li>基于 webpack 构建，并带有合理的默认配置；</li>
+<li>可以通过项目内的配置文件进行配置；</li>
+<li>可以通过插件进行扩展。</li>
+</ul>
+</li>
+<li>一个丰富的官方插件集合，集成了前端生态中最好的工具。</li>
+<li>一套完全图形化的创建和管理 Vue.js 项目的用户界面。</li>
+</ul>
+</blockquote>
+<p>简言之：vue-cli可以让我们快速初始化一个vue项目，并且封装了webpack合理的配置项，让我们可以直接进行项目开发。同时，vue-cli还提供丰富的扩展功能，甚至还有一个可视化ui界面，不仅好用，还很强大，是开发vue项目的不二之选。</p>
+<h1 id="项目添加配置"><a href="#项目添加配置" class="headerlink" title="项目添加配置"></a>项目添加配置</h1><blockquote>
+<p>一般而言，我们创建的项目即使不配置任何文件，也是可以正常运行的，因为vue-cli做了很多合理性的配置，但是不同的项目会有不同的需求，所以几乎都会进行自定义配置。也就是vue.config.js文件。</p>
+</blockquote>
+<h2 id="vue-config-js"><a href="#vue-config-js" class="headerlink" title="vue.config.js"></a>vue.config.js</h2><p><code>vue.config.js</code> 是一个可选的配置文件，如果项目的 (和 <code>package.json</code> 同级的) 根目录中存在这个文件，那么它会被 <code>@vue/cli-service</code> 自动加载。</p>
+<p>这个文件应该导出一个包含了选项的对象：（这里是common.js规范）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vue.config.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="comment">// 选项...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="publicPath"><a href="#publicPath" class="headerlink" title="publicPath"></a>publicPath</h3><ul>
+<li>Type: <code>string</code></li>
+<li>Default: <code>&#39;/&#39;</code></li>
+<li>定义部署在服务器上的子目录。例如，如果你的应用被部署在 <code>https://www.my-app.com/my-app/</code>，则设置 <code>publicPath</code> 为 <code>/my-app/</code>。</li>
+<li>默认情况下，Vue CLI 会假设你的应用是被部署在一个域名的根路径上，例如 <code>https://www.my-app.com/</code></li>
+</ul>
+<h3 id="oututDir"><a href="#oututDir" class="headerlink" title="oututDir"></a>oututDir</h3><ul>
+<li>Type: <code>string</code></li>
+<li>Default: <code>&#39;dist&#39;</code></li>
+<li>当运行 <code>vue-cli-service build</code> 时生成的生产环境构建文件的目录。注意目标目录在构建之前会被清除 (构建时传入 <code>--no-clean</code> 可关闭该行为)。</li>
+</ul>
+<h3 id="assetsDir"><a href="#assetsDir" class="headerlink" title="assetsDir"></a>assetsDir</h3><ul>
+<li><p>Type: <code>string</code></p>
+</li>
+<li><p>Default: <code>&#39;&#39;</code></p>
+</li>
+<li><p>放置生成的静态资源 (js、css、img、fonts) 的 (相对于 <code>outputDir</code> 的) 目录。</p>
+</li>
+</ul>
+<h3 id="indexPath"><a href="#indexPath" class="headerlink" title="indexPath"></a>indexPath</h3><ul>
+<li>Type: <code>string</code></li>
+<li>Default: <code>&#39;index.html&#39;</code></li>
+<li>指定生成的 <code>index.html</code> 的输出路径 (相对于 <code>outputDir</code>)。也可以是一个绝对路径。</li>
+</ul>
+<h3 id="filenameHashing"><a href="#filenameHashing" class="headerlink" title="filenameHashing"></a>filenameHashing</h3><ul>
+<li><p>Type: <code>boolean</code></p>
+</li>
+<li><p>Default: <code>true</code></p>
+<p>默认情况下，生成的静态资源在它们的文件名中包含了 hash 以便更好的控制缓存。然而，这也要求 index 的 HTML 是被 Vue CLI 自动生成的。如果你无法使用 Vue CLI 生成的 index HTML，你可以通过将这个选项设为 <code>false</code> 来关闭文件名哈希。</p>
+</li>
+</ul>
+<h3 id="productionSourceMap"><a href="#productionSourceMap" class="headerlink" title="productionSourceMap"></a>productionSourceMap</h3><ul>
+<li>Type: <code>boolean</code></li>
+<li>Default: <code>true</code></li>
+<li>如果你不需要生产环境的 source map，可以将其设置为 <code>false</code> 以加速生产环境构建。sourcemap是拿来作为定位代码debug时用的</li>
+</ul>
+<h3 id="css-extract"><a href="#css-extract" class="headerlink" title="css.extract"></a>css.extract</h3><ul>
+<li><p>Type: <code>boolean | Object</code></p>
+</li>
+<li><p>Default: 生产环境下是 <code>true</code>，开发环境下是 <code>false</code></p>
+<p>是否将组件中的 CSS 提取至一个独立的 CSS 文件中 (而不是动态注入到 JavaScript 中的 inline 代码)。</p>
+<p>是通过mini-css-extract-plugin来实现的</p>
+</li>
+</ul>
+<h3 id="css-sourceMap"><a href="#css-sourceMap" class="headerlink" title="css.sourceMap"></a>css.sourceMap</h3><ul>
+<li><p>Type: <code>boolean</code></p>
+</li>
+<li><p>Default: <code>false</code></p>
+<p>是否为 CSS 开启 source map。设置为 <code>true</code> 之后可能会影响构建的性能。</p>
+</li>
+</ul>
+<h3 id="devServer"><a href="#devServer" class="headerlink" title="devServer"></a>devServer</h3><ul>
+<li><p>Type: <code>Object</code></p>
+<p><a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/dev-server/">所有 <code>webpack-dev-server</code> 的选项</a>都支持。注意：</p>
+<ul>
+<li>有些值像 <code>host</code>、<code>port</code> 和 <code>https</code> 可能会被命令行参数覆写。</li>
+<li>有些值像 <code>publicPath</code> 和 <code>historyApiFallback</code> 不应该被修改，因为它们需要和开发服务器的 <a target="_blank" rel="noopener" href="https://cli.vuejs.org/zh/config/#publicpath">publicPath</a> 同步以保障正常的工作。</li>
+</ul>
+</li>
+</ul>
+<h3 id="configureWebpack"><a href="#configureWebpack" class="headerlink" title="configureWebpack"></a>configureWebpack</h3><ul>
+<li><p>Type: <code>Object | Function</code></p>
+<p>如果这个值是一个对象，则会通过 webpack-merge 合并到最终的配置中。</p>
+<p>如果这个值是一个函数，则会接收被解析的配置作为参数。该函数既可以修改配置并不返回任何东西，也可以返回一个被克隆或合并过的配置版本。</p>
+</li>
+</ul>
+<h3 id="chainWebpack"><a href="#chainWebpack" class="headerlink" title="chainWebpack"></a>chainWebpack</h3><ul>
+<li><p>Type: <code>Function</code></p>
+<p>是一个函数，会接收一个基于 webpack-chain的 <code>ChainableConfig</code> 实例。允许对内部的 webpack 配置进行更细粒度的修改。</p>
+</li>
+</ul>
+<h2 id="配置示例"><a href="#配置示例" class="headerlink" title="配置示例"></a>配置示例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">const path &#x3D; require(&#39;path&#39;)</span><br><span class="line">const Timestamp &#x3D; new Date().getTime();</span><br><span class="line">const CompressionWebpackPlugin &#x3D; require(&#39;compression-webpack-plugin&#39;);</span><br><span class="line">const productionGzipExtensions &#x3D; [&quot;js&quot;, &quot;css&quot;];</span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    &#x2F;&#x2F; 生产环境 sourceMap</span><br><span class="line">    productionSourceMap: false,</span><br><span class="line">    &#x2F;&#x2F; 配置线上访问的前置目录</span><br><span class="line">    publicPath: &#39;&#x2F;mp&#x2F;&#39;,</span><br><span class="line">    &#x2F;&#x2F; 打包的文件夹名</span><br><span class="line">    outputDir: &#39;mp&#39;,</span><br><span class="line">    &#x2F;&#x2F; 放置生成的静态资源js css img的文件夹</span><br><span class="line">    assetsDir: &#39;static&#39;,</span><br><span class="line">    &#x2F;&#x2F; 指定生成的html入口文件路径</span><br><span class="line">    indexPath: &#39;index.html&#39;,</span><br><span class="line">    &#x2F;&#x2F;生成的静态资源在它们的文件名中是否包含hash以便更好的控制缓存</span><br><span class="line">    filenameHashing: true,</span><br><span class="line">    css: &#123;</span><br><span class="line">        sourceMap: true &#x2F;&#x2F;打开本地开发环境下的sourceMap</span><br><span class="line">    &#125;,</span><br><span class="line">    chainWebpack: config &#x3D;&gt; &#123;</span><br><span class="line">        config.resolve.alias</span><br><span class="line">            .set(&#39;vue$&#39;, &#39;vue&#x2F;dist&#x2F;vue.esm.js&#39;)</span><br><span class="line">            .set(&#39;@&#39;, path.join(__dirname, &#39;src&#39;))   &#x2F;&#x2F;项目别名设置</span><br><span class="line">            .set(&#39;@pages&#39;, path.join(__dirname, &#39;src&#x2F;pages&#39;))</span><br><span class="line">            .set(&#39;@assets&#39;, path.join(__dirname, &#39;src&#x2F;assets&#39;))</span><br><span class="line">            .set(&#39;@components&#39;, path.join(__dirname, &#39;src&#x2F;components&#39;))</span><br><span class="line">            .set(&#39;@store&#39;, path.join(__dirname, &#39;src&#x2F;store&#39;))</span><br><span class="line">            .set(&#39;@utils&#39;, path.join(__dirname, &#39;src&#x2F;utils&#39;))</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;打包分析工具</span><br><span class="line">        if (process.env.use_analyzer) &#123;</span><br><span class="line">            config</span><br><span class="line">                .plugin(&#39;webpack-bundle-analyzer&#39;)</span><br><span class="line">                .use(require(&#39;webpack-bundle-analyzer&#39;).BundleAnalyzerPlugin)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    configureWebpack: config &#x3D;&gt; &#123;</span><br><span class="line">        config.externals &#x3D; &#123;</span><br><span class="line">            vue: &#39;Vue&#39;,</span><br><span class="line">            moment: &#39;moment&#39;,</span><br><span class="line">            lodash: &#39;_&#39;,</span><br><span class="line">            &#39;vue-router&#39;: &#39;VueRouter&#39;,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x2F;&#x2F; js打包版本控制</span><br><span class="line">        config.output.filename &#x3D; &#96;static&#x2F;js&#x2F;[name].[hash:8].$&#123;Timestamp&#125;.js&#96;,</span><br><span class="line">        config.output.chunkFilename &#x3D; &#96;static&#x2F;js&#x2F;[name].[hash:8].$&#123;Timestamp&#125;.js&#96;,</span><br><span class="line">        &#x2F;&#x2F; Gzip压缩</span><br><span class="line">        config.plugins.push(new CompressionWebpackPlugin(&#123;</span><br><span class="line">            filename: &quot;[path].gz[query]&quot;,</span><br><span class="line">            algorithm: &#39;gzip&#39;,</span><br><span class="line">            test: new RegExp(&quot;\\.(&quot; + productionGzipExtensions.join(&quot;|&quot;) + &quot;)$&quot;), &#x2F;&#x2F;匹配文件名</span><br><span class="line">            threshold: 10240,</span><br><span class="line">            minRatio: 0.8,</span><br><span class="line">            deleteOriginalAssets: false &#x2F;&#x2F;是否删除源文件(默认)</span><br><span class="line">        &#125;))</span><br><span class="line">    &#125;,</span><br><span class="line">    devServer: &#123;</span><br><span class="line">        port: 8088,</span><br><span class="line">        proxy: &#123;</span><br><span class="line">            &#39;&#x2F;xxx&#x2F;api&#39;: &#123;</span><br><span class="line">                target: &#39;http:&#x2F;&#x2F;api.xxx.cn&#x2F;xxx&#x2F;api&#39;,</span><br><span class="line">                changeOrigin: true,</span><br><span class="line">                ws: true,&#x2F;&#x2F;websocket</span><br><span class="line">                pathRewrite: &#123;</span><br><span class="line">                    &#39;^&#x2F;xxx&#x2F;api&#39;: &#39;&#39;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ 
       <!-- reward -->
       
       <div id="reword-out">
@@ -184,6 +281,15 @@
 
    
   <nav class="article-nav">
+    
+      <a href="/2020/10/11/jetpack%E7%B3%BB%E5%88%97-dataBinding%E4%BD%BF%E7%94%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            dataBinding使用
+          
+        </div>
+      </a>
     
     
       <a href="/2020/10/07/webpack%E8%AF%A6%E8%A7%A3/" class="article-nav-link">
