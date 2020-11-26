@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+
+
+<html lang="zh">
+
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="hexo blog" />
+   
+  <meta name="description" content="young blog write my world" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Java JVM |  young blog write my world
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Java-JVM"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Java JVM
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/11/25/Java-JVM/" class="article-date">
+  <time datetime="2020-11-25T02:57:16.000Z" itemprop="datePublished">2020-11-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java%E8%AF%AD%E6%B3%95/">Java语法</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">3.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">15 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="JVM-相关知识体系"><a href="#JVM-相关知识体系" class="headerlink" title="JVM 相关知识体系"></a>JVM 相关知识体系</h1><blockquote>
+<p>本文是构建JVM核心知识点全局知识体系</p>
+</blockquote>
+<h2 id="知识体系"><a href="#知识体系" class="headerlink" title="知识体系"></a>知识体系</h2><p><img src="../../../../images/07/10.png" alt="Image text"></p>
+<h2 id="学习要点"><a href="#学习要点" class="headerlink" title="学习要点"></a>学习要点</h2><blockquote>
+<p>不同的虚拟机实现方式上也有差别，如果没有特别指出，这里的JVM指的是sun的HotSpot；不同的JDK版本略有差别，这里主要以1.8</p>
+</blockquote>
+<p><img src="../../../../images/07/11.png" alt="Image text"></p>
+<h1 id="JVM-基础-类字节码详解"><a href="#JVM-基础-类字节码详解" class="headerlink" title="JVM 基础 - 类字节码详解"></a>JVM 基础 - 类字节码详解</h1><h2 id="多语言编译为字节码在JVM运行"><a href="#多语言编译为字节码在JVM运行" class="headerlink" title="多语言编译为字节码在JVM运行"></a>多语言编译为字节码在JVM运行</h2><p>计算机是不能直接运行java代码的，必须要先运行java虚拟机，再由java虚拟机运行编译后的java代码。这个编译后的java代码，就是本文要介绍的jav字节码。</p>
+<p>为什么jvm不能直接运行java代码呢，这是因为在cpu层面看来计算机中所有的操作都是一个个指令的运行汇集而成，java是高级语言，只有人类才能理解其逻辑，计算机是无法识别的。所以java代码必须要先编译成字节码文件，jvm才能正确识别代码转换后的指令并将其运行。</p>
+<ul>
+<li>java代码间接翻译成字节码，储存字节码的文件再交由运行在不同平台上的jvm虚拟机去读取执行，从而实现一次编写，到处运行的目的。</li>
+<li>jvm也不再只支持java，由此衍生出了许多基于jvm的编程语言，比如groovy，scala，kotlin等等。</li>
+</ul>
+<p><img src="../../../../images/07/12.png" alt="Image text"></p>
+<h2 id="Java字节码文件"><a href="#Java字节码文件" class="headerlink" title="Java字节码文件"></a>Java字节码文件</h2><p>class文件本质上一个以8位字节为基础单位的二进制流，各个数据项目按照严格顺序紧凑的排列在class文件中。jvm根据其特定的规则解析该二进制数据，从而得到相关信息。</p>
+<p>class文件采用一种伪结构来存储数据，它有两种类型：无符号数和表。这里暂不详细的讲。</p>
+<p>本文将通过简单的java例子编译后的文件来理解。</p>
+<h3 id="class文件的结构属性"><a href="#class文件的结构属性" class="headerlink" title="class文件的结构属性"></a>class文件的结构属性</h3><p>在理解之前先从整体看下java字节码文件包含了哪些类型的数据。</p>
+<p><img src="../../../../images/07/13.png" alt="Image text"></p>
+<h3 id="从一个例子开始"><a href="#从一个例子开始" class="headerlink" title="从一个例子开始"></a>从一个例子开始</h3><p>下面以一个简单的例子来逐步讲解字节码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;Main.java</span><br><span class="line">public class Main &#123;</span><br><span class="line">    </span><br><span class="line">    private int m;</span><br><span class="line">    </span><br><span class="line">    public int inc() &#123;</span><br><span class="line">        return m + 1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过以下命令，可以在当前所在路径下生成一个Main.class文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac Main.java</span><br></pre></td></tr></table></figure>
+
+<p>以文本的形式打开生成的class文件，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">cafe babe 0000 0034 0013 0a00 0400 0f09</span><br><span class="line">0003 0010 0700 1107 0012 0100 016d 0100</span><br><span class="line">0149 0100 063c 696e 6974 3e01 0003 2829</span><br><span class="line">5601 0004 436f 6465 0100 0f4c 696e 654e</span><br><span class="line">756d 6265 7254 6162 6c65 0100 0369 6e63</span><br><span class="line">0100 0328 2949 0100 0a53 6f75 7263 6546</span><br><span class="line">696c 6501 0009 4d61 696e 2e6a 6176 610c</span><br><span class="line">0007 0008 0c00 0500 0601 0010 636f 6d2f</span><br><span class="line">7268 7974 686d 372f 4d61 696e 0100 106a</span><br><span class="line">6176 612f 6c61 6e67 2f4f 626a 6563 7400</span><br><span class="line">2100 0300 0400 0000 0100 0200 0500 0600</span><br><span class="line">0000 0200 0100 0700 0800 0100 0900 0000</span><br><span class="line">1d00 0100 0100 0000 052a b700 01b1 0000</span><br><span class="line">0001 000a 0000 0006 0001 0000 0003 0001</span><br><span class="line">000b 000c 0001 0009 0000 001f 0002 0001</span><br><span class="line">0000 0007 2ab4 0002 0460 ac00 0000 0100</span><br><span class="line">0a00 0000 0600 0100 0000 0800 0100 0d00</span><br><span class="line">0000 0200 0e</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>文件开头的4个字节(“cafe babe”)称之为 <code>魔数</code>，唯有以”cafe babe”开头的class文件方可被虚拟机所接受，这4个字节就是字节码文件的身份识别。</p>
+</li>
+<li><p>0000是编译器jdk版本的次版本号0，0034转化为十进制是52,是主版本号，java的版本号从45开始，除1.0和1.1都是使用45.x外,以后每升一个大版本，版本号加一。也就是说，编译生成该class文件的jdk版本为1.8.0。</p>
+</li>
+<li><p>继续往下是常量池… 知道是这么分析的就可以了，然后我们通过工具反编译字节码文件继续去看。</p>
+</li>
+</ul>
+<h3 id="反编译字节码文件"><a href="#反编译字节码文件" class="headerlink" title="反编译字节码文件"></a>反编译字节码文件</h3><blockquote>
+<p>使用到java内置的一个反编译工具javap可以反编译字节码文件，用法：javap <options> <classes></p>
+</blockquote>
+<p>其中<options>选项包括：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">-help  --help  -?        输出此用法消息</span><br><span class="line">-version                 版本信息</span><br><span class="line">-v  -verbose             输出附加信息</span><br><span class="line">-l                       输出行号和本地变量表</span><br><span class="line">-public                  仅显示公共类和成员</span><br><span class="line">-protected               显示受保护的&#x2F;公共类和成员</span><br><span class="line">-package                 显示程序包&#x2F;受保护的&#x2F;公共类</span><br><span class="line">                         和成员 (默认)</span><br><span class="line">-p  -private             显示所有类和成员</span><br><span class="line">-c                       对代码进行反汇编</span><br><span class="line">-s                       输出内部类型签名</span><br><span class="line">-sysinfo                 显示正在处理的类的</span><br><span class="line">                         系统信息 (路径, 大小, 日期, MD5 散列)</span><br><span class="line">-constants               显示最终常量</span><br><span class="line">-classpath &lt;path&gt;        指定查找用户类文件的位置</span><br><span class="line">-cp &lt;path&gt;               指定查找用户类文件的位置</span><br><span class="line">-bootclasspath &lt;path&gt;    覆盖引导类文件的位置</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>输入命令 javap -v -p Main.class 查看输出内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">Classfile &#x2F;E:&#x2F;JavaCode&#x2F;TestProj&#x2F;out&#x2F;production&#x2F;TestProj&#x2F;com&#x2F;rhythm7&#x2F;Main.class</span><br><span class="line">  Last modified 2018-4-7; size 362 bytes</span><br><span class="line">  MD5 checksum 4aed8540b098992663b7ba08c65312de</span><br><span class="line">  Compiled from &quot;Main.java&quot;</span><br><span class="line">public class com.rhythm7.Main</span><br><span class="line">  minor version: 0</span><br><span class="line">  major version: 52</span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #1 &#x3D; Methodref          #4.#18         &#x2F;&#x2F; java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">   #2 &#x3D; Fieldref           #3.#19         &#x2F;&#x2F; com&#x2F;rhythm7&#x2F;Main.m:I</span><br><span class="line">   #3 &#x3D; Class              #20            &#x2F;&#x2F; com&#x2F;rhythm7&#x2F;Main</span><br><span class="line">   #4 &#x3D; Class              #21            &#x2F;&#x2F; java&#x2F;lang&#x2F;Object</span><br><span class="line">   #5 &#x3D; Utf8               m</span><br><span class="line">   #6 &#x3D; Utf8               I</span><br><span class="line">   #7 &#x3D; Utf8               &lt;init&gt;</span><br><span class="line">   #8 &#x3D; Utf8               ()V</span><br><span class="line">   #9 &#x3D; Utf8               Code</span><br><span class="line">  #10 &#x3D; Utf8               LineNumberTable</span><br><span class="line">  #11 &#x3D; Utf8               LocalVariableTable</span><br><span class="line">  #12 &#x3D; Utf8               this</span><br><span class="line">  #13 &#x3D; Utf8               Lcom&#x2F;rhythm7&#x2F;Main;</span><br><span class="line">  #14 &#x3D; Utf8               inc</span><br><span class="line">  #15 &#x3D; Utf8               ()I</span><br><span class="line">  #16 &#x3D; Utf8               SourceFile</span><br><span class="line">  #17 &#x3D; Utf8               Main.java</span><br><span class="line">  #18 &#x3D; NameAndType        #7:#8          &#x2F;&#x2F; &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">  #19 &#x3D; NameAndType        #5:#6          &#x2F;&#x2F; m:I</span><br><span class="line">  #20 &#x3D; Utf8               com&#x2F;rhythm7&#x2F;Main</span><br><span class="line">  #21 &#x3D; Utf8               java&#x2F;lang&#x2F;Object</span><br><span class="line">&#123;</span><br><span class="line">  private int m;</span><br><span class="line">    descriptor: I</span><br><span class="line">    flags: ACC_PRIVATE</span><br><span class="line"></span><br><span class="line">  public com.rhythm7.Main();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack&#x3D;1, locals&#x3D;1, args_size&#x3D;1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: invokespecial #1                  &#x2F;&#x2F; Method java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">         4: return</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 3: 0</span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0       5     0  this   Lcom&#x2F;rhythm7&#x2F;Main;</span><br><span class="line"></span><br><span class="line">  public int inc();</span><br><span class="line">    descriptor: ()I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack&#x3D;2, locals&#x3D;1, args_size&#x3D;1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: getfield      #2                  &#x2F;&#x2F; Field m:I</span><br><span class="line">         4: iconst_1</span><br><span class="line">         5: iadd</span><br><span class="line">         6: ireturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 8: 0</span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0       7     0  this   Lcom&#x2F;rhythm7&#x2F;Main;</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: &quot;Main.java&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="字节码文件信息"><a href="#字节码文件信息" class="headerlink" title="字节码文件信息"></a>字节码文件信息</h3><p>开头的7行信息包括：Class文件当前所在位置，最后修改时间，文件大小，MD5值，编译自哪些文件，类的权限定名，jdk次版本号，主版本号。</p>
+<p>然后紧接这的是该累的访问标志：ACC_PUBLIC,ACC_SUPER，访问标志的含义如下：</p>
+<table>
+<thead>
+<tr>
+<th>标志名称</th>
+<th>标志值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ACC_PUBLIC</td>
+<td>0x0001</td>
+<td>是否为Public类型</td>
+</tr>
+<tr>
+<td>ACC_FINAL</td>
+<td>0x0010</td>
+<td>是否被声明为final，只有类可以设置</td>
+</tr>
+<tr>
+<td>ACC_SUPER</td>
+<td>0x0020</td>
+<td>是否允许使用invokespecial字节码指令的新语义．</td>
+</tr>
+<tr>
+<td>ACC_INTERFACE</td>
+<td>0x0200</td>
+<td>标志这是一个接口</td>
+</tr>
+<tr>
+<td>ACC_ABSTRACT</td>
+<td>0x0400</td>
+<td>是否为abstract类型，对于接口或者抽象类来说，次标志值为真，其他类型为假</td>
+</tr>
+<tr>
+<td>ACC_SYNTHETIC</td>
+<td>0x1000</td>
+<td>标志这个类并非由用户代码产生</td>
+</tr>
+<tr>
+<td>ACC_ANNOTATION</td>
+<td>0x2000</td>
+<td>标志这是一个注解</td>
+</tr>
+<tr>
+<td>ACC_ENUM</td>
+<td>0x4000</td>
+<td>标志这是一个枚举</td>
+</tr>
+</tbody></table>
+<h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><p>Constant pool :常量池</p>
+<p>常量池可以理解为Class文件中的资源仓库。主要存放的是两大类常量：字面量（Lietral）和符号引用（Symbolic References）。字面量类似于java中的常量概念，如文本字符串，final常量等，而符号引用则属于编译原理方面的概念，包括以下三种：</p>
+<ul>
+<li>类和接口的全限定名</li>
+<li>字段的名称和描述符号</li>
+<li>方法的名称和描述符</li>
+</ul>
+<p>不同于C/C++，jvm是在加载class文件的时候才进行的动态链接，也就是说这些子弹和方法符号引用只有在运行期转换后才能获得真正的内存入口地址。当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建或者运行时解析并翻译到具体的内存地址中。直接通过反编译文件来查看字节码内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#1 &#x3D; Methodref          #4.#18         &#x2F;&#x2F; java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">#4 &#x3D; Class              #21            &#x2F;&#x2F; java&#x2F;lang&#x2F;Object</span><br><span class="line">#7 &#x3D; Utf8               &lt;init&gt;</span><br><span class="line">#8 &#x3D; Utf8               ()V</span><br><span class="line">#18 &#x3D; NameAndType        #7:#8          &#x2F;&#x2F; &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">#21 &#x3D; Utf8               java&#x2F;lang&#x2F;Object</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>第一个常量是一个方法定义，指向了第4和第18个常量。以此类推查看第4和第18个常量。最后可以拼接成第一个常量右侧的注释内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br></pre></td></tr></table></figure>
+
+<p>这段可以理解为该类的实例构造器的声明，由于main类没有重写构造方法，所以调用的是父类的构造方法。此处也说明了main类的直接父类是Object。该方法默认返回值是V，也就是void，无返回值。</p>
+<p>第二个常量同理可得：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#2 &#x3D; Fieldref           #3.#19         &#x2F;&#x2F; com&#x2F;rhythm7&#x2F;Main.m:I</span><br><span class="line">#3 &#x3D; Class              #20            &#x2F;&#x2F; com&#x2F;rhythm7&#x2F;Main</span><br><span class="line">#5 &#x3D; Utf8               m</span><br><span class="line">#6 &#x3D; Utf8               I</span><br><span class="line">#19 &#x3D; NameAndType        #5:#6          &#x2F;&#x2F; m:I</span><br><span class="line">#20 &#x3D; Utf8               com&#x2F;rhythm7&#x2F;Main</span><br></pre></td></tr></table></figure>
+
+<p>复制代码此处声明了一个字段m，类型为I，I即是int类型。关于字节码的类型对应如下：</p>
+<table>
+<thead>
+<tr>
+<th>标识字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B</td>
+<td>基本类型byte</td>
+</tr>
+<tr>
+<td>C</td>
+<td>基本类型char</td>
+</tr>
+<tr>
+<td>D</td>
+<td>基本类型double</td>
+</tr>
+<tr>
+<td>F</td>
+<td>基本类型float</td>
+</tr>
+<tr>
+<td>I</td>
+<td>基本类型int</td>
+</tr>
+<tr>
+<td>J</td>
+<td>基本类型int</td>
+</tr>
+<tr>
+<td>S</td>
+<td>基本类型short</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>基本类型boolean</td>
+</tr>
+<tr>
+<td>V</td>
+<td>特殊类型void</td>
+</tr>
+<tr>
+<td>L</td>
+<td>对象类型，以分号结尾，如Ljava/lang/Object;</td>
+</tr>
+</tbody></table>
+<p>对于数组类型，每一位使用一个前置的[字符来描述，如定义一个java.lang.String[]/[]类型的二维数组，将被记录为[[Ljava/lang/String;</p>
+<h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>在常量池之后的是对类内部的方法描述，在字节码中以表的集合形式表现，暂且不管字节码文件的16进制文件内容如何，我们直接看反编译后的内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">private int m;</span><br><span class="line">  descriptor: I</span><br><span class="line">  flags: ACC_PRIVATE</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>此处声明了一个私有变量m，类型为int，返回值为int。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public com.rhythm7.Main();</span><br><span class="line">   descriptor: ()V</span><br><span class="line">   flags: ACC_PUBLIC</span><br><span class="line">   Code:</span><br><span class="line">     stack&#x3D;1, locals&#x3D;1, args_size&#x3D;1</span><br><span class="line">        0: aload_0</span><br><span class="line">        1: invokespecial #1                  &#x2F;&#x2F; Method java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">        4: return</span><br><span class="line">     LineNumberTable:</span><br><span class="line">       line 3: 0</span><br><span class="line">     LocalVariableTable:</span><br><span class="line">       Start  Length  Slot  Name   Signature</span><br><span class="line">           0       5     0  this   Lcom&#x2F;rhythm7&#x2F;Main;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里是构造方法：Main()，返回值为void，公开方法。</p>
+<p>code内的主要属性为：</p>
+<ul>
+<li><strong>stack</strong>: 最大操作数栈，JVM运行时会根据这个值来分配栈帧(Frame)中的操作栈深度,此处为1</li>
+<li><strong>locals</strong>: 局部变量所需的存储空间，单位为Slot, Slot是虚拟机为局部变量分配内存时所使用的最小单位，为4个字节大小。方法参数(包括实例方法中的隐藏参数this)，显示异常处理器的参数(try catch中的catch块所定义的异常)，方法体中定义的局部变量都需要使用局部变量表来存放。值得一提的是，locals的大小并不一定等于所有局部变量所占的Slot之和，因为局部变量中的Slot是可以重用的。</li>
+<li><strong>args_size</strong>: 方法参数的个数，这里是1，因为每个实例方法都会有一个隐藏参数this</li>
+<li><strong>attribute_info</strong>: 方法体内容，0,1,4为字节码”行号”，该段代码的意思是将第一个引用类型本地变量推送至栈顶，然后执行该类型的实例方法，也就是常量池存放的第一个变量，也就是注释里的”java/lang/Object.””😦)V”, 然后执行返回语句，结束方法。</li>
+<li><strong>LineNumberTable</strong>: 该属性的作用是描述源码行号与字节码行号(字节码偏移量)之间的对应关系。可以使用 -g:none 或-g:lines选项来取消或要求生成这项信息，如果选择不生成LineNumberTable，当程序运行异常时将无法获取到发生异常的源码行号，也无法按照源码的行数来调试程序。</li>
+<li><strong>LocalVariableTable</strong>: 该属性的作用是描述帧栈中局部变量与源码中定义的变量之间的关系。可以使用 -g:none 或 -g:vars来取消或生成这项信息，如果没有生成这项信息，那么当别人引用这个方法时，将无法获取到参数名称，取而代之的是arg0, arg1这样的占位符。 start 表示该局部变量在哪一行开始可见，length表示可见行数，Slot代表所在帧栈位置，Name是变量名称，然后是类型签名。</li>
+</ul>
+<p>同理可以分析Main类中的另一个方法”inc()”:</p>
+<p>方法体内的内容是：将this入栈，获取字段#2并置于栈顶, 将int类型的1入栈，将栈内顶部的两个数值相加，返回一个int类型的值。</p>
+<h3 id="kotlin-函数扩展的实现"><a href="#kotlin-函数扩展的实现" class="headerlink" title="kotlin 函数扩展的实现"></a>kotlin 函数扩展的实现</h3><p>kotlin提供了扩展函数的语言特性，借助这个特性，我们可以给任意对象添加自定义方法。</p>
+<p>以下示例为Object添加”sayHello”方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#x2F;&#x2F;SayHello.kt</span><br><span class="line">package com.rhythm7</span><br><span class="line"></span><br><span class="line">fun Any.sayHello() &#123;</span><br><span class="line">    println(&quot;Hello&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>编译后，使用javap查看生成SayHelloKt.class文件的字节码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Classfile &#x2F;E:&#x2F;JavaCode&#x2F;TestProj&#x2F;out&#x2F;production&#x2F;TestProj&#x2F;com&#x2F;rhythm7&#x2F;SayHelloKt.class</span><br><span class="line">Last modified 2018-4-8; size 958 bytes</span><br><span class="line"> MD5 checksum 780a04b75a91be7605cac4655b499f19</span><br><span class="line"> Compiled from &quot;SayHello.kt&quot;</span><br><span class="line">public final class com.rhythm7.SayHelloKt</span><br><span class="line"> minor version: 0</span><br><span class="line"> major version: 52</span><br><span class="line"> flags: ACC_PUBLIC, ACC_FINAL, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">    &#x2F;&#x2F;省略常量池部分字节码</span><br><span class="line">&#123;</span><br><span class="line"> public static final void sayHello(java.lang.Object);</span><br><span class="line">   descriptor: (Ljava&#x2F;lang&#x2F;Object;)V</span><br><span class="line">   flags: ACC_PUBLIC, ACC_STATIC, ACC_FINAL</span><br><span class="line">   Code:</span><br><span class="line">     stack&#x3D;2, locals&#x3D;2, args_size&#x3D;1</span><br><span class="line">        0: aload_0</span><br><span class="line">        1: ldc           #9                  &#x2F;&#x2F; String $receiver</span><br><span class="line">        3: invokestatic  #15                 &#x2F;&#x2F; Method kotlin&#x2F;jvm&#x2F;internal&#x2F;Intrinsics.checkParameterIsNotNull:(Ljava&#x2F;lang&#x2F;Object;Ljava&#x2F;lang&#x2F;String;)V</span><br><span class="line">        6: ldc           #17                 &#x2F;&#x2F; String Hello</span><br><span class="line">        8: astore_1</span><br><span class="line">        9: getstatic     #23                 &#x2F;&#x2F; Field java&#x2F;lang&#x2F;System.out:Ljava&#x2F;io&#x2F;PrintStream;</span><br><span class="line">       12: aload_1</span><br><span class="line">       13: invokevirtual #28                 &#x2F;&#x2F; Method java&#x2F;io&#x2F;PrintStream.println:(Ljava&#x2F;lang&#x2F;Object;)V</span><br><span class="line">       16: return</span><br><span class="line">     LocalVariableTable:</span><br><span class="line">       Start  Length  Slot  Name   Signature</span><br><span class="line">           0      17     0 $receiver   Ljava&#x2F;lang&#x2F;Object;</span><br><span class="line">     LineNumberTable:</span><br><span class="line">       line 4: 6</span><br><span class="line">       line 5: 16</span><br><span class="line">   RuntimeInvisibleParameterAnnotations:</span><br><span class="line">     0:</span><br><span class="line">       0: #7()</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: &quot;SayHello.kt&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>观察头部发现,koltin为文件SayHello生成了一个类，类名”com.rhythm7.SayHelloKt”.</p>
+<p>由于我们一开始编写SayHello.kt时并不希望SayHello是一个可实例化的对象类，所以，SayHelloKt是无法被实例化的，SayHelloKt并没有任何一个构造器。</p>
+<p>再观察唯一的一个方法：发现Any.sayHello()的具体实现是静态不可变方法的形式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public static final void sayHello(java.lang.Object);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>所以当我们在其他地方使用Any.sayHello()时，事实上等同于调用java的SayHelloKt.sayHello(Object)方法。</p>
+<p>顺便一提的是，当扩展的方法为Any时，意味着Any是non-null的，这时，编译器会在方法体的开头检查参数的非空，即调用 <code>kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(Object value, String paramName)</code> 方法来检查传入的Any类型对象是否为空。如果我们扩展的函数为<code>Any?.sayHello()</code>，那么在编译后的文件中则不会有这段字节码的出现。</p>
+<h1 id="JVM-基础-Java-类加载机制"><a href="#JVM-基础-Java-类加载机制" class="headerlink" title="JVM 基础 - Java 类加载机制"></a>JVM 基础 - Java 类加载机制</h1> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/11/25/Java-JVM/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/" rel="tag">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/11/25/Java-JVM-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Java JVM解析
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/11/24/Java%20Object%E7%B1%BB%E5%88%86%E6%9E%90/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Java Object类分析</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> YOUNG
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src=''></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="YOUNG BLOG"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" target="_blank" rel="noopener" href="http://shenyu-vip.lofter.com">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

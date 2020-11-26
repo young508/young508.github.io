@@ -148,6 +148,400 @@
     
     
     <article
+  id="post-Java-JVM-基础概念"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/11/25/Java-JVM-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/"
+    >Java JVM解析</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/11/25/Java-JVM-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/" class="article-date">
+  <time datetime="2020-11-25T03:19:28.000Z" itemprop="datePublished">2020-11-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/">Java</a> / <a class="article-category-link" href="/categories/Java/JVM/">JVM</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><strong>文章内容主要是学习笔记，来源：<a target="_blank" rel="noopener" href="https://www.pdai.tech/md/java/jvm/java-jvm-class.html">https://www.pdai.tech/md/java/jvm/java-jvm-class.html</a></strong></p>
+<h1 id="JVM-相关知识体系"><a href="#JVM-相关知识体系" class="headerlink" title="JVM 相关知识体系"></a>JVM 相关知识体系</h1> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
+  id="post-Java-JVM"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/11/25/Java-JVM/"
+    >Java JVM</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/11/25/Java-JVM/" class="article-date">
+  <time datetime="2020-11-25T02:57:16.000Z" itemprop="datePublished">2020-11-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java%E8%AF%AD%E6%B3%95/">Java语法</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="JVM-相关知识体系"><a href="#JVM-相关知识体系" class="headerlink" title="JVM 相关知识体系"></a>JVM 相关知识体系</h1><blockquote>
+<p>本文是构建JVM核心知识点全局知识体系</p>
+</blockquote>
+<h2 id="知识体系"><a href="#知识体系" class="headerlink" title="知识体系"></a>知识体系</h2><p><img src="../../../../images/07/10.png" alt="Image text"></p>
+<h2 id="学习要点"><a href="#学习要点" class="headerlink" title="学习要点"></a>学习要点</h2><blockquote>
+<p>不同的虚拟机实现方式上也有差别，如果没有特别指出，这里的JVM指的是sun的HotSpot；不同的JDK版本略有差别，这里主要以1.8</p>
+</blockquote>
+<p><img src="../../../../images/07/11.png" alt="Image text"></p>
+<h1 id="JVM-基础-类字节码详解"><a href="#JVM-基础-类字节码详解" class="headerlink" title="JVM 基础 - 类字节码详解"></a>JVM 基础 - 类字节码详解</h1><h2 id="多语言编译为字节码在JVM运行"><a href="#多语言编译为字节码在JVM运行" class="headerlink" title="多语言编译为字节码在JVM运行"></a>多语言编译为字节码在JVM运行</h2><p>计算机是不能直接运行java代码的，必须要先运行java虚拟机，再由java虚拟机运行编译后的java代码。这个编译后的java代码，就是本文要介绍的jav字节码。</p>
+<p>为什么jvm不能直接运行java代码呢，这是因为在cpu层面看来计算机中所有的操作都是一个个指令的运行汇集而成，java是高级语言，只有人类才能理解其逻辑，计算机是无法识别的。所以java代码必须要先编译成字节码文件，jvm才能正确识别代码转换后的指令并将其运行。</p>
+<ul>
+<li>java代码间接翻译成字节码，储存字节码的文件再交由运行在不同平台上的jvm虚拟机去读取执行，从而实现一次编写，到处运行的目的。</li>
+<li>jvm也不再只支持java，由此衍生出了许多基于jvm的编程语言，比如groovy，scala，kotlin等等。</li>
+</ul>
+<p><img src="../../../../images/07/12.png" alt="Image text"></p>
+<h2 id="Java字节码文件"><a href="#Java字节码文件" class="headerlink" title="Java字节码文件"></a>Java字节码文件</h2><p>class文件本质上一个以8位字节为基础单位的二进制流，各个数据项目按照严格顺序紧凑的排列在class文件中。jvm根据其特定的规则解析该二进制数据，从而得到相关信息。</p>
+<p>class文件采用一种伪结构来存储数据，它有两种类型：无符号数和表。这里暂不详细的讲。</p>
+<p>本文将通过简单的java例子编译后的文件来理解。</p>
+<h3 id="class文件的结构属性"><a href="#class文件的结构属性" class="headerlink" title="class文件的结构属性"></a>class文件的结构属性</h3><p>在理解之前先从整体看下java字节码文件包含了哪些类型的数据。</p>
+<p><img src="../../../../images/07/13.png" alt="Image text"></p>
+<h3 id="从一个例子开始"><a href="#从一个例子开始" class="headerlink" title="从一个例子开始"></a>从一个例子开始</h3><p>下面以一个简单的例子来逐步讲解字节码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;Main.java</span><br><span class="line">public class Main &#123;</span><br><span class="line">    </span><br><span class="line">    private int m;</span><br><span class="line">    </span><br><span class="line">    public int inc() &#123;</span><br><span class="line">        return m + 1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过以下命令，可以在当前所在路径下生成一个Main.class文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac Main.java</span><br></pre></td></tr></table></figure>
+
+<p>以文本的形式打开生成的class文件，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">cafe babe 0000 0034 0013 0a00 0400 0f09</span><br><span class="line">0003 0010 0700 1107 0012 0100 016d 0100</span><br><span class="line">0149 0100 063c 696e 6974 3e01 0003 2829</span><br><span class="line">5601 0004 436f 6465 0100 0f4c 696e 654e</span><br><span class="line">756d 6265 7254 6162 6c65 0100 0369 6e63</span><br><span class="line">0100 0328 2949 0100 0a53 6f75 7263 6546</span><br><span class="line">696c 6501 0009 4d61 696e 2e6a 6176 610c</span><br><span class="line">0007 0008 0c00 0500 0601 0010 636f 6d2f</span><br><span class="line">7268 7974 686d 372f 4d61 696e 0100 106a</span><br><span class="line">6176 612f 6c61 6e67 2f4f 626a 6563 7400</span><br><span class="line">2100 0300 0400 0000 0100 0200 0500 0600</span><br><span class="line">0000 0200 0100 0700 0800 0100 0900 0000</span><br><span class="line">1d00 0100 0100 0000 052a b700 01b1 0000</span><br><span class="line">0001 000a 0000 0006 0001 0000 0003 0001</span><br><span class="line">000b 000c 0001 0009 0000 001f 0002 0001</span><br><span class="line">0000 0007 2ab4 0002 0460 ac00 0000 0100</span><br><span class="line">0a00 0000 0600 0100 0000 0800 0100 0d00</span><br><span class="line">0000 0200 0e</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>文件开头的4个字节(“cafe babe”)称之为 <code>魔数</code>，唯有以”cafe babe”开头的class文件方可被虚拟机所接受，这4个字节就是字节码文件的身份识别。</p>
+</li>
+<li><p>0000是编译器jdk版本的次版本号0，0034转化为十进制是52,是主版本号，java的版本号从45开始，除1.0和1.1都是使用45.x外,以后每升一个大版本，版本号加一。也就是说，编译生成该class文件的jdk版本为1.8.0。</p>
+</li>
+<li><p>继续往下是常量池… 知道是这么分析的就可以了，然后我们通过工具反编译字节码文件继续去看。</p>
+</li>
+</ul>
+<h3 id="反编译字节码文件"><a href="#反编译字节码文件" class="headerlink" title="反编译字节码文件"></a>反编译字节码文件</h3><blockquote>
+<p>使用到java内置的一个反编译工具javap可以反编译字节码文件，用法：javap <options> <classes></p>
+</blockquote>
+<p>其中<options>选项包括：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">-help  --help  -?        输出此用法消息</span><br><span class="line">-version                 版本信息</span><br><span class="line">-v  -verbose             输出附加信息</span><br><span class="line">-l                       输出行号和本地变量表</span><br><span class="line">-public                  仅显示公共类和成员</span><br><span class="line">-protected               显示受保护的&#x2F;公共类和成员</span><br><span class="line">-package                 显示程序包&#x2F;受保护的&#x2F;公共类</span><br><span class="line">                         和成员 (默认)</span><br><span class="line">-p  -private             显示所有类和成员</span><br><span class="line">-c                       对代码进行反汇编</span><br><span class="line">-s                       输出内部类型签名</span><br><span class="line">-sysinfo                 显示正在处理的类的</span><br><span class="line">                         系统信息 (路径, 大小, 日期, MD5 散列)</span><br><span class="line">-constants               显示最终常量</span><br><span class="line">-classpath &lt;path&gt;        指定查找用户类文件的位置</span><br><span class="line">-cp &lt;path&gt;               指定查找用户类文件的位置</span><br><span class="line">-bootclasspath &lt;path&gt;    覆盖引导类文件的位置</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>输入命令 javap -v -p Main.class 查看输出内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">Classfile &#x2F;E:&#x2F;JavaCode&#x2F;TestProj&#x2F;out&#x2F;production&#x2F;TestProj&#x2F;com&#x2F;rhythm7&#x2F;Main.class</span><br><span class="line">  Last modified 2018-4-7; size 362 bytes</span><br><span class="line">  MD5 checksum 4aed8540b098992663b7ba08c65312de</span><br><span class="line">  Compiled from &quot;Main.java&quot;</span><br><span class="line">public class com.rhythm7.Main</span><br><span class="line">  minor version: 0</span><br><span class="line">  major version: 52</span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #1 &#x3D; Methodref          #4.#18         &#x2F;&#x2F; java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">   #2 &#x3D; Fieldref           #3.#19         &#x2F;&#x2F; com&#x2F;rhythm7&#x2F;Main.m:I</span><br><span class="line">   #3 &#x3D; Class              #20            &#x2F;&#x2F; com&#x2F;rhythm7&#x2F;Main</span><br><span class="line">   #4 &#x3D; Class              #21            &#x2F;&#x2F; java&#x2F;lang&#x2F;Object</span><br><span class="line">   #5 &#x3D; Utf8               m</span><br><span class="line">   #6 &#x3D; Utf8               I</span><br><span class="line">   #7 &#x3D; Utf8               &lt;init&gt;</span><br><span class="line">   #8 &#x3D; Utf8               ()V</span><br><span class="line">   #9 &#x3D; Utf8               Code</span><br><span class="line">  #10 &#x3D; Utf8               LineNumberTable</span><br><span class="line">  #11 &#x3D; Utf8               LocalVariableTable</span><br><span class="line">  #12 &#x3D; Utf8               this</span><br><span class="line">  #13 &#x3D; Utf8               Lcom&#x2F;rhythm7&#x2F;Main;</span><br><span class="line">  #14 &#x3D; Utf8               inc</span><br><span class="line">  #15 &#x3D; Utf8               ()I</span><br><span class="line">  #16 &#x3D; Utf8               SourceFile</span><br><span class="line">  #17 &#x3D; Utf8               Main.java</span><br><span class="line">  #18 &#x3D; NameAndType        #7:#8          &#x2F;&#x2F; &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">  #19 &#x3D; NameAndType        #5:#6          &#x2F;&#x2F; m:I</span><br><span class="line">  #20 &#x3D; Utf8               com&#x2F;rhythm7&#x2F;Main</span><br><span class="line">  #21 &#x3D; Utf8               java&#x2F;lang&#x2F;Object</span><br><span class="line">&#123;</span><br><span class="line">  private int m;</span><br><span class="line">    descriptor: I</span><br><span class="line">    flags: ACC_PRIVATE</span><br><span class="line"></span><br><span class="line">  public com.rhythm7.Main();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack&#x3D;1, locals&#x3D;1, args_size&#x3D;1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: invokespecial #1                  &#x2F;&#x2F; Method java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">         4: return</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 3: 0</span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0       5     0  this   Lcom&#x2F;rhythm7&#x2F;Main;</span><br><span class="line"></span><br><span class="line">  public int inc();</span><br><span class="line">    descriptor: ()I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack&#x3D;2, locals&#x3D;1, args_size&#x3D;1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: getfield      #2                  &#x2F;&#x2F; Field m:I</span><br><span class="line">         4: iconst_1</span><br><span class="line">         5: iadd</span><br><span class="line">         6: ireturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 8: 0</span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            0       7     0  this   Lcom&#x2F;rhythm7&#x2F;Main;</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: &quot;Main.java&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="字节码文件信息"><a href="#字节码文件信息" class="headerlink" title="字节码文件信息"></a>字节码文件信息</h3><p>开头的7行信息包括：Class文件当前所在位置，最后修改时间，文件大小，MD5值，编译自哪些文件，类的权限定名，jdk次版本号，主版本号。</p>
+<p>然后紧接这的是该累的访问标志：ACC_PUBLIC,ACC_SUPER，访问标志的含义如下：</p>
+<table>
+<thead>
+<tr>
+<th>标志名称</th>
+<th>标志值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ACC_PUBLIC</td>
+<td>0x0001</td>
+<td>是否为Public类型</td>
+</tr>
+<tr>
+<td>ACC_FINAL</td>
+<td>0x0010</td>
+<td>是否被声明为final，只有类可以设置</td>
+</tr>
+<tr>
+<td>ACC_SUPER</td>
+<td>0x0020</td>
+<td>是否允许使用invokespecial字节码指令的新语义．</td>
+</tr>
+<tr>
+<td>ACC_INTERFACE</td>
+<td>0x0200</td>
+<td>标志这是一个接口</td>
+</tr>
+<tr>
+<td>ACC_ABSTRACT</td>
+<td>0x0400</td>
+<td>是否为abstract类型，对于接口或者抽象类来说，次标志值为真，其他类型为假</td>
+</tr>
+<tr>
+<td>ACC_SYNTHETIC</td>
+<td>0x1000</td>
+<td>标志这个类并非由用户代码产生</td>
+</tr>
+<tr>
+<td>ACC_ANNOTATION</td>
+<td>0x2000</td>
+<td>标志这是一个注解</td>
+</tr>
+<tr>
+<td>ACC_ENUM</td>
+<td>0x4000</td>
+<td>标志这是一个枚举</td>
+</tr>
+</tbody></table>
+<h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><p>Constant pool :常量池</p>
+<p>常量池可以理解为Class文件中的资源仓库。主要存放的是两大类常量：字面量（Lietral）和符号引用（Symbolic References）。字面量类似于java中的常量概念，如文本字符串，final常量等，而符号引用则属于编译原理方面的概念，包括以下三种：</p>
+<ul>
+<li>类和接口的全限定名</li>
+<li>字段的名称和描述符号</li>
+<li>方法的名称和描述符</li>
+</ul>
+<p>不同于C/C++，jvm是在加载class文件的时候才进行的动态链接，也就是说这些子弹和方法符号引用只有在运行期转换后才能获得真正的内存入口地址。当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建或者运行时解析并翻译到具体的内存地址中。直接通过反编译文件来查看字节码内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#1 &#x3D; Methodref          #4.#18         &#x2F;&#x2F; java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">#4 &#x3D; Class              #21            &#x2F;&#x2F; java&#x2F;lang&#x2F;Object</span><br><span class="line">#7 &#x3D; Utf8               &lt;init&gt;</span><br><span class="line">#8 &#x3D; Utf8               ()V</span><br><span class="line">#18 &#x3D; NameAndType        #7:#8          &#x2F;&#x2F; &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">#21 &#x3D; Utf8               java&#x2F;lang&#x2F;Object</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>第一个常量是一个方法定义，指向了第4和第18个常量。以此类推查看第4和第18个常量。最后可以拼接成第一个常量右侧的注释内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br></pre></td></tr></table></figure>
+
+<p>这段可以理解为该类的实例构造器的声明，由于main类没有重写构造方法，所以调用的是父类的构造方法。此处也说明了main类的直接父类是Object。该方法默认返回值是V，也就是void，无返回值。</p>
+<p>第二个常量同理可得：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#2 &#x3D; Fieldref           #3.#19         &#x2F;&#x2F; com&#x2F;rhythm7&#x2F;Main.m:I</span><br><span class="line">#3 &#x3D; Class              #20            &#x2F;&#x2F; com&#x2F;rhythm7&#x2F;Main</span><br><span class="line">#5 &#x3D; Utf8               m</span><br><span class="line">#6 &#x3D; Utf8               I</span><br><span class="line">#19 &#x3D; NameAndType        #5:#6          &#x2F;&#x2F; m:I</span><br><span class="line">#20 &#x3D; Utf8               com&#x2F;rhythm7&#x2F;Main</span><br></pre></td></tr></table></figure>
+
+<p>复制代码此处声明了一个字段m，类型为I，I即是int类型。关于字节码的类型对应如下：</p>
+<table>
+<thead>
+<tr>
+<th>标识字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B</td>
+<td>基本类型byte</td>
+</tr>
+<tr>
+<td>C</td>
+<td>基本类型char</td>
+</tr>
+<tr>
+<td>D</td>
+<td>基本类型double</td>
+</tr>
+<tr>
+<td>F</td>
+<td>基本类型float</td>
+</tr>
+<tr>
+<td>I</td>
+<td>基本类型int</td>
+</tr>
+<tr>
+<td>J</td>
+<td>基本类型int</td>
+</tr>
+<tr>
+<td>S</td>
+<td>基本类型short</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>基本类型boolean</td>
+</tr>
+<tr>
+<td>V</td>
+<td>特殊类型void</td>
+</tr>
+<tr>
+<td>L</td>
+<td>对象类型，以分号结尾，如Ljava/lang/Object;</td>
+</tr>
+</tbody></table>
+<p>对于数组类型，每一位使用一个前置的[字符来描述，如定义一个java.lang.String[]/[]类型的二维数组，将被记录为[[Ljava/lang/String;</p>
+<h3 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h3><p>在常量池之后的是对类内部的方法描述，在字节码中以表的集合形式表现，暂且不管字节码文件的16进制文件内容如何，我们直接看反编译后的内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">private int m;</span><br><span class="line">  descriptor: I</span><br><span class="line">  flags: ACC_PRIVATE</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>此处声明了一个私有变量m，类型为int，返回值为int。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public com.rhythm7.Main();</span><br><span class="line">   descriptor: ()V</span><br><span class="line">   flags: ACC_PUBLIC</span><br><span class="line">   Code:</span><br><span class="line">     stack&#x3D;1, locals&#x3D;1, args_size&#x3D;1</span><br><span class="line">        0: aload_0</span><br><span class="line">        1: invokespecial #1                  &#x2F;&#x2F; Method java&#x2F;lang&#x2F;Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">        4: return</span><br><span class="line">     LineNumberTable:</span><br><span class="line">       line 3: 0</span><br><span class="line">     LocalVariableTable:</span><br><span class="line">       Start  Length  Slot  Name   Signature</span><br><span class="line">           0       5     0  this   Lcom&#x2F;rhythm7&#x2F;Main;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里是构造方法：Main()，返回值为void，公开方法。</p>
+<p>code内的主要属性为：</p>
+<ul>
+<li><strong>stack</strong>: 最大操作数栈，JVM运行时会根据这个值来分配栈帧(Frame)中的操作栈深度,此处为1</li>
+<li><strong>locals</strong>: 局部变量所需的存储空间，单位为Slot, Slot是虚拟机为局部变量分配内存时所使用的最小单位，为4个字节大小。方法参数(包括实例方法中的隐藏参数this)，显示异常处理器的参数(try catch中的catch块所定义的异常)，方法体中定义的局部变量都需要使用局部变量表来存放。值得一提的是，locals的大小并不一定等于所有局部变量所占的Slot之和，因为局部变量中的Slot是可以重用的。</li>
+<li><strong>args_size</strong>: 方法参数的个数，这里是1，因为每个实例方法都会有一个隐藏参数this</li>
+<li><strong>attribute_info</strong>: 方法体内容，0,1,4为字节码”行号”，该段代码的意思是将第一个引用类型本地变量推送至栈顶，然后执行该类型的实例方法，也就是常量池存放的第一个变量，也就是注释里的”java/lang/Object.””😦)V”, 然后执行返回语句，结束方法。</li>
+<li><strong>LineNumberTable</strong>: 该属性的作用是描述源码行号与字节码行号(字节码偏移量)之间的对应关系。可以使用 -g:none 或-g:lines选项来取消或要求生成这项信息，如果选择不生成LineNumberTable，当程序运行异常时将无法获取到发生异常的源码行号，也无法按照源码的行数来调试程序。</li>
+<li><strong>LocalVariableTable</strong>: 该属性的作用是描述帧栈中局部变量与源码中定义的变量之间的关系。可以使用 -g:none 或 -g:vars来取消或生成这项信息，如果没有生成这项信息，那么当别人引用这个方法时，将无法获取到参数名称，取而代之的是arg0, arg1这样的占位符。 start 表示该局部变量在哪一行开始可见，length表示可见行数，Slot代表所在帧栈位置，Name是变量名称，然后是类型签名。</li>
+</ul>
+<p>同理可以分析Main类中的另一个方法”inc()”:</p>
+<p>方法体内的内容是：将this入栈，获取字段#2并置于栈顶, 将int类型的1入栈，将栈内顶部的两个数值相加，返回一个int类型的值。</p>
+<h3 id="kotlin-函数扩展的实现"><a href="#kotlin-函数扩展的实现" class="headerlink" title="kotlin 函数扩展的实现"></a>kotlin 函数扩展的实现</h3><p>kotlin提供了扩展函数的语言特性，借助这个特性，我们可以给任意对象添加自定义方法。</p>
+<p>以下示例为Object添加”sayHello”方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#x2F;&#x2F;SayHello.kt</span><br><span class="line">package com.rhythm7</span><br><span class="line"></span><br><span class="line">fun Any.sayHello() &#123;</span><br><span class="line">    println(&quot;Hello&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>编译后，使用javap查看生成SayHelloKt.class文件的字节码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Classfile &#x2F;E:&#x2F;JavaCode&#x2F;TestProj&#x2F;out&#x2F;production&#x2F;TestProj&#x2F;com&#x2F;rhythm7&#x2F;SayHelloKt.class</span><br><span class="line">Last modified 2018-4-8; size 958 bytes</span><br><span class="line"> MD5 checksum 780a04b75a91be7605cac4655b499f19</span><br><span class="line"> Compiled from &quot;SayHello.kt&quot;</span><br><span class="line">public final class com.rhythm7.SayHelloKt</span><br><span class="line"> minor version: 0</span><br><span class="line"> major version: 52</span><br><span class="line"> flags: ACC_PUBLIC, ACC_FINAL, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">    &#x2F;&#x2F;省略常量池部分字节码</span><br><span class="line">&#123;</span><br><span class="line"> public static final void sayHello(java.lang.Object);</span><br><span class="line">   descriptor: (Ljava&#x2F;lang&#x2F;Object;)V</span><br><span class="line">   flags: ACC_PUBLIC, ACC_STATIC, ACC_FINAL</span><br><span class="line">   Code:</span><br><span class="line">     stack&#x3D;2, locals&#x3D;2, args_size&#x3D;1</span><br><span class="line">        0: aload_0</span><br><span class="line">        1: ldc           #9                  &#x2F;&#x2F; String $receiver</span><br><span class="line">        3: invokestatic  #15                 &#x2F;&#x2F; Method kotlin&#x2F;jvm&#x2F;internal&#x2F;Intrinsics.checkParameterIsNotNull:(Ljava&#x2F;lang&#x2F;Object;Ljava&#x2F;lang&#x2F;String;)V</span><br><span class="line">        6: ldc           #17                 &#x2F;&#x2F; String Hello</span><br><span class="line">        8: astore_1</span><br><span class="line">        9: getstatic     #23                 &#x2F;&#x2F; Field java&#x2F;lang&#x2F;System.out:Ljava&#x2F;io&#x2F;PrintStream;</span><br><span class="line">       12: aload_1</span><br><span class="line">       13: invokevirtual #28                 &#x2F;&#x2F; Method java&#x2F;io&#x2F;PrintStream.println:(Ljava&#x2F;lang&#x2F;Object;)V</span><br><span class="line">       16: return</span><br><span class="line">     LocalVariableTable:</span><br><span class="line">       Start  Length  Slot  Name   Signature</span><br><span class="line">           0      17     0 $receiver   Ljava&#x2F;lang&#x2F;Object;</span><br><span class="line">     LineNumberTable:</span><br><span class="line">       line 4: 6</span><br><span class="line">       line 5: 16</span><br><span class="line">   RuntimeInvisibleParameterAnnotations:</span><br><span class="line">     0:</span><br><span class="line">       0: #7()</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: &quot;SayHello.kt&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>观察头部发现,koltin为文件SayHello生成了一个类，类名”com.rhythm7.SayHelloKt”.</p>
+<p>由于我们一开始编写SayHello.kt时并不希望SayHello是一个可实例化的对象类，所以，SayHelloKt是无法被实例化的，SayHelloKt并没有任何一个构造器。</p>
+<p>再观察唯一的一个方法：发现Any.sayHello()的具体实现是静态不可变方法的形式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public static final void sayHello(java.lang.Object);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>所以当我们在其他地方使用Any.sayHello()时，事实上等同于调用java的SayHelloKt.sayHello(Object)方法。</p>
+<p>顺便一提的是，当扩展的方法为Any时，意味着Any是non-null的，这时，编译器会在方法体的开头检查参数的非空，即调用 <code>kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(Object value, String paramName)</code> 方法来检查传入的Any类型对象是否为空。如果我们扩展的函数为<code>Any?.sayHello()</code>，那么在编译后的文件中则不会有这段字节码的出现。</p>
+<h1 id="JVM-基础-Java-类加载机制"><a href="#JVM-基础-Java-类加载机制" class="headerlink" title="JVM 基础 - Java 类加载机制"></a>JVM 基础 - Java 类加载机制</h1> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/" rel="tag">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
+  id="post-Java Object类分析"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/11/24/Java%20Object%E7%B1%BB%E5%88%86%E6%9E%90/"
+    >Java Object类分析</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/11/24/Java%20Object%E7%B1%BB%E5%88%86%E6%9E%90/" class="article-date">
+  <time datetime="2020-11-24T09:19:47.000Z" itemprop="datePublished">2020-11-24</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java%E8%AF%AD%E6%B3%95/">Java语法</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <blockquote>
+<ul>
+<li><p>理论上Object类是所有类的父类，即直接或间接的继承java.lang.Object类。由于所有的类都继承在Object类，因此省略了extends Object关键字。</p>
+</li>
+<li><p>该类中主要有以下方法: toString(),getClass(),equals(),clone(),finalize(), 其中toString(),getClass(),equals是其中最重要的方法。</p>
+</li>
+<li><p>Object类中的getClass(),notify(),notifyAll(),wait()等方法被定义为final类型，因此不能重写。</p>
+</li>
+</ul>
+</blockquote>
+<h1 id="Object源码"><a href="#Object源码" class="headerlink" title="Object源码"></a>Object源码</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">public class Object &#123;</span><br><span class="line"></span><br><span class="line">    private static native void registerNatives();</span><br><span class="line">    static &#123;</span><br><span class="line">        registerNatives();</span><br><span class="line">    &#125;</span><br><span class="line">    public final native Class&lt;?&gt; getClass();</span><br><span class="line">    public native int hashCode();</span><br><span class="line">    public boolean equals(Object obj) &#123;</span><br><span class="line">        return (this &#x3D;&#x3D; obj);</span><br><span class="line">    &#125;</span><br><span class="line">    protected native Object clone() throws CloneNotSupportedException;</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return getClass().getName() + &quot;@&quot; + Integer.toHexString(hashCode());</span><br><span class="line">    &#125;</span><br><span class="line">    public final native void notify();</span><br><span class="line">    public final native void notifyAll();</span><br><span class="line">    public final native void wait(long timeout) throws InterruptedException;</span><br><span class="line">    public final void wait(long timeout, int nanos) throws InterruptedException &#123;</span><br><span class="line">        if (timeout &lt; 0) &#123;</span><br><span class="line">            throw new IllegalArgumentException(&quot;timeout value is negative&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (nanos &lt; 0 || nanos &gt; 999999) &#123;</span><br><span class="line">            throw new IllegalArgumentException(</span><br><span class="line">                                &quot;nanosecond timeout value out of range&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (nanos &gt; 0) &#123;</span><br><span class="line">            timeout++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        wait(timeout);</span><br><span class="line">    &#125;</span><br><span class="line">    public final void wait() throws InterruptedException &#123;</span><br><span class="line">        wait(0);</span><br><span class="line">    &#125;</span><br><span class="line">    protected void finalize() throws Throwable &#123; &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>Object类中的大部分方法都是native方法，用此关键字修饰的方法是Java中的本地方法，一般是用C/C++语言来实现。</p>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><p>Object类中没有显示的提供构造方法，这是编译器默认提供的。</p>
+<h2 id="registerNatives"><a href="#registerNatives" class="headerlink" title="registerNatives"></a>registerNatives</h2><p>其主要作用是将C/C++中的方法映射到Java中的native方法，实现方法命名的解耦。函数的执行是在静态代码块中执行的，在类首次进行加载的时候执行。</p>
+<h2 id="getClass"><a href="#getClass" class="headerlink" title="getClass"></a>getClass</h2><p>可以看到方法用final，说明此方法不能被重写。此方法返回类运行时的类型</p>
+<h2 id="hashCode"><a href="#hashCode" class="headerlink" title="hashCode"></a>hashCode</h2><p>返回对象的哈希码，是一个整数。</p>
+<p>在实际使用中，要尽量保证对于不同的对象产生不同的哈希码。hashCode的典型实现是将对象的内部地址转为一个整数，但是这种实现技术不是Java语言必须要采用的。</p>
+<h2 id="equals"><a href="#equals" class="headerlink" title="equals"></a>equals</h2><p>这里就用到了 == ，比较的是这两个引用存的是否是同一地址。</p>
+<h2 id="clone"><a href="#clone" class="headerlink" title="clone"></a>clone</h2><p>Object clone() 方法用于创建并返回一个对象的拷贝。是native方法</p>
+<p>在对该方法重写的时候，必须要继承Cloneable接口，并且调研super.clone</p>
+<p>这里的clone 方法是浅拷贝，对象内<strong>属性引用</strong>的对象只会拷贝引用地址，而不会将引用的对象重新分配内存，相对应的深拷贝则会连引用的对象也重新创建。</p>
+<h3 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Subject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Subject</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;[Subject: &quot;</span> + <span class="keyword">this</span>.hashCode() + <span class="string">&quot;,name:&quot;</span> + name + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//引用类型</span></span><br><span class="line">    <span class="keyword">private</span> Subject subject;</span><br><span class="line">    <span class="comment">//基础数据类型</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Subject <span class="title">getSubject</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSubject</span><span class="params">(Subject subject)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.subject = subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *  重写clone()方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//浅拷贝</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 直接调用父类的clone()方法</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.clone();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;[Student: &quot;</span> + <span class="keyword">this</span>.hashCode() + <span class="string">&quot;,subject:&quot;</span> + subject + <span class="string">&quot;,name:&quot;</span> + name + <span class="string">&quot;,age:&quot;</span> + age + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当Student调研clone方法时，对象中的引用属性Subject只会是地址clone，StudentA和StudentB会持有同一份引用</li>
+</ul>
+<h3 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Subject</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Subject</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException </span>&#123;</span><br><span class="line">        <span class="comment">//Subject 如果也有引用类型的成员属性，也应该和 Student 类一样实现</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.clone();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;[Subject: &quot;</span> + <span class="keyword">this</span>.hashCode() + <span class="string">&quot;,name:&quot;</span> + name + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//引用类型</span></span><br><span class="line">    <span class="keyword">private</span> Subject subject;</span><br><span class="line">    <span class="comment">//基础数据类型</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Subject <span class="title">getSubject</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSubject</span><span class="params">(Subject subject)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.subject = subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *  重写clone()方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//深拷贝</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 直接调用父类的clone()方法</span></span><br><span class="line">            Student student = (Student) <span class="keyword">super</span>.clone();</span><br><span class="line">            student.subject = (Subject) subject.clone();</span><br><span class="line">            <span class="keyword">return</span> student;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;[Student: &quot;</span> + <span class="keyword">this</span>.hashCode() + <span class="string">&quot;,subject:&quot;</span> + subject + <span class="string">&quot;,name:&quot;</span> + name + <span class="string">&quot;,age:&quot;</span> + age + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里的Subject也实现了Cloneable，并且Student重写了clone函数，实现了StudentA.subject !=StudentB.subject</li>
+</ul>
+<h2 id="toString-NaN"><a href="#toString-NaN" class="headerlink" title="toString"></a>toString</h2><p>可以重写，更多是日志打印</p>
+<h2 id="wait-notify"><a href="#wait-notify" class="headerlink" title="wait/notify"></a>wait/notify</h2><ul>
+<li><p>导致线程进入等待状态，直到它被其他线程通过notify()或者notifyAll唤醒。该方法只能在<strong>同步方法</strong>中调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。</p>
+</li>
+<li><p>随机选择一个<strong>在该对象上调用wait方法的线程，解除其阻塞状态。该方法只能在</strong>同步方法<strong>或</strong>同步块**内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。</p>
+</li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Object/" rel="tag">Object</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
   id="post-TCPIP协议"
   class="article article-type-post"
   itemscope
@@ -264,7 +658,7 @@
 
     
     <article
-  id="post-Java基础-集合"
+  id="post-Java 集合"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -275,15 +669,15 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2020/11/23/Java%E5%9F%BA%E7%A1%80-%E9%9B%86%E5%90%88/"
-    >Java基础--集合（1）</a> 
+  <a class="article-title" href="/2020/11/23/Java%20%E9%9B%86%E5%90%88/"
+    >Java集合</a> 
 </h2>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2020/11/23/Java%E5%9F%BA%E7%A1%80-%E9%9B%86%E5%90%88/" class="article-date">
+      <a href="/2020/11/23/Java%20%E9%9B%86%E5%90%88/" class="article-date">
   <time datetime="2020-11-23T14:06:35.000Z" itemprop="datePublished">2020-11-23</time>
 </a> 
   <div class="article-category">
@@ -1087,528 +1481,6 @@
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-V8引擎内存模型"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/30/V8%E5%BC%95%E6%93%8E%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"
-    >V8引擎内存模型</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/30/V8%E5%BC%95%E6%93%8E%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="article-date">
-  <time datetime="2020-09-30T06:35:19.000Z" itemprop="datePublished">2020-09-30</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="栈和堆"><a href="#栈和堆" class="headerlink" title="栈和堆"></a>栈和堆</h2><h3 id="JavaScript是什么类型的语言"><a href="#JavaScript是什么类型的语言" class="headerlink" title="JavaScript是什么类型的语言"></a>JavaScript是什么类型的语言</h3><p>每种编程语言都有内建的数据模型，但它们的数据类型常有不同之处，使用方式也有不同。比如C，Java在使用变量之前，先要申明好数据类型，比如如下C代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">   int a &#x3D; 1;</span><br><span class="line">   char* b &#x3D; &quot; 极客时间 &quot;;</span><br><span class="line">   bool c &#x3D; true;</span><br><span class="line">   return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上述代码声明变量的特点是：在声明变量之前需要先定义变量类型。我们把这种在使用之前就需要确认其变量数据类型的称为<strong>静态语言。</strong></p>
-<p>相反地，我们把在运行过程中需要检查数据类型的语言称为<strong>动态语言</strong>。比如我们所讲的 JavaScript 就是动态语言，因为在声明变量之前并不需要确认其数据类型。</p>
-<p>虽然 C 语言是静态，但是在 C 语言中，我们可以把其他类型数据赋予给一个声明好的变量，如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c = a</span><br></pre></td></tr></table></figure>
-
-<p>前面代码中，我们把 int 型的变量 a 赋值给了 bool 型的变量 c，这段代码也是可以编译执行的，因为在赋值过程中，<strong>C 编译器会把 int 型的变量悄悄转换为 bool 型的变量</strong>，我们通常把这种偷偷转换的操作称为隐式类型转换。而支持隐式类型转换的语言称为弱类型语言，不支持隐式类型转换的语言称为强类型语言。在这点上，C 和 JavaScript 都是弱类型语言。</p>
-<p>对于各种语言的类型，你可以参考下图</p>
-<p><img src="../../../../images/04/wy-01.png" alt="Image text"></p>
-<h3 id="JavaScript数据类型"><a href="#JavaScript数据类型" class="headerlink" title="JavaScript数据类型"></a>JavaScript数据类型</h3><p>现在我们知道了，JavaScript 是一种弱类型的、动态的语言。那这些特点意味着什么呢？</p>
-<ul>
-<li><strong>弱类型</strong>，意味着你不需要告诉 JavaScript 引擎这个或那个变量是什么数据类型，JavaScript 引擎在运行代码的时候自己会计算出来。</li>
-<li><strong>动态</strong>，意味着你可以使用同一个变量保存不同类型的数据</li>
-</ul>
-<p>那么接下来，我们再来看看 JavaScript 的数据类型，你可以看下面这段代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> bar</span><br><span class="line">bar = <span class="number">12</span> </span><br><span class="line">bar = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line">bar = <span class="literal">true</span></span><br><span class="line">bar = <span class="literal">null</span></span><br><span class="line">bar = &#123;<span class="attr">name</span>:<span class="string">&quot; 极客时间 &quot;</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>从上述代码中你可以看出，我们声明了一个 bar 变量，然后可以使用各种类型的数据值赋予给该变量。</p>
-<p>在 JavaScript 中，如果你想要查看一个变量到底是什么类型，可以使用“typeof”运算符。具体使用方式如下所示：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> bar</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> bar)  <span class="comment">//undefined</span></span><br><span class="line">bar = <span class="number">12</span> </span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> bar) <span class="comment">//number</span></span><br><span class="line">bar = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> bar)<span class="comment">//string</span></span><br><span class="line">bar = <span class="literal">true</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> bar) <span class="comment">//boolean</span></span><br><span class="line">bar = <span class="literal">null</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> bar) <span class="comment">//object</span></span><br><span class="line">bar = &#123;<span class="attr">name</span>:<span class="string">&quot; 极客时间 &quot;</span>&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> bar) <span class="comment">//object</span></span><br></pre></td></tr></table></figure>
-
-<p>执行这段代码，你可以看到打印出来了不同的数据类型，有 undefined、number、boolean、object 等。那么接下来我们就来谈谈 JavaScript 到底有多少种数据类型。</p>
-<p>其实 JavaScript 中的数据类型一种有 8 种，它们分别是：</p>
-<p><img src="../../../../images/04/wy-02.png" alt="Image text"></p>
-<p>了解这些类型之后，还有三点需要你注意一下。</p>
-<p>第一点，使用 typeof 检测 Null 类型时，返回的是 Object。这是当初 JavaScript 语言的一个 Bug，一直保留至今，之所以一直没修改过来，主要是为了兼容老的代码。</p>
-<p>第二点，Object 类型比较特殊，它是由上述 7 种类型组成的一个包含了 key-value 对的数据类型。如下所示：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myObj = &#123;</span><br><span class="line">  name:<span class="string">&#x27;极客时间&#x27;</span>,</span><br><span class="line">  update:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;....&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>从中你可以看出来，Object 是由 key-value 组成的，其中的 vaule 可以是任何类型，包括函数，这也就意味着你可以通过 Object 来存储函数，Object 中的函数又称为方法，比如上述代码中的 update 方法。</p>
-<p>第三点，我们把前面的 7 种数据类型称为原始类型，把最后一个对象类型称为引用类型，之所以把它们区分为两种不同的类型，是因为它们在内存中存放的位置不一样。到底怎么个不一样法呢？接下来，我们就来讲解一下 JavaScript 的原始类型和引用类型到底是怎么储存的。</p>
-<h3 id="内存空间"><a href="#内存空间" class="headerlink" title="内存空间"></a>内存空间</h3><p>JS的内存分布也比较简单，如图示：</p>
-<p><img src="../../../../images/04/wy-03.png" alt="Image text"></p>
-<p>从图中可以看出， 在 JavaScript 的执行过程中， 主要有三种类型内存空间，分别是代码空间、栈空间和堆空间。</p>
-<p>其中的代码空间主要是存储可执行代码的，这个我们后面再做介绍，今天主要来说说栈空间和堆空间。</p>
-<h3 id="栈和堆-1"><a href="#栈和堆-1" class="headerlink" title="栈和堆"></a>栈和堆</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line">    <span class="keyword">var</span> b = a</span><br><span class="line">    <span class="keyword">var</span> c = &#123;<span class="attr">name</span>:<span class="string">&quot; 极客时间 &quot;</span>&#125;</span><br><span class="line">    <span class="keyword">var</span> d = c</span><br><span class="line">&#125;</span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
-
-<p>前面文章我们已经讲解过了，当执行一段代码时，需要先编译，并创建执行上下文，然后再按照顺序执行代码。</p>
-<p><img src="../../../../images/04/wy-04.png" alt="Image text"></p>
-<p>可以看到，普通变量是直接存储在执行上下文中，但是对象变量执行上下文中存储的是堆中的一个内存地址，实际存储该变量的内存空间是堆。</p>
-<p>也就是说：</p>
-<p>原始类型的数据值都是直接保存在“栈”中的，引用类型的值是存放在“堆”中的。不过你也许会好奇，为什么一定要分“堆”和“栈”两个存储空间呢？所有数据直接存放在“栈”中不就可以了吗？</p>
-<p><strong>答案是不可以的。</strong>这是因为 JavaScript 引擎需要用栈来维护程序执行期间上下文的状态，如果栈空间大了话，所有的数据都存放在栈空间里面，那么会影响到上下文切换的效率，进而又影响到整个程序的执行效率。比如文中的 foo 函数执行结束了，JavaScript 引擎需要离开当前的执行上下文，只需要将指针下移到上个执行上下文的地址就可以了，foo 函数执行上下文栈区空间全部回收，具体过程你可以参考下图：</p>
-<p><img src="../../../../images/04/wy-05.png" alt="Image text"></p>
-<h3 id="闭包的内存模型"><a href="#闭包的内存模型" class="headerlink" title="闭包的内存模型"></a>闭包的内存模型</h3><p>现在你知道了作用域内的原始类型数据会被存储到栈空间，引用类型会被存储到堆空间，基于这两点的认知，我们再深入一步，探讨下闭包的内存模型。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> myName = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line">    <span class="keyword">let</span> test1 = <span class="number">1</span></span><br><span class="line">    <span class="keyword">const</span> test2 = <span class="number">2</span></span><br><span class="line">    <span class="keyword">var</span> innerBar = &#123; </span><br><span class="line">        setName:<span class="function"><span class="keyword">function</span>(<span class="params">newName</span>)</span>&#123;</span><br><span class="line">            myName = newName</span><br><span class="line">        &#125;,</span><br><span class="line">        getName:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(test1)</span><br><span class="line">            <span class="keyword">return</span> myName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> innerBar</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> bar = foo()</span><br><span class="line">bar.setName(<span class="string">&quot; 极客邦 &quot;</span>)</span><br><span class="line">bar.getName()</span><br><span class="line"><span class="built_in">console</span>.log(bar.getName())</span><br></pre></td></tr></table></figure>
-
-<p>简单分析下上述代码的内存模型</p>
-<ul>
-<li>先创建一个全局的执行上下文，存储有变量函数foo，指向储存函数代码的地址</li>
-<li>执行foo函数，创建foo的执行上下文</li>
-<li>在编译过程中，遇到内部函数 setName，JavaScript 引擎还要对内部函数做一次快速的词法扫描，发现该内部函数引用了 foo - 函数中的 myName 变量，由于是内部函数引用了外部函数的变量，所以 JavaScript 引擎判断这是一个闭包，于是在堆空间创建换一个“closure(foo)”的对象（这是一个内部对象，JavaScript 是无法访问的），用来保存 myName 变量。</li>
-<li>接着继续扫描到 getName 方法时，发现该函数内部还引用变量 test1，于是 JavaScript 引擎又将 test1 添加到“closure(foo)”对象中。这时候堆中的“closure(foo)”对象中就包含了 myName 和 test1 两个变量了。</li>
-<li>由于 test2 并没有被内部函数引用，所以 test2 依然保存在调用栈中</li>
-</ul>
-<p>通过上面的分析，我们可以画出执行到 foo 函数中“return innerBar”语句时的调用栈状态，如下图所示：</p>
-<p><img src="../../../../images/04/wy-06.png" alt="Image text"></p>
-<p>当执行到 foo 函数时，闭包就产生了；当 foo 函数执行结束之后，返回的 getName 和 setName 方法都引用“clourse(foo)”对象，所以即使 foo 函数退出了，“clourse(foo)”依然被其内部的 getName 和 setName 方法引用。所以在下次调用bar.setName或者bar.getName时，创建的执行上下文中就包含了“clourse(foo)”。</p>
-<p>总的来说，产生闭包的核心有两步：</p>
-<ul>
-<li><p>第一步是需要预扫描内部函数；</p>
-</li>
-<li><p>第二步是把内部函数引用的外部变量保存到堆中。</p>
-</li>
-</ul>
-<h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><h3 id="调用栈中内存回收"><a href="#调用栈中内存回收" class="headerlink" title="调用栈中内存回收"></a>调用栈中内存回收</h3><p>调用栈中的数据，我们还是通过一段示例代码的执行流程来分析其回收机制，具体如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">1</span></span><br><span class="line">    <span class="keyword">var</span> b = &#123;<span class="attr">name</span>:<span class="string">&quot; 极客邦 &quot;</span>&#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">showName</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="keyword">var</span> c = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line">      <span class="keyword">var</span> d = &#123;<span class="attr">name</span>:<span class="string">&quot; 极客时间 &quot;</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    showName()</span><br><span class="line">&#125;</span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
-
-<p>当执行到第 6 行代码时，其调用栈和堆空间状态图如下所示：</p>
-<p><img src="../../../../images/04/wy-07.png" alt="Image text"></p>
-<p>执行到 showName 函数时，那么 JavaScript 引擎会创建 showName 函数的执行上下文，并将 showName 函数的执行上下文压入到调用栈中，最终执行到 showName 函数时，其调用栈就如上图所示。与此同时，还有一个<strong>记录当前执行状态的指针</strong>（称为 ESP），指向调用栈中 showName 函数的执行上下文，表示当前正在执行 showName 函数。</p>
-<p>接着，当 showName 函数执行完成之后，函数执行流程就进入了 foo 函数，那这时就需要销毁 showName 函数的执行上下文了。ESP 这时候就帮上忙了，JavaScript 会将 ESP 下移到 foo 函数的执行上下文，这个下移操作就是销毁 showName 函数执行上下文的过程。</p>
-<p>你可能会有点懵，ESP 指针向下移动怎么就能把 showName 的执行上下文销毁了呢？具体你可以看下面这张移动 ESP 前后的对比图</p>
-<p><img src="../../../../images/04/wy-08.png" alt="Image text"></p>
-<p>从图中可以看出，当 showName 函数执行结束之后，ESP 向下移动到 foo 函数的执行上下文中，上面 showName 的执行上下文虽然保存在栈内存中，但是已经是无效内存了。比如当 foo 函数再次调用另外一个函数时，这块内容会被直接覆盖掉，用来存放另外一个函数的执行上下文。</p>
-<p>所以说，当一个函数执行结束之后，JavaScript 引擎会通过向下移动 ESP 来销毁该函数保存在栈中的执行上下文。</p>
-<h3 id="堆中内存回收"><a href="#堆中内存回收" class="headerlink" title="堆中内存回收"></a>堆中内存回收</h3><p>在 V8 中会把堆分为新生代和老生代两个区域，新生代中存放的是生存时间短的对象，老生代中存放的生存时间久的对象。</p>
-<p>一般有两个回收器，分别为：新生代垃圾回收器（副垃圾回收器）和老生代垃圾回收器（主垃圾回收器）</p>
-<p>新生区通常只支持 1～8M 的容量，而老生区支持的容量就大很多了。对于这两块区域，V8 分别使用两个不同的垃圾回收器，以便更高效地实施垃圾回收。</p>
-<ul>
-<li>副垃圾回收器，主要负责新生代的垃圾回收。</li>
-<li>主垃圾回收器，主要负责老生代的垃圾回收。</li>
-</ul>
-<p><img src="../../../../images/04/wy-09.png" alt="Image text"></p>
-<h4 id="新生代"><a href="#新生代" class="headerlink" title="新生代"></a>新生代</h4><ul>
-<li>新生代中用Scavenge 算法来处理。所谓 Scavenge 算法，是把新生代空间对半划分为两个区域，一半是对象区域，一半是空闲区域</li>
-<li>新加入的对象都会存放到对象区域，当对象区域快被写满时，就需要执行一次垃圾清理操作。</li>
-<li>垃圾清理的过程中，会先对对象做标记，标记完成后，进行垃圾清理阶段，同时生下来的对象会有序的复制到空闲区域中，清空对象区域，然后对象区域和空闲区域进行角色反转。</li>
-<li>由于新生代中采用的 Scavenge 算法，所以每次执行清理操作时，都需要将存活的对象从对象区域复制到空闲区域。但复制操作需要时间成本，如果新生区空间设置得太大了，那么每次清理的时间就会过久，所以为了执行效率，一般新生区的空间会被设置得比较小。</li>
-<li>也正是因为新生区的空间不大，所以很容易被存活的对象装满整个区域。为了解决这个问题，JavaScript 引擎采用了对象晋升策略，也就是经过两次垃圾回收依然还存活的对象，会被移动到老生区中。</li>
-</ul>
-<h4 id="老生代"><a href="#老生代" class="headerlink" title="老生代"></a>老生代</h4><p>除了新生区中晋升的对象，一些大的对象会直接被分配到老生区。因此老生区中的对象有两个特点，</p>
-<ul>
-<li><p>一个是对象占用空间大，</p>
-</li>
-<li><p>一个是对象存活时间长。</p>
-</li>
-</ul>
-<p>主垃圾回收器是采用标记 - 清除（Mark-Sweep）的算法进行垃圾回收的</p>
-<ul>
-<li>首先是标记过程阶段。标记阶段就是从一组根元素开始，递归遍历这组根元素，在这个遍历过程中，能到达的元素称为活动对象，没有到达的元素就可以判断为垃圾数据。</li>
-<li>接下来就是垃圾的清除过程。它和副垃圾回收器的垃圾清除过程完全不同，你可以理解这个过程是清除掉红色标记数据的过程，可参考下图大致理解下其清除过程：</li>
-</ul>
-<p><img src="../../../../images/04/wy-10.png" alt="Image text"></p>
-<ul>
-<li>上面的标记过程和清除过程就是标记 - 清除算法，不过对一块内存多次执行标记 - 清除算法后，会产生大量不连续的内存碎片。而碎片过多会导致大对象无法分配到足够的连续内存，于是又产生了另外一种算法——标记 - 整理（Mark-Compact），这个标记过程仍然与标记 - 清除算法里的是一样的，但后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。你可以参考下图</li>
-</ul>
-<p><img src="../../../../images/04/wy-11.png" alt="Image text"></p>
-<h3 id="全停顿"><a href="#全停顿" class="headerlink" title="全停顿"></a>全停顿</h3><p>由于 JavaScript 是运行在主线程之上的，一旦执行垃圾回收算法，都需要将正在执行的 JavaScript 脚本暂停下来，待垃圾回收完毕后再恢复脚本执行。我们把这种行为叫做全停顿（Stop-The-World）。</p>
-<p><img src="../../../../images/04/wy-12.png" alt="Image text"></p>
-<p>为了改变这种垃圾回收造成明显性的页面卡顿，V8 将标记过程分为一个个的子标记过程，同时让垃圾回收标记和 JavaScript 应用逻辑交替进行，直到标记阶段完成，我们把这个算法称为增量标记（Incremental Marking）算法。如下图所示：</p>
-<p><img src="../../../../images/04/wy-13.png" alt="Image text"></p>
-<h2 id="编译器和解释器"><a href="#编译器和解释器" class="headerlink" title="编译器和解释器"></a>编译器和解释器</h2><p>之所以存在编译器和解释器，是因为机器不能直接理解我们所写的代码，所以在执行程序之前，需要将我们所写的代码“翻译”成机器能读懂的机器语言。按语言的执行流程，可以把语言划分为编译型语言和解释型语言。</p>
-<p>编译型语言在程序执行之前，需要经过编译器的编译过程，并且编译之后会直接保留机器能读懂的二进制文件，这样每次运行程序时，都可以直接运行该二进制文件，而不需要再次重新编译了。比如 C/C++、GO 等都是编译型语言。</p>
-<p>而由解释型语言编写的程序，在每次运行时都需要通过解释器对程序进行动态解释和执行。比如 Python、JavaScript 等都属于解释型语言。</p>
-<p>那编译器和解释器是如何“翻译”代码的呢？具体流程你可以参考下图</p>
-<p><img src="../../../../images/04/wy-14.png" alt="Image text"></p>
-<p>从图中你可以看出这二者的执行流程，大致可阐述为如下：</p>
-<ol>
-<li>在编译型语言的编译过程中，编译器首先会依次对源代码进行词法分析、语法分析，生成抽象语法树（AST），然后是优化代码，最后再生成处理器能够理解的机器码。如果编译成功，将会生成一个可执行的文件。但如果编译过程发生了语法或者其他的错误，那么编译器就会抛出异常，最后的二进制文件也不会生成成功</li>
-<li>在解释型语言的解释过程中，同样解释器也会对源代码进行词法分析、语法分析，并生成抽象语法树（AST），不过它会再基于抽象语法树生成字节码，最后再根据字节码来执行程序、输出结果。</li>
-</ol>
-<h3 id="V8是如何执行一段代码的"><a href="#V8是如何执行一段代码的" class="headerlink" title="V8是如何执行一段代码的"></a>V8是如何执行一段代码的</h3><p><img src="../../../../images/04/wy-15.png" alt="Image text"></p>
-<p>从图中可以清楚地看到，V8 在执行过程中既有解释器 Ignition，又有编译器 TurboFan，那么它们是如何配合去执行一段 JavaScript 代码的呢? 下面我们就按照上图来一一分解其执行流程。</p>
-<p><strong>1. 生成抽象语法树（AST）和执行上下文</strong></p>
-<p>将源代码转换为抽象语法树，并生成执行上下文，而执行上下文我们在前面的文章中已经介绍过很多了，主要是代码在执行过程中的环境信息。</p>
-<p>那么下面我们就得重点讲解下抽象语法树（下面表述中就直接用它的简称 AST 了），看看什么是 AST 以及 AST 的生成过程是怎样的。</p>
-<p>高级语言是开发者可以理解的语言，但是让编译器或者解释器来理解就非常困难了。对于编译器或者解释器来说，它们可以理解的就是 AST 了。所以无论你使用的是解释型语言还是编译型语言，在编译过程中，它们都会生成一个 AST。这和渲染引擎将 HTML 格式文件转换为计算机可以理解的 DOM 树的情况类似。</p>
-<p>你可以结合下面这段代码来直观地感受下什么是 AST：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myName = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">23</span>;</span><br><span class="line">&#125;</span><br><span class="line">myName = <span class="string">&quot;geektime&quot;</span></span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
-
-<p>这段代码经过javascript-ast站点处理后，生成的 AST 结构如下：</p>
-<p><img src="../../../../images/04/wy-16.png" alt="Image text"></p>
-<p>从图中可以看出，AST 的结构和代码的结构非常相似，其实你也可以把 AST 看成代码的结构化的表示，编译器或者解释器后续的工作都需要依赖于 AST，而不是源代码。</p>
-<p>AST 是非常重要的一种数据结构，在很多项目中有着广泛的应用。其中最著名的一个项目是 Babel。Babel 是一个被广泛使用的代码转码器，可以将 ES6 代码转为 ES5 代码，这意味着你可以现在就用 ES6 编写程序，而不用担心现有环境是否支持 ES6。Babel 的工作原理就是先将 ES6 源码转换为 AST，然后再将 ES6 语法的 AST 转换为 ES5 语法的 AST，最后利用 ES5 的 AST 生成 JavaScript 源代码。</p>
-<p>除了 Babel 外，还有 ESLint 也使用 AST。ESLint 是一个用来检查 JavaScript 编写规范的插件，其检测流程也是需要将源码转换为 AST，然后再利用 AST 来检查代码规范化的问题。</p>
-<p>现在你知道了什么是 AST 以及它的一些应用，那接下来我们再来看下 AST 是如何生成的。通常，生成 AST 需要经过两个阶段。</p>
-<p><strong>第一阶段是分词（tokenize），又称为词法分析</strong>，其作用是将一行行的源码拆解成一个个 token。所谓token，指的是语法上不可能再分的、最小的单个字符或字符串。你可以参考下图来更好地理解什么 token。</p>
-<p><img src="../../../../images/04/wy-17.png" alt="Image text"></p>
-<p>从图中可以看出，通过var myName = “极客时间”简单地定义了一个变量，其中关键字“var”、标识符“myName” 、赋值运算符“=”、字符串“极客时间”四个都是 token，而且它们代表的属性还不一样。</p>
-<p><strong>第二阶段是解析（parse），又称为语法分析</strong>，其作用是将上一步生成的 token 数据，根据语法规则转为 AST。如果源码符合语法规则，这一步就会顺利完成。但如果源码存在语法错误，这一步就会终止，并抛出一个“语法错误”。</p>
-<p>这就是 AST 的生成过程，先分词，再解析。</p>
-<p>有了 AST 后，那接下来 V8 就会生成该段代码的执行上下文。至于执行上下文的具体内容，你可以参考前面几篇文章的讲解。</p>
-<p><strong>2. 生成字节码</strong></p>
-<p>有了 AST 和执行上下文后，那接下来的第二步，解释器 Ignition 就登场了，它会根据 AST 生成字节码，并解释执行字节码。</p>
-<p>其实一开始 V8 并没有字节码，而是直接将 AST 转换为机器码，由于执行机器码的效率是非常高效的，所以这种方式在发布后的一段时间内运行效果是非常好的。但是随着 Chrome 在手机上的广泛普及，特别是运行在 512M 内存的手机上，内存占用问题也暴露出来了，因为 V8 需要消耗大量的内存来存放转换后的机器码。为了解决内存占用问题，V8 团队大幅重构了引擎架构，引入字节码，并且抛弃了之前的编译器，最终花了将进四年的时间，实现了现在的这套架构。</p>
-<p>那什么是字节码呢？为什么引入字节码就能解决内存占用问题呢？</p>
-<p>字节码就是介于 AST 和机器码之间的一种代码。但是与特定类型的机器码无关，字节码需要通过解释器将其转换为机器码后才能执行。</p>
-<p>理解了什么是字节码，我们再来对比下高级代码、字节码和机器码，你可以参考下图</p>
-<p><img src="../../../../images/04/wy-18.png" alt="Image text"></p>
-<p><strong>3. 执行代码</strong></p>
-<p>生成字节码之后，接下来就要进入执行阶段了。</p>
-<p>通常，如果有一段第一次执行的字节码，解释器 Ignition 会逐条解释执行。<strong>在执行字节码的过程中，如果发现有热点代码（HotSpot），比如一段代码被重复执行多次，这种就称为热点代码，那么后台的编译器 TurboFan 就会把该段热点的字节码编译为高效的机器码，</strong>然后当再次执行这段被优化的代码时，只需要执行编译后的机器码就可以了，这样就大大提升了代码的执行效率。</p>
-<p>V8 的解释器和编译器的取名也很有意思。解释器 Ignition 是点火器的意思，编译器 TurboFan 是涡轮增压的意思，寓意着代码启动时通过点火器慢慢发动，一旦启动，涡轮增压介入，其执行效率随着执行时间越来越高效率，因为热点代码都被编译器 TurboFan 转换了机器码，直接执行机器码就省去了字节码“翻译”为机器码的过程。</p>
-<p>其实字节码配合解释器和编译器是最近一段时间很火的技术，比如 Java 和 Python 的虚拟机也都是基于这种技术实现的，我们把这种技术称为即时编译（JIT）。具体到 V8，就是指解释器 Ignition 在解释执行字节码的同时，收集代码信息，当它发现某一部分代码变热了之后，TurboFan 编译器便闪亮登场，把热点的字节码转换为机器码，并把转换后的机器码保存起来，以备下次使用。</p>
-<p>对于 JavaScript 工作引擎，除了 V8 使用了“字节码 +JIT”技术之外，苹果的 SquirrelFish Extreme 和 Mozilla 的 SpiderMonkey 也都使用了该技术。</p>
-<p>这么多语言的工作引擎都使用了“字节码 +JIT”技术，因此理解 JIT 这套工作机制还是很有必要的。你可以结合下图看看 JIT 的工作过程：</p>
-<p><img src="../../../../images/04/wy-19.png" alt="Image text"></p>
-<h3 id="JavaScript-的性能优化"><a href="#JavaScript-的性能优化" class="headerlink" title="JavaScript 的性能优化"></a>JavaScript 的性能优化</h3><p>到这里相信你现在已经了解 V8 是如何执行一段 JavaScript 代码的了。在过去几年中，JavaScript 的性能得到了大幅提升，这得益于 V8 团队对解释器和编译器的不断改进和优化。</p>
-<p>虽然在 V8 诞生之初，也出现过一系列针对 V8 而专门优化 JavaScript 性能的方案，比如隐藏类、内联缓存等概念都是那时候提出来的。不过随着 V8 的架构调整，你越来越不需要这些微优化策略了，相反，对于优化 JavaScript 执行效率，你应该将优化的中心聚焦在单次脚本的执行时间和脚本的网络下载上，主要关注以下三点内容</p>
-<ul>
-<li>提升单次脚本的执行速度，避免 JavaScript 的长任务霸占主线程，这样可以使得页面快速响应交互；</li>
-<li>避免大的内联脚本，因为在解析 HTML 的过程中，解析和编译也会占用主线程；</li>
-<li>减少 JavaScript 文件的容量，因为更小的文件会提升下载速度，并且占用更低的内存</li>
-</ul>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/V8/" rel="tag">V8</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" rel="tag">内存模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-浏览器的事件循环机制"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/29/%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/"
-    >浏览器的事件循环机制</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/29/%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" class="article-date">
-  <time datetime="2020-09-29T03:34:39.000Z" itemprop="datePublished">2020-09-29</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="早期消息队列"><a href="#早期消息队列" class="headerlink" title="早期消息队列"></a>早期消息队列</h1><p>下图模拟早期消息队列机制</p>
-<p><img src="../../../../images/03/wy-01.png" alt="Image text"></p>
-<ul>
-<li><p>内部维护栈结构的一个消息队列</p>
-</li>
-<li><p>IO线程会把渲染进程中的资源加载完成消息，点击消息和其他事件消息添加到消息队列中，同时与其他进程的交换消息也是通过IO线程来交互</p>
-</li>
-<li><p>渲染主线程通过无限循环不断取消息队列里面需要处理的消息</p>
-</li>
-</ul>
-<h2 id="单线程页面缺点"><a href="#单线程页面缺点" class="headerlink" title="单线程页面缺点"></a>单线程页面缺点</h2><p>通过上图可以看到，页面线程所以执行的任务都来自于消息队列。消息队列是FIFO(先进先出)的属性，也就是说放入队列里面的任务，需要等待前面的任务执行完后才会执行。鉴于这个属性，就有如下两个问题需要解决：</p>
-<ul>
-<li>如何处理高优先级任务</li>
-</ul>
-<p>比如典型的场景就是监控DOM节点的变化（节点的插入，修改，删除等动态变化），然后根据这些变化进行相应的业务逻辑。由于是单队列任务栈，后来的消息任务只能等待前面的任务执行完后才会执行，无法进行高优先级相应。</p>
-<ul>
-<li>单个任务耗时</li>
-</ul>
-<p>在消息队列中，如果某个执行任务非常耗时，那么其后面的任务时间会一直无法执行，从而会让页面有卡顿等现象发生。</p>
-<h1 id="宏任务"><a href="#宏任务" class="headerlink" title="宏任务"></a>宏任务</h1><h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><p>页面中大部分<strong>任务</strong>都是在主线程上完成的，大致包括：</p>
-<ul>
-<li>渲染事件（如解析DOM，计算布局，绘制）</li>
-<li>用户交互事件（鼠标点击，页面滑动，放大缩小）</li>
-<li>JavaScript脚本执行事件</li>
-<li>网络请求完成，文件读写完成事件</li>
-</ul>
-<p><strong>一定得记住，这里的任务并不是JavaScript中某个具体的函数，而是执行整个JS代码算一个任务</strong></p>
-<p>为了协调这些任务有条不紊的在主线程中执行，页面进程引入了消息队列和事件循环机制，渲染进程内部会维护多个消息队列，比如延迟消息队列（异步）和普通消息队列（同步）。然后主线程采用一个for循环，不断的从这些任务队列中取出任务并执行。我们把这些队列中的任务称为宏任务</p>
-<p>下面C代码简单展示该逻辑：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ProcessTimerTask</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="comment">// 从 delayed_incoming_queue 中取出已经到期的定时器任务</span></span><br><span class="line">  <span class="comment">// 依次执行这些任务</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">TaskQueue task_queue；</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ProcessTask</span><span class="params">()</span></span>;</span><br><span class="line"><span class="keyword">bool</span> keep_running = <span class="literal">true</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MainTherad</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 执行同步队列任务，</span></span><br><span class="line">    Task task = task_queue.takeTask();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 执行异步队列任务</span></span><br><span class="line">    ProcessTask(task);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 执行延迟队列中的任务</span></span><br><span class="line">    ProcessDelayTask()</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span>(!keep_running) <span class="comment">// 如果设置了退出标志，那么直接退出线程循环</span></span><br><span class="line">        <span class="keyword">break</span>; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>在for循环中，会执行同步队列任务，等这里面的任务队列都执行完毕后，再取异步任务队列任务，比如setTimeOut的回调代码就是在该任务中。</p>
-<h2 id="setTimeOut"><a href="#setTimeOut" class="headerlink" title="setTimeOut"></a>setTimeOut</h2><p>有必要简单分析一下setTimeOut实现原理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function showName()&#123;</span><br><span class="line">  console.log(&quot; 极客时间 &quot;)</span><br><span class="line">&#125;</span><br><span class="line">var timerID &#x3D; setTimeout(showName,200);</span><br></pre></td></tr></table></figure>
-
-<p>上面代码是：200毫秒后打印“极客时间”</p>
-<p>实际上，JavaScript调用setTimeOut设置回调函数的时候，渲染进程将会创建一个回调任务，包含了回调函数 showName、当前发起时间、延迟执行时间，其模拟代码如下所示：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">struct DelayTask&#123;</span><br><span class="line">  int64 id；</span><br><span class="line">  CallBackFunction cbf;</span><br><span class="line">  int start_time;</span><br><span class="line">  int delay_time;</span><br><span class="line">&#125;;</span><br><span class="line">DelayTask timerTask;</span><br><span class="line">timerTask.cbf = showName;</span><br><span class="line">timerTask.start_time = getCurrentTime(); // 获取当前时间</span><br><span class="line">timerTask.delay_time = 200;// 设置延迟执行时间</span><br></pre></td></tr></table></figure>
-
-<p>创建好回调任务之后，再将该任务添加到延迟执行队列中</p>
-<p>执行 ProcessDelayTask 函数会根据发起时间和延迟时间<strong>计算出到期的任务</strong>，然后依次执行这些<strong>到期的任务</strong>。等到期的任务执行完成之后，再继续下一个循环过程。通过这样的方式，一个完整的定时器就实现了。</p>
-<p>但是，异步任务必须等待同步任务执行完成才会执行，所以异步队列任务的时效性就得不到保证</p>
-<h1 id="微任务"><a href="#微任务" class="headerlink" title="微任务"></a>微任务</h1><p><strong>消息队列机制并不是太灵活，为了适应效率和实时性，引入了微任务</strong></p>
-<p><strong>微任务</strong>就是一个需要异步执行的函数，执行时机是在主函数执行结束之后、当前宏任务结束之前。</p>
-<p>当 JavaScript 执行一段脚本的时候，V8 会为其创建一个全局执行上下文，在创建全局执行上下文的同时，V8 引擎也会在内部创建一个微任务队列。顾名思义，这个微任务队列就是用来存放微任务的，因为<strong>在当前宏任务执行的过程中，有时候会产生多个微任务</strong>，这时候就需要使用这个微任务队列来保存这些微任务了。不过这个微任务队列是给 V8 引擎内部使用的，所以你是无法通过 JavaScript 直接访问的。</p>
-<h2 id="微任务如何产生的"><a href="#微任务如何产生的" class="headerlink" title="微任务如何产生的"></a>微任务如何产生的</h2><p>微任务产生有两种时机：</p>
-<ul>
-<li>1.使用 MutationObserver 监控某个 DOM 节点，然后再通过 JavaScript 来修改这个节点，或者为这个节点添加、删除部分子节点，当 DOM 节点发生变化时，就会产生 DOM 变化记录的微任务。</li>
-<li>2.使用 Promise，当调用 Promise.resolve() 或者 Promise.reject() 的时候，也会产生微任务。</li>
-</ul>
-<h2 id="何时被执行"><a href="#何时被执行" class="headerlink" title="何时被执行"></a>何时被执行</h2><ul>
-<li>通常情况下，在当前宏任务中的 JavaScript 快执行完成时，也就在 JavaScript 引擎准备退出全局执行上下文并清空调用栈的时候，JavaScript 引擎会检查全局执行上下文中的微任务队列，然后按照顺序执行队列中的微任务。</li>
-<li>如果在执行微任务的过程中，产生了新的微任务，同样会将该微任务添加到微任务队列中，V8 引擎一直循环执行微任务队列中的任务，直到队列为空才算执行结束。也就是说在执行微任务过程中产生的新的微任务并不会推迟到下个宏任务中执行，而是在当前的宏任务中继续执行。</li>
-<li>参考下面的示意图</li>
-</ul>
-<p><img src="../../../../images/03/wy-02.png" alt="Image text"></p>
-<p><img src="../../../../images/03/wy-02.png" alt="Image text"></p>
-<p>该示意图是在执行一个 ParseHTML 的宏任务，在执行过程中，遇到了 JavaScript 脚本，那么就暂停解析流程，进入到 JavaScript 的执行环境。从图中可以看到，全局上下文中包含了微任务列表。</p>
-<p>在 JavaScript 脚本的后续执行过程中，分别通过 Promise 和 removeChild 创建了两个微任务，并被添加到微任务列表中。接着 JavaScript 执行结束，准备退出全局执行上下文，这时候就到了检查点了，JavaScript 引擎会检查微任务列表，发现微任务列表中有微任务，那么接下来，依次执行这两个微任务。等微任务队列清空之后，就退出全局执行上下文。</p>
-<p>以上就是微任务的工作流程，从上面分析我们可以得出如下几个结论：</p>
-<ul>
-<li>微任务和宏任务是绑定的，每个宏任务在执行时，会创建自己的微任务队列。</li>
-<li>微任务的执行时长会影响到当前宏任务的时长。比如一个宏任务在执行过程中，产生了 100 个微任务，执行每个微任务的时间是 10 毫秒，那么执行这 100 个微任务的时间就是 1000 毫秒，也可以说这 100 个微任务让宏任务的执行时间延长了 1000 毫秒。所以-你在写代码的时候一定要注意控制微任务的执行时长。</li>
-<li>在一个宏任务中，分别创建一个用于回调的宏任务和微任务，无论什么情况下，微任务都早于宏任务执行。</li>
-</ul>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/V8/" rel="tag">V8</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" rel="tag">事件循环机制</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="tag">消息队列</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-浏览器中JavaScript的执行机制"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E7%9A%84%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/"
-    >浏览器中JavaScript的执行机制</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E7%9A%84%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/" class="article-date">
-  <time datetime="2020-09-27T13:21:01.000Z" itemprop="datePublished">2020-09-27</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="函数调用栈"><a href="#函数调用栈" class="headerlink" title="函数调用栈"></a>函数调用栈</h1><h2 id="变量提升（Hoisting）"><a href="#变量提升（Hoisting）" class="headerlink" title="变量提升（Hoisting）"></a>变量提升（Hoisting）</h2><p>JavaScript中，var变量声明会有一个顺序上的提升</p>
-<p>比如我们的属性变量：</p>
-<p><img src="../../../../images/02/wy-01.png" alt="Image text"></p>
-<p>再比如我们的函数变量：</p>
-<p><img src="../../../../images/02/wy-02.png" alt="Image text"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">showName()</span><br><span class="line">console.log(myname)</span><br><span class="line">var myname &#x3D; &#39;极客时间&#39;</span><br><span class="line">function showName() &#123;</span><br><span class="line">    console.log(&#39;函数showName被执行&#39;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>经过变量提升后，实际的顺序为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var myname&#x3D;undefined</span><br><span class="line">function showName()&#123;</span><br><span class="line">		console.log(&#39;函数showName被执行&#39;);</span><br><span class="line">&#125;</span><br><span class="line">showName()</span><br><span class="line">console.log(myname)</span><br><span class="line">myname &#x3D; &#39;极客时间&#39;</span><br></pre></td></tr></table></figure>
-
-<p>如下图示：</p>
-<p><img src="../../../../images/02/wy-03.png" alt="Image text"></p>
-<h2 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h2><p>从概念的字面意义上来看，“变量提升”意味着变量和函数的声明会在物理层面移动到代码的最前面，正如我们所模拟的那样。但，这并不准确。实际上变量和函数声明在代码里的位置是不会改变的，而且是在编译阶段被JavaScript引擎放入内存中。对，你没听错，一段JavaScript代码在执行之前需要被JavaScript引擎编译，编译完成之后，才会进入执行阶段。大致流程你可以参考下图：</p>
-<p><img src="../../../../images/02/wy-08.png" alt="Image text"></p>
-<h3 id="1-编译阶段"><a href="#1-编译阶段" class="headerlink" title="1.编译阶段"></a>1.编译阶段</h3><p>那么编译阶段和变量提升存在什么关系呢？</p>
-<p>为了搞清楚这个问题，我们还是回过头来看上面那段模拟变量提升的代码，为了方便介绍，可以把这段代码分成两部分。</p>
-<p><strong>第一部分：变量提升部分的代码。</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myname = <span class="literal">undefined</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">showName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;函数showName被执行&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>第二部分：执行部分的代码。</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">showName()</span><br><span class="line"><span class="built_in">console</span>.log(myname)</span><br><span class="line">myname = <span class="string">&#x27;极客时间&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>下面我们就可以把JavaScript的执行流程细化，如下图所示：</p>
-<p><img src="../../../../images/02/wy-09.png" alt="Image text"></p>
-<p>可以发现，编译阶段，我们的JS代码会被分成执行上下文和可执行代码</p>
-<h3 id="2-执行阶段"><a href="#2-执行阶段" class="headerlink" title="2.执行阶段"></a>2.执行阶段</h3><p>JavaScript引擎开始执行“可执行代码”，按照顺序一行一行地执行。下面我们就来一行一行分析下这个执行过程</p>
-<ul>
-<li>当执行到showName函数时，JavaScript引擎便开始在变量环境对象中查找该函数，由于变量环境对象中存在该函数的引用，所以JavaScript引擎便开始执行该函数，并输出“函数showName被执行”结果。</li>
-<li>接下来打印“myname”信息，JavaScript引擎继续在变量环境对象中查找该对象，由于变量环境存在myname变量，并且其值为undefined，所以这时候就输出undefined。</li>
-<li>接下来执行第3行，把“极客时间”赋给myname变量，赋值后变量环境中的myname属性值改变为“极客时间”</li>
-<li>对于变量名相同的问题，后面的会直接覆盖前面的赋值操作。</li>
-</ul>
-<h2 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h2><p>编译阶段会涉及到函数调用栈</p>
-<p><strong>JavaScript引擎正是利用栈的这种结构来管理执行上下文的。在执行上下文创建好后，JavaScript引擎会将执行上下文压入栈中，通常把这种用来管理执行上下文的栈称为执行上下文栈，又称调用栈。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var a &#x3D; 2</span><br><span class="line">function add(b,c)&#123;</span><br><span class="line">  return b+c</span><br><span class="line">&#125;</span><br><span class="line">function addAll(b,c)&#123;</span><br><span class="line">var d &#x3D; 10</span><br><span class="line">result &#x3D; add(b,c)</span><br><span class="line">return  a+result+d</span><br><span class="line">&#125;</span><br><span class="line">addAll(3,6)</span><br></pre></td></tr></table></figure>
-
-<p>上面这段代码，我们分析一下调用栈的过程</p>
-<ul>
-<li><p><strong>创建全局上下文，并将其压入栈底</strong>。如下图所示</p>
-<p><img src="../../../../images/02/wy-04.png" alt="Image text"></p>
-<p>变量a、函数add和addAll都保存到了全局上下文的变量环境对象中。</p>
-<p>紧接着，执行变量赋值和函数执行操作，如下图示</p>
-<p><img src="../../../../images/02/wy-05.png" alt="Image text"></p>
-</li>
-<li><p><strong>当执行函数addAll时，JS引擎会编译该函数，并为其创建一个执行上下文，压入栈中</strong></p>
-<p><img src="../../../../images/02/wy-06.png" alt="Image text"></p>
-<p>同样是，在函数内部，也是先申明，变量提升，再执行</p>
-</li>
-<li><p>当执行addAll时，内部又会为add函数创建一个执行上下文，押入栈中</p>
-<p><img src="../../../../images/02/wy-07.png" alt="Image text"></p>
-<p>当add函数返回时，该函数的执行上下文就会从栈顶弹出，并将result的值设置为add函数的返回值，也就是9</p>
-</li>
-<li><p>从栈顶执行到栈底，表示整个JavaScript流程执行结束了。</p>
-</li>
-</ul>
-<h1 id="let和const的引入"><a href="#let和const的引入" class="headerlink" title="let和const的引入"></a>let和const的引入</h1><h2 id="块级作用域"><a href="#块级作用域" class="headerlink" title="块级作用域"></a>块级作用域</h2><p>JS的var变量只有函数作用域，这样会引发很多意想不到的问题，这里就不阐述了</p>
-<p>ES6中通过let和const关键字，让JS也有了块级作用域</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">1</span></span><br><span class="line">    <span class="keyword">let</span> b = <span class="number">2</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">let</span> b = <span class="number">3</span></span><br><span class="line">      <span class="keyword">var</span> c = <span class="number">4</span></span><br><span class="line">      <span class="keyword">let</span> d = <span class="number">5</span></span><br><span class="line">      <span class="built_in">console</span>.log(a)</span><br><span class="line">      <span class="built_in">console</span>.log(b)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(b) </span><br><span class="line">    <span class="built_in">console</span>.log(c)</span><br><span class="line">    <span class="built_in">console</span>.log(d)</span><br><span class="line">&#125;   </span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
-
-<p>这里的{}中的let变量，只会在该{}中生效，但是var变量却是foo函数中都有效</p>
-<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><blockquote>
-<p>通过执行上下文中的词法环境来实现let，const的块级作用域</p>
-</blockquote>
-<p>我们来分析下上面代码的流程</p>
-<h3 id="1-编译并创建执行上下文"><a href="#1-编译并创建执行上下文" class="headerlink" title="1.编译并创建执行上下文"></a>1.编译并创建执行上下文</h3><p><img src="../../../../images/02/wy-11.png" alt="Image text"></p>
-<p>通过上图，我们可以得出以下结论：</p>
-<ul>
-<li>函数内部通过var声明的变量，在编译阶段全都被存放到变量环境里面了。</li>
-<li>通过let声明的变量，在编译阶段会被存放到词法环境（Lexical Environment）中。</li>
-<li>在函数的作用域内部，通过let声明的变量并没有被存放到词法环境中。</li>
-<li>接下来，第二步继续执行代码，当执行到代码块里面时，变量环境中a的值已经被设置成了1，词法环境中b的值已经被设置成了2。</li>
-</ul>
-<h3 id="2-代码块变量的执行"><a href="#2-代码块变量的执行" class="headerlink" title="2.代码块变量的执行"></a>2.代码块变量的执行</h3><p>这时候函数的执行上下文就如下图所示：</p>
-<p><img src="../../../../images/02/wy-12.png" alt="Image text"></p>
-<ul>
-<li>声明的变量执行完后，进入执行阶段</li>
-<li>此时外层的let b赋值，代码块执行，变量还是先声明在赋值</li>
-</ul>
-<p>其实，在词法环境内部，维护了一个小型栈结构，栈底是函数最外层的变量，进入一个作用域块后，就会把该作用域块内部的变量压到栈顶；当作用域执行完成之后，该作用域的信息就会从栈顶弹出，这就是词法环境的结构。需要注意下，我这里所讲的变量是指通过let或者const声明的变量。</p>
-<p><img src="../../../../images/02/wy-13.png" alt="Image text"></p>
-<p><strong>当作用域块执行结束之后，其内部定义的变量就会从词法环境的栈顶弹出</strong>，最终执行上下文如下图所示：</p>
-<p><img src="../../../../images/02/wy-14.png" alt="Image text"></p>
-<p><strong>这样我们代码块中的变量就实现了只在代码块中起作用。</strong></p>
-<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h3><p>通过词法环境的小型栈来实现了代码块中let和const变量的块级作用域效果</p>
-<h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><p>理解作用域链是理解闭包的基础</p>
-<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><p><strong>每个执行上下文的变量环境中，都包含了一个外部引用，用来指向外部的执行上下文，我们把这个外部引用称为outer。</strong></p>
-<p>当一段JS代码使用了一个变量时，引擎会在“当前执行上下文”中寻找该变量，如果没有找到，会寻找其外部引用里的“执行上下文”中变量，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function bar() &#123;</span><br><span class="line">    console.log(myName)</span><br><span class="line">&#125;</span><br><span class="line">function foo() &#123;</span><br><span class="line">    var myName &#x3D; &quot; 极客邦 &quot;</span><br><span class="line">    bar()</span><br><span class="line">&#125;</span><br><span class="line">var myName &#x3D; &quot; 极客时间 &quot;</span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
-
-<p>比如上面代码，bar中的myName没有找到，会寻找全局中的myName，分析入下图示：</p>
-<p><img src="../../../../images/02/wy-15.png" alt="Image text"></p>
-<p><img src="../../../../images/02/wy-16.png" alt="Image text"></p>
-<p>此时，你可能又会疑惑，为啥bar函数不是引用foo函数里面的myName变量，这就有涉及到外部引用out的引用规则</p>
-<h2 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h2><blockquote>
-<p>词法作用域就是指作用域是由代码中函数声明的位置来决定的，所以词法作用域是静态的作用域，通过它就能够预测代码在执行过程中如何查找标识符</p>
-</blockquote>
-<p>看下面这张图：</p>
-<p><img src="../../../../images/02/wy-17.png" alt="Image text"></p>
-<p>从图中可以看出，<strong>词法作用域就是根据代码的位置来决定的</strong>，其中 main 函数包含了 bar 函数，bar 函数中包含了 foo 函数，因为 JavaScript 作用域链是由词法作用域决定的，所以整个词法作用域链的顺序是：foo 函数作用域—&gt;bar 函数作用域—&gt;main 函数作用域—&gt; 全局作用域。</p>
-<h2 id="块级作用域中变量查找"><a href="#块级作用域中变量查找" class="headerlink" title="块级作用域中变量查找"></a>块级作用域中变量查找</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">function bar() &#123;</span><br><span class="line">    var myName &#x3D; &quot; 极客世界 &quot;</span><br><span class="line">    let test1 &#x3D; 100</span><br><span class="line">    if (1) &#123;</span><br><span class="line">        let myName &#x3D; &quot;Chrome 浏览器 &quot;</span><br><span class="line">        console.log(test)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">function foo() &#123;</span><br><span class="line">    var myName &#x3D; &quot; 极客邦 &quot;</span><br><span class="line">    let test &#x3D; 2</span><br><span class="line">    &#123;</span><br><span class="line">        let test &#x3D; 3</span><br><span class="line">        bar()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">var myName &#x3D; &quot; 极客时间 &quot;</span><br><span class="line">let myAge &#x3D; 10</span><br><span class="line">let test &#x3D; 1</span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
-
-<p>直接上图：</p>
-<p><img src="../../../../images/02/wy-18.png" alt="Image text"></p>
-<p>也是正常的理解：顺序为 ：自己的块级作用域-&gt;自己的上下文变量环境-&gt;out的块级作用域-&gt;out上下文变量环境</p>
-<h2 id="闭包-1"><a href="#闭包-1" class="headerlink" title="闭包"></a>闭包</h2><p>闭包的最直观解释就是函数内嵌套了函数，并且内部函数引用了外部函数的变量</p>
-<p>我们来看下面的代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function foo() &#123;</span><br><span class="line">    var myName &#x3D; &quot; 极客时间 &quot;</span><br><span class="line">    let test1 &#x3D; 1</span><br><span class="line">    const test2 &#x3D; 2</span><br><span class="line">    var innerBar &#x3D; &#123;</span><br><span class="line">        getName:function()&#123;</span><br><span class="line">            console.log(test1)</span><br><span class="line">            return myName</span><br><span class="line">        &#125;,</span><br><span class="line">        setName:function(newName)&#123;</span><br><span class="line">            myName &#x3D; newName</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return innerBar</span><br><span class="line">&#125;</span><br><span class="line">var bar &#x3D; foo()</span><br><span class="line">bar.setName(&quot; 极客邦 &quot;)</span><br><span class="line">bar.getName()</span><br><span class="line">console.log(bar.getName())</span><br></pre></td></tr></table></figure>
-
-<p>首先我们看看当执行到 foo 函数内部的return innerBar这行代码时调用栈的情况，你可以参考下图：</p>
-<p><img src="../../../../images/02/wy-19.png" alt="Image text"></p>
-<p>根据词法作用域的规则，内部函数 getName 和 setName 总是可以访问它们的外部函数 foo 中的变量，所以当 innerBar 对象返回给全局变量 bar 时，虽然 foo 函数已经执行结束，但是 getName 和 setName 函数依然可以使用 foo 函数中的变量 myName 和 test1。所以当 foo 函数执行完成之后，其整个调用栈的状态如下图所示：</p>
-<p><img src="../../../../images/02/wy-20.png" alt="Image text"></p>
-<p>从上图可以看出，foo 函数执行完成之后，其执行上下文从栈顶弹出了，但是由于返回的 setName 和 getName 方法中使用了 foo 函数内部的变量 myName 和 test1，所以这两个变量依然保存在内存中。这像极了 setName 和 getName 方法背的一个专属背包，无论在哪里调用了 setName 和 getName 方法，它们都会背着这个 foo 函数的专属背包。</p>
-<p>之所以是专属背包，是因为除了 setName 和 getName 函数之外，其他任何地方都是无法访问该背包的，我们就可以把这个背包称为 foo 函数的<strong>闭包</strong>。</p>
-<ul>
-<li><strong>在 JavaScript 中，根据词法作用域的规则，内部函数总是可以访问其外部函数中声明的变量，当通过调用一个外部函数返回一个内部函数后，即使该外部函数已经执行结束了，但是内部函数引用外部函数的变量依然保存在内存中，我们就把这些变量的集合称为闭包</strong></li>
-</ul>
-<p>那这些闭包是如何使用的呢？当执行到 bar.setName 方法中的myName = “极客邦”这句代码时，JavaScript 引擎会沿着“当前执行上下文–&gt;foo 函数闭包–&gt; 全局执行上下文”的顺序来查找 myName 变量，你可以参考下面的调用栈状态图：</p>
-<p><img src="../../../../images/02/wy-21.png" alt="Image text"></p>
-<h1 id="this的认识"><a href="#this的认识" class="headerlink" title="this的认识"></a>this的认识</h1><p>关于 this，我们还是得先从执行上下文说起。在前面几篇文章中，我们提到执行上下文中包含了变量环境、词法环境、外部环境，但其实还有一个 this 没有提及，具体你可以参考下图：</p>
-<p><img src="../../../../images/02/wy-22.png" alt="Image text"></p>
-<p>从图中可以看出，this 是和执行上下文绑定的，也就是说每个执行上下文中都有一个 this。中我们提到过，执行上下文主要分为三种——全局执行上下文、函数执行上下文和 eval 执行上下文，所以对应的 this 也只有这三种——全局执行上下文中的 this、函数中的 this 和 eval 中的 this。</p>
-<p>实际上，this是不固定的，一般而言，<strong>对象.方法</strong>使用的时候，函数中this指向的就是该对象，如果是直接调用，一般默认都是window对象</p>
-<p>比如，如下代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var myObj &#x3D; &#123;</span><br><span class="line">  name : &quot; 极客时间 &quot;, </span><br><span class="line">  showThis: function()&#123;</span><br><span class="line">    console.log(this)</span><br><span class="line">    function bar()&#123;console.log(this)&#125;</span><br><span class="line">    bar()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">myObj.showThis()</span><br></pre></td></tr></table></figure>
-
-<p>可以看到，showThis由myObj调用，所以this就是myObj，但是showThis内部的函数bar被调用的时候，前面没有对象引用，默认是window，所以bar函数中的this指向的就是window</p>
-<h2 id="避免this问题"><a href="#避免this问题" class="headerlink" title="避免this问题"></a>避免this问题</h2><ul>
-<li>call，bind，apply</li>
-<li>定义变量改变，比如外部定义变量 let that=this</li>
-<li>使用箭头函数</li>
-</ul>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a></li></ul>
 
     </footer>
   </div>
