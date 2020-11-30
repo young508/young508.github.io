@@ -1,137 +1,487 @@
 <!DOCTYPE html>
-
-
 <html lang="zh">
+<head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-
-<head>
-  <meta charset="utf-8" />
-   
-  <meta name="keywords" content="hexo blog" />
-   
-  <meta name="description" content="young blog write my world" />
+  <!-- 页面元数据 -->
   
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>
-    浏览器渲染进程分析 |  young blog write my world
-  </title>
-  <meta name="generator" content="hexo-theme-ayer">
+  <title>浏览器渲染进程分析 - YOUNG BLOG</title>
   
-  <link rel="shortcut icon" href="/favicon.ico" />
-  
-  
-<link rel="stylesheet" href="/dist/main.css">
-
-  
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
-
-  
-<link rel="stylesheet" href="/css/custom.css">
-
-  
-  
-<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
-
-  
+    <meta name="keywords" content="浏览器,进阶">
   
 
   
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  
+
+  <!-- import link -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/first.css">
+
+  
+
+  
+  <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+  
+
+  <script id="loadcss"></script>
 
 </head>
 
-</html>
-
 <body>
-  <div id="app">
-    
-      
-    <main class="content on">
-      <section class="outer">
-  <article
-  id="post-浏览器渲染进程分析"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  浏览器渲染进程分析
-</h1>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/23/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B%E5%88%86%E6%9E%90/" class="article-date">
-  <time datetime="2020-09-23T05:02:07.000Z" itemprop="datePublished">2020-09-23</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a>
-  </div>
   
-<div class="word_count">
-    <span class="post-time">
-        <span class="post-meta-item-icon">
-            <i class="ri-quill-pen-line"></i>
-            <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">4.3k</span>
-        </span>
-    </span>
 
-    <span class="post-time">
-        &nbsp; | &nbsp;
-        <span class="post-meta-item-icon">
-            <i class="ri-book-open-line"></i>
-            <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">15 min</span>
-        </span>
-    </span>
-</div>
- 
+<header id="l_header" class="l_header auto shadow blur show" style='opacity: 0' >
+  <div class='container'>
+  <div id='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
     </div>
+		<div class="nav-main">
       
-    <div class="tocbot"></div>
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/Logo-NavBar@3x.png'/>
+          
+          
+          
+        </a>
+      
 
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
 
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+  <div id="l_body">
+    <div id="l_cover">
+  
+    
+        <div id="full" class='cover-wrapper post dock' style="display: none;">
+          
+            <div class='cover-bg lazyload placeholder' data-bg="https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.jpg"></div>
+          
+          <div class='cover-body'>
+  <div class='top'>
+    
+    
+      <p class="title">Volantis</p>
+    
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+          
+            <a href="/v4/getting-started/"
+              
+              
+              id="v4getting-started">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f5c3.svg'><p>文档</p>
+            </a>
+          
+            <a href="/faqs/"
+              
+              
+              id="faqs">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f516.svg'><p>帮助</p>
+            </a>
+          
+            <a href="/examples/"
+              
+              
+              id="examples">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f396.svg'><p>示例</p>
+            </a>
+          
+            <a href="/contributors/"
+              
+              
+              id="contributors">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f389.svg'><p>社区</p>
+            </a>
+          
+            <a href="/archives/"
+              
+              
+              id="archives">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4f0.svg'><p>博客</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://github.com/volantis-x/hexo-theme-volantis/"
+              
+              
+              id="https:githubcomvolantis-xhexo-theme-volantis">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f9ec.svg'><p>源码</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+        </div>
+    
+  
+  </div>
+
+    <div id='safearea'>
+      <div class='body-wrapper' id="pjax-container">
+        
+
+<div class='l_main'>
+  <article class="article post white-box reveal md shadow article-type-post" id="post" itemscope itemprop="blogPost">
+  
 
 
   
-    <div class="article-entry" itemprop="articleBody">
-       
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title">
+        浏览器渲染进程分析
+      </h1>
+      <div class='new-meta-box'>
+        
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>请设置文章作者</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：Sep 23, 2020</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="浏览器渲染进程分析" data-path="/2020/09/23/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B%E5%88%86%E6%9E%90/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+      </div>
+    
+  </div>
+
+
+  
   <p>浏览器的渲染进程非常重要，不仅是因为Chrome的Blink和V8都是运行在该进程中，更重要的是只有掌握了该进程的知识，你才可以解决一系列相关的问题，比如能熟练使用开发者工具，因为能够理解开发者工具里面大部分项目的含义，能优化页面卡顿问题，使用JavaScript优化动画流程，通过优化样式表来防止强制同步布局，等等。</p>
 <h1 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h1><p>所以，我们编写的HTML，CSS和JavaScript是如何通过浏览器显示成功能丰富，页面美观的前端页面呢？</p>
-<p><img src="../../../../images/wy/wy-11.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-11.png" class="lazyload" data-srcset="../../../../images/wy/wy-11.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>从图中可以看出，左边输入的是HTML、CSS、JavaScript数据，这些数据经过中间渲染模块的处理，最终输出为屏幕上的像素。</p>
 <p>为了能更好地理解下文，你可以先结合下图快速抓住HTML、CSS和JavaScript的含义：</p>
-<p><img src="../../../../images/wy/wy-12.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-12.png" class="lazyload" data-srcset="../../../../images/wy/wy-12.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <ul>
 <li><strong>HTML</strong>：HTML的内容是由标记和文本组成。标记也称为标签，每个标签都有自己的语义，浏览器会根据这些标签正确的显示HTML内容，比如p标签就是告诉浏览器新建一个段落，文本内容就是标签里面的内容。</li>
 <li><strong>CSS</strong>：层叠样式表，由选择器和属性组成，会把选择器对应的标签来显示CSS的属性，比如color属性，可以改变文本的颜色</li>
 <li><strong>JavaScript</strong>：让页面的内容可以灵活起来，比如动态的修改文本的颜色，是浏览器的脚本语言。</li>
 </ul>
-<p><img src="../../../../images/wy/wy-13.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-13.png" class="lazyload" data-srcset="../../../../images/wy/wy-13.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>浏览器的渲染进程内部还是比较复杂的，大致有以下几个字阶段，构建DOM树，样式计算，布局阶段，分层，绘制，分块，光栅化和合成。</p>
 <h1 id="DOM树构建"><a href="#DOM树构建" class="headerlink" title="DOM树构建"></a>DOM树构建</h1><p>DOM，全称Document Object Model，文档对象模型，浏览器无法理解HTML，所以第一步就是是将HTML内容转换为DOM树结构，如下图示：</p>
-<p><img src="../../../../images/wy/wy-14.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-14.png" class="lazyload" data-srcset="../../../../images/wy/wy-14.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>可以发现，树结构和我们现实中的树也是比较类似的，整个渲染进程中会构建多个树。</p>
 <p>DOM的构建过程，可参考下图</p>
-<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p><img src="../../../../images/wy/wy-15.png" alt="Image text"></p>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p><img src="../../../../images/wy/wy-15.png" class="lazyload" data-srcset="../../../../images/wy/wy-15.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>不难看出，构建DOM的输入内容是简单的HTML文件，经过HTML解析器解析后，最终输出树状结构的DOM</p>
 <p>为了更加直观地理解DOM树，你可以打开Chrome的“开发者工具”，选择“Console”标签来打开控制台，然后在控制台里面输入“document”后回车，这样你就能看到一个完整的DOM树结构，如下图所示：</p>
-<p><img src="../../../../images/wy/wy-16.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-16.png" class="lazyload" data-srcset="../../../../images/wy/wy-16.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <h2 id="DOM特点"><a href="#DOM特点" class="headerlink" title="DOM特点"></a>DOM特点</h2><p>图中的document就是DOM结构，原来DOM和HTML机构一模一样，唯一不同的是，DOM是保存在内存中的树状结构，我们可以通过Javascript来进行动态修改</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document.getElementsByTagName(&quot;p&quot;)[0].innerText &#x3D; &quot;black&quot;</span><br></pre></td></tr></table></figure>
 
 <p>这行代码的作用是把第一个<code>&lt;p&gt;</code>标签的内容修改为black，具体执行结果你可以参考下图：</p>
-<p><img src="../../../../images/wy/wy-17.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-17.png" class="lazyload" data-srcset="../../../../images/wy/wy-17.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>从图中可以看出，在执行了一段修改第一个<code>&lt;p&gt;</code>标签的JavaScript代码后，DOM的第一个p节点的内容成功被修改，同时页面中的内容也被修改了</p>
 <p>所以，HTML是我们DOM的最初来源，后续的所有操作都是基于内存中的DOM来进行操作了。</p>
 <h1 id="样式计算"><a href="#样式计算" class="headerlink" title="样式计算"></a>样式计算</h1><p>样式计算的目的是为了计算出DOM节点中每个元素的具体样式，可以分为三步</p>
-<h2 id="CSS转换"><a href="#CSS转换" class="headerlink" title="CSS转换"></a>CSS转换</h2><p><img src="../../../../images/wy/wy-18.png" alt="Image text"></p>
+<h2 id="CSS转换"><a href="#CSS转换" class="headerlink" title="CSS转换"></a>CSS转换</h2><p><img src="../../../../images/wy/wy-18.png" class="lazyload" data-srcset="../../../../images/wy/wy-18.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>CSS样式来源主要有三种</p>
 <ul>
 <li>通过link引用的外部CSS文件</li>
@@ -140,13 +490,13 @@
 </ul>
 <p>和HTML文件一样，浏览器也不认识CSS，所以渲染引擎在接收到CSS文件后通过一系列转换，变成浏览器可理解的结构，styleSheets</p>
 <p>同样，我们可以通过document.styleSheets查看结构</p>
-<p><img src="../../../../images/wy/wy-19.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-19.png" class="lazyload" data-srcset="../../../../images/wy/wy-19.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>同样的，我们JavaScript可以对这些属性进行修改操作</p>
 <h2 id="标准化属性值"><a href="#标准化属性值" class="headerlink" title="标准化属性值"></a>标准化属性值</h2><p>要理解什么是属性值标准化，你可以看下面这样一段CSS文本</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">body &#123; font-size: 2em &#125;</span><br><span class="line">p &#123;color:blue;&#125;</span><br><span class="line">span  &#123;display: none&#125;</span><br><span class="line">div &#123;font-weight: bold&#125;</span><br><span class="line">div  p &#123;color:green;&#125;</span><br><span class="line">div &#123;color:red; &#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以看到很多属性值比如2em，blue等都是不被渲染引擎所理解的，所以需要将这些值进行标准化，渲染引擎才能正常计算</p>
-<p><img src="../../../../images/wy/wy-20.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-20.png" class="lazyload" data-srcset="../../../../images/wy/wy-20.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>从图中可以看到，2em解析成了32px，red被解析成了rgb(255,0,0)，bold被解析成了700等</p>
 <h2 id="计算DOM节点样式"><a href="#计算DOM节点样式" class="headerlink" title="计算DOM节点样式"></a>计算DOM节点样式</h2><p>现在的样式属性已经标准化了，接下来就需要计算DOM树中每个节点对应的样式了</p>
 <ul>
@@ -156,10 +506,10 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">body &#123; font-size: 20px &#125;</span><br><span class="line">p &#123;color:blue;&#125;</span><br><span class="line">span  &#123;display: none&#125;</span><br><span class="line">div &#123;font-weight: bold;color:red&#125;</span><br><span class="line">div  p &#123;color:green;&#125;</span><br></pre></td></tr></table></figure>
 
 <p>最终解析出来的DOM属性为：</p>
-<p><img src="../../../../images/wy/wy-21.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-21.png" class="lazyload" data-srcset="../../../../images/wy/wy-21.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>从图中可以看出，所有子节点都继承了父节点样式。比如body节点的font-size属性是20，那body节点下面的所有节点的font-size都等于20，当然不是所有的属性都会被继承。</p>
 <p>我们可以打开调试工具，选择element选项</p>
-<p><img src="../../../../images/wy/wy-22.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-22.png" class="lazyload" data-srcset="../../../../images/wy/wy-22.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>这个界面展示的信息很丰富，大致可描述为如下</p>
 <ul>
 <li>首先，可以选择要查看的元素的样式（位于图中的区域2中），在图中的第1个区域中点击对应的元素元素，就可以了下面的区域查看该元素的样式了。比如这里我们选择的元素是<code>&lt;p&gt;</code>标签，位于<code>html.body.div.</code>这个路径下面</li>
@@ -169,18 +519,18 @@
 <h3 id="层叠"><a href="#层叠" class="headerlink" title="层叠"></a>层叠</h3><p>层叠是CSS的一个基本特征，它是一个定义了如何合并来自多个源的属性值的算法</p>
 <p>它是CSS的核心地位，因为样式可以通过设置class，id，父子等等方式设置引用，最后会根据一套公式进行计算得出真正生效的样式</p>
 <p>总之，通过继承和层叠，会得到出标签最终的真正样式，可以打开Chrome的“开发者工具”，选择第一个“element”标签，然后再选择“Computed”子标签，如下图所示：</p>
-<p><img src="../../../../images/wy/wy-23.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-23.png" class="lazyload" data-srcset="../../../../images/wy/wy-23.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <h1 id="布局阶段"><a href="#布局阶段" class="headerlink" title="布局阶段"></a>布局阶段</h1><p>现在，我们通过HTML构建了DOM树，通过CSS计算出了DOM树中每个节点的元素属性。接下来，我们需要对这些节点进行位置的计算，也即是布局。</p>
 <p>Chrome在布局阶段需要完成两个工作，<u>创建布局树和布局计算</u></p>
 <h2 id="创建布局树"><a href="#创建布局树" class="headerlink" title="创建布局树"></a>创建布局树</h2><p>你可能注意到了DOM树还含有很多不可见的元素，比如head标签，还有使用了<code>display:none</code>属性的元素。所以在显示之前，我们还要额外地构建一棵只包含<strong>可见元素布局树</strong>。</p>
-<p><img src="../../../../images/wy/wy-24.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-24.png" class="lazyload" data-srcset="../../../../images/wy/wy-24.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>构建布局树，主要是为了生成真正有用的节点元素</p>
 <ul>
 <li>遍历DOM树中的所有可见节点，并把这些节点加到布局中；</li>
 <li>不可见阶段会被忽略掉，比如head标签中的内容，display：none的元素也不会添加到布局树中</li>
 </ul>
 <h2 id="布局计算"><a href="#布局计算" class="headerlink" title="布局计算"></a>布局计算</h2><p>有了布局树后，开始进行位置计算，等计算完成后，这里位置信息会直接写到布局树中。所以布局树既是输入内容也是输出内容，这是布局阶段一个不合理的地方，因为在布局阶段并没有清晰地将输入内容和输出内容区分开来。针对这个问题，Chrome团队正在重构布局代码，下一代布局系统叫LayoutNG，试图更清晰地分离输入和输出，从而让新设计的布局算法更加简单。</p>
-<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p><img src="../../../../images/wy/wy-25.png" alt="Image text"></p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p><img src="../../../../images/wy/wy-25.png" class="lazyload" data-srcset="../../../../images/wy/wy-25.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>可以看到，目前已经完成了前三步</p>
 <ul>
 <li>1.HTML解析成DOM树</li>
@@ -189,15 +539,15 @@
 </ul>
 <h1 id="分层"><a href="#分层" class="headerlink" title="分层"></a>分层</h1><p>有了具体的位置信息后，还不会进行绘制操作，因为页面中有很多复杂的效果，比如3D动画，页面滚动，z-index等，为了更加方便的实现这些效果，引擎还需要<strong>为特点的节点生成专用的图层，并生成对应的图层树（LayerTree）</strong></p>
 <h2 id="图层树"><a href="#图层树" class="headerlink" title="图层树"></a>图层树</h2><p>可以打开Chrome的“开发者工具”，选择“Layers”标签，就可以可视化页面的分层情况，如下图所示</p>
-<p><img src="../../../../images/wy/wy-26.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-26.png" class="lazyload" data-srcset="../../../../images/wy/wy-26.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>现在你知道了浏览器的页面实际上被分成了很多图层，这些图层叠加后合成了最终的页面。下面我们再来看看这些图层和布局树节点之间的关系，如文中图所示：</p>
-<p><img src="../../../../images/wy/wy-27.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-27.png" class="lazyload" data-srcset="../../../../images/wy/wy-27.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>通常情况下，并不是每个节点都独创一个图层，如果一个节点没有独有的图层，那么会从属于父节点的图层，比如上图中span标签没有专属图层，会依附于父节点的图层。但是不管怎么样，每个节点都会直接或者间接的从属于某个图层。</p>
 <p>那么，什么情况下，渲染引擎会为该节点重新建一个图层呢？</p>
 <ul>
 <li><strong>拥有层叠上下文属性的元素会被提升为单独的一层</strong></li>
 </ul>
-<p><img src="../../../../images/wy/wy-28.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-28.png" class="lazyload" data-srcset="../../../../images/wy/wy-28.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>页面是二维平面，但是层叠上下文属性能够让HTML元素具有三维的概念。这些HTML元素按照优先级排列在Z轴上，从图中可以看出，定位，z-index，透明属性和CSS滤镜都会提升图层</p>
 <ul>
 <li>需要裁剪（clip）的地方也会被创建为图层</li>
@@ -206,41 +556,41 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line">      div &#123;</span><br><span class="line">            width: 200;</span><br><span class="line">            height: 200;</span><br><span class="line">            overflow:auto;</span><br><span class="line">            background: gray;</span><br><span class="line">        &#125; </span><br><span class="line">&lt;&#x2F;style&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;div &gt;</span><br><span class="line">        &lt;p&gt;所以元素有了层叠上下文的属性或者需要被剪裁，那么就会被提升成为单独一层，你可以参看下图：&lt;&#x2F;p&gt;</span><br><span class="line">        &lt;p&gt;从上图我们可以看到，document层上有A和B层，而B层之上又有两个图层。这些图层组织在一起也是一颗树状结构。&lt;&#x2F;p&gt;</span><br><span class="line">        &lt;p&gt;图层树是基于布局树来创建的，为了找出哪些元素需要在哪些层中，渲染引擎会遍历布局树来创建层树（Update LayerTree）。&lt;&#x2F;p&gt; </span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br></pre></td></tr></table></figure>
 
 <p>在这里我们把div的大小限定为200 * 200像素，而div里面的文字内容比较多，文字所显示的区域肯定会超出200 * 200的面积，这时候就产生了剪裁，渲染引擎会把裁剪文字内容的一部分用于显示在div区域，下图是运行时的执行结果</p>
-<p><img src="../../../../images/wy/wy-29.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-29.png" class="lazyload" data-srcset="../../../../images/wy/wy-29.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>出现这种裁剪的情况，引擎会为文字单独创建一个图层，如果出现滚动条，滚动条也会被创建单独的图层，如下图示：</p>
-<p><img src="../../../../images/wy/wy-30.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-30.png" class="lazyload" data-srcset="../../../../images/wy/wy-30.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>所以说，基于上下文属性的节点和出现裁剪的节点会单独创建图层</p>
 <h1 id="图层绘制"><a href="#图层绘制" class="headerlink" title="图层绘制"></a>图层绘制</h1><p>在完成图层树的构建后，渲染引擎会对图层树中每个图层进行绘制。绘制的过程就是把图层信息拆分成一个个很小的绘制指令，然后再把这些绘制指令按照顺序组成一个待绘制列表，如下图示：</p>
-<p><img src="../../../../images/wy/wy-31.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-31.png" class="lazyload" data-srcset="../../../../images/wy/wy-31.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>从图中可以看出，绘制列表中的指令其实特别简单，就是执行一个简单的绘制操作，比如绘制粉红色背景或者黑色的线，而一个元素通常需要几个绘制指令才能完成绘制操作，因为每个元素一般包括背景，前景，边框等都需要单独的指令去绘制。</p>
 <p>所以，<strong>在图层绘制阶段，输出的内容就是这些待绘制列表</strong></p>
 <p>的“Layers”标签，选择“document”层，来实际体验下绘制列表，如下图所示：</p>
-<p><img src="../../../../images/wy/wy-32.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-32.png" class="lazyload" data-srcset="../../../../images/wy/wy-32.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>在该图中，区域1就是document的绘制列表，拖动区域2中的进度条可以重现列表的绘制过程。</p>
 <h1 id="栅格化操作"><a href="#栅格化操作" class="headerlink" title="栅格化操作"></a>栅格化操作</h1><p>图层绘制列表只是用来记录绘制顺序和绘制指令的列表，实际的绘制操作是由渲染引擎中的合成线程来完成的。下图是渲染主线程和合成线程之间的关系</p>
-<p><img src="../../../../images/wy/wy-33.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-33.png" class="lazyload" data-srcset="../../../../images/wy/wy-33.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>可以看到，当绘制列表准备好后，渲染主线程会将列表提交（commit）给合成线程进行处理。那么合成线程又是怎么处理的呢？</p>
 <h2 id="视口viewport"><a href="#视口viewport" class="headerlink" title="视口viewport"></a>视口viewport</h2><blockquote>
 <ul>
 <li>通常一个页面可能很大，但是用户只能看到其中的一部分，我们把用户可以看到的这个部分叫做视口（viewport）。</li>
 </ul>
 </blockquote>
-<p><img src="../../../../images/wy/wy-34.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-34.png" class="lazyload" data-srcset="../../../../images/wy/wy-34.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>对于很长的页面，通过视口，我们只能看到很小的一部分内容，所在在这种情况下，如果绘制出所有图层的话，就会产生太大的开销，而且非常没有必要。</p>
 <h2 id="位图"><a href="#位图" class="headerlink" title="位图"></a>位图</h2><p>基于这个原因，合成线程会将图层划分成许多图块（tile），这些块通常是256，512等大小的矩形，如下图示：</p>
-<p><img src="../../../../images/wy/wy-35.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-35.png" class="lazyload" data-srcset="../../../../images/wy/wy-35.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>然后合成线程会按照视口附近的图块生成位图，<strong>将图块转换为位图的操作就叫栅格化</strong>，图块是栅格化操作的最小单位。</p>
 <p>同时，渲染进程会维护一个栅格化的线程池，所有的栅格化操作都是在该线程池中执行的，如下图示：</p>
-<p><img src="../../../../images/wy/wy-36.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-36.png" class="lazyload" data-srcset="../../../../images/wy/wy-36.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <h2 id="GPU加速"><a href="#GPU加速" class="headerlink" title="GPU加速"></a>GPU加速</h2><p>通常情况下，栅格化都会通过GPU进行加速生成，使用GPU生成位图的过程叫做快速栅格化，或者叫GPU栅格化，生成的位图被保存在GPU的内存中。</p>
 <p>GPU运行在GPU进程中，这里就会涉及到进程间通信</p>
-<p><img src="../../../../images/wy/wy-37.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-37.png" class="lazyload" data-srcset="../../../../images/wy/wy-37.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>从图中可以看出，渲染进程把生成位图的指令发送给GPU进程，然后在GPU进程中生成位图，并保存在GPU的内存中。</p>
 <h1 id="合成和显示"><a href="#合成和显示" class="headerlink" title="合成和显示"></a>合成和显示</h1><p>一旦所有图块都被光栅化，合成线程就会生成一个绘制图块的命令——“DrawQuad”，然后将该命令提交给浏览器进程。</p>
 <p>浏览器进程里面有一个叫viz的组件，用来接收合成线程发过来的DrawQuad命令，然后根据DrawQuad命令，将其页面内容绘制到内存中，最后再将内存显示在屏幕上。</p>
 <p>到这里，经过这一系列的阶段，编写好的HTML、CSS、JavaScript等文件，经过浏览器就会显示出漂亮的页面了。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>整个渲染进程主要步骤为：DOM，StyleSheets，布局树，图层树，绘制图层，绘制列表，栅格化，合成和显示。下面用一张图来总结</p>
-<p><img src="../../../../images/wy/wy-38.png" alt="Image text"></p>
+<p><img src="../../../../images/wy/wy-38.png" class="lazyload" data-srcset="../../../../images/wy/wy-38.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p><strong>根据上图，一个完整的渲染流程可以总结为：</strong></p>
 <ul>
 <li>渲染进程将HTML内容转换为可以读懂的DOM结构</li>
@@ -252,529 +602,993 @@
 <li>合成线程发送绘制图块命令DrawQuad给浏览器进程</li>
 <li>浏览器进程根据DrawQuad消息，合成并显示</li>
 </ul>
-<h1 id="相关概念补充"><a href="#相关概念补充" class="headerlink" title="相关概念补充"></a>相关概念补充</h1><h2 id="重排"><a href="#重排" class="headerlink" title="重排"></a>重排</h2><p><img src="../../../../images/wy/wy-39.png" alt="Image text"></p>
+<h1 id="相关概念补充"><a href="#相关概念补充" class="headerlink" title="相关概念补充"></a>相关概念补充</h1><h2 id="重排"><a href="#重排" class="headerlink" title="重排"></a>重排</h2><p><img src="../../../../images/wy/wy-39.png" class="lazyload" data-srcset="../../../../images/wy/wy-39.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>重排就是改动了HTML元素，此时会重新更新DOM，渲染流程会重新走一遍，开销最大。</p>
-<h2 id="重绘"><a href="#重绘" class="headerlink" title="重绘"></a>重绘</h2><p><img src="../../../../images/wy/wy-40.png" alt="Image text"></p>
+<h2 id="重绘"><a href="#重绘" class="headerlink" title="重绘"></a>重绘</h2><p><img src="../../../../images/wy/wy-40.png" class="lazyload" data-srcset="../../../../images/wy/wy-40.png" srcset="data:image/png;base64,666" alt="Image text"></p>
 <p>重绘是修改了元素属性，那么布局阶段将不会执行，因为没有引起位置的变化，直接进入绘制阶段。然后进入一系列的子阶段。<strong>相较于重排操作，重绘省去了布局和分层阶段，所以执行效率会比重排操作要高一些</strong>。</p>
 <h2 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h2><p>如果跳过了布局和绘制，直接进入合成阶段，比如CSS的动画操作，这可以避开重排和重绘阶段，直接在非主线程上执行合成动画操作。这样的效率是最高的，因为是在非主线程上合成，并没有占用主线程的资源，另外也避开了布局和绘制两个子阶段，所以相对于重绘和重排，合成能大大提升绘制效率。</p>
- 
-      <!-- reward -->
+
+  
+  
+    
+    <div class='footer'>
       
-      <div id="reword-out">
-        <div id="reward-btn">
-          Donate
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=http://yoursite.com/2020/09/23/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B%E5%88%86%E6%9E%90/>http://yoursite.com/2020/09/23/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B%E5%88%86%E6%9E%90/</a></p>
+              
+            
+          </blockquote>
         </div>
-      </div>
+      
       
     </div>
+  
+  
     
 
-    <!-- copyright -->
-    
-    <div class="declare">
-      <ul class="post-copyright">
-        <li>
-          <i class="ri-copyright-line"></i>
-          <strong>Copyright： </strong>
-          
-          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
-          
-        </li>
-      </ul>
-    </div>
-    
-    <footer class="article-footer">
-       
-<div class="share-btn">
-      <span class="share-sns share-outer">
-        <i class="ri-share-forward-line"></i>
-        分享
-      </span>
-      <div class="share-wrap">
-        <i class="arrow"></i>
-        <div class="share-icons">
-          
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="ri-weibo-fill"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="ri-wechat-fill"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="ri-qq-fill"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="ri-douban-line"></i>
-          </a>
-          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a> -->
-          
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="ri-facebook-circle-fill"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="ri-twitter-fill"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="ri-google-fill"></i>
-          </a>
-        </div>
-      </div>
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-25T17:16:57+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：Sep 25, 2020</p>
+  </a>
 </div>
 
-<div class="wx-share-modal">
-    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/09/23/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B%E5%88%86%E6%9E%90/" alt="微信分享二维码">
-    </div>
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>浏览器</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E8%BF%9B%E9%98%B6/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>进阶</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2020/09/23/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B%E5%88%86%E6%9E%90/&title=浏览器渲染进程分析 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://yoursite.com/2020/09/23/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B%E5%88%86%E6%9E%90/&title=浏览器渲染进程分析 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2020/09/23/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B%E5%88%86%E6%9E%90/&title=浏览器渲染进程分析 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
 </div>
 
-<div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%9B%E9%98%B6/" rel="tag">进阶</a></li></ul>
 
-    </footer>
+
+        
+      
+    </div>
   </div>
 
-   
-  <nav class="article-nav">
-    
-      <a href="/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E7%9A%84%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            浏览器中JavaScript的执行机制
-          
-        </div>
-      </a>
-    
-    
-      <a href="/2020/09/21/chrome%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/" class="article-nav-link">
-        <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">chrome架构演进</div>
-      </a>
-    
-  </nav>
 
-   
-<!-- valine评论 -->
-<div id="vcomments-box">
-  <div id="vcomments"></div>
-</div>
-<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
-<script>
-  new Valine({
-    el: "#vcomments",
-    app_id: "",
-    app_key: "",
-    path: window.location.pathname,
-    avatar: "monsterid",
-    placeholder: "给我的文章加点评论吧~",
-    recordIP: true,
-  });
-  const infoEle = document.querySelector("#vcomments .info");
-  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
-    infoEle.childNodes.forEach(function (item) {
-      item.parentNode.removeChild(item);
-    });
-  }
-</script>
-<style>
-  #vcomments-box {
-    padding: 5px 30px;
-  }
+  
+  
 
-  @media screen and (max-width: 800px) {
-    #vcomments-box {
-      padding: 5px 0px;
-    }
-  }
+  
+    <div class="prev-next">
+      
+        <a class='prev' href='/2020/09/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E7%9A%84%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/'>
+          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>浏览器中JavaScript的执行机制</p>
+          <p class='content'>函数调用栈变量提升（Hoisting）JavaScript中，var变量声明会有一个顺序上的提升
+比如我们的属性变量：
 
-  #vcomments-box #vcomments {
-    background-color: #fff;
-  }
+再比如我们的函数变量：
 
-  .v .vlist .vcard .vh {
-    padding-right: 20px;
-  }
+123456showName()console...</p>
+        </a>
+      
+      
+        <a class='next' href='/2020/09/21/chrome%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/'>
+          <p class='title'>chrome架构演进<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>进程和线程
+进程
+进程：进程是资源（cpu，内存等）分配的基本单位，它是程序执行时的一个实例
 
-  .v .vlist .vcard {
-    padding-left: 10px;
-  }
-</style>
-
- 
-     
+程序运行时，系统会创建一个进程，并为他分配资源，然后把改进程放人进程就绪队列，线程调度器选择它的时...</p>
+        </a>
+      
+    </div>
+  
 </article>
 
-</section>
-      <footer class="footer">
-  <div class="outer">
-    <ul>
-      <li>
-        Copyrights &copy;
-        2015-2020
-        <i class="ri-heart-fill heart_icon"></i> YOUNG
-      </li>
-    </ul>
-    <ul>
-      <li>
-        
-        
-        
-        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        <span class="division">|</span>
-        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
-        
-      </li>
-    </ul>
-    <ul>
-      <li>
-        
-        
-        <span>
-  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
-  <span class="division">|</span>
-  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
-</span>
-        
-      </li>
-    </ul>
-    <ul>
-      
-    </ul>
-    <ul>
-      
-    </ul>
-    <ul>
-      <li>
-        <!-- cnzz统计 -->
-        
-        <script type="text/javascript" src=''></script>
-        
-      </li>
-    </ul>
-  </div>
-</footer>
-      <div class="float_btns">
-        <div class="totop" id="totop">
-  <i class="ri-arrow-up-line"></i>
-</div>
 
-<div class="todark" id="todark">
-  <i class="ri-moon-line"></i>
-</div>
-
-      </div>
-    </main>
-    <aside class="sidebar on">
-      <button class="navbar-toggle"></button>
-<nav class="navbar">
   
-  <div class="logo">
-    <a href="/"><img src="/images/ayer-side.svg" alt="YOUNG BLOG"></a>
-  </div>
+
+  <article class="post white-box reveal shadow" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+
+</div>
+<aside class='l_side'>
   
-  <ul class="nav nav-main">
-    
-    <li class="nav-item">
-      <a class="nav-item-link" href="/">主页</a>
-    </li>
-    
-    <li class="nav-item">
-      <a class="nav-item-link" href="/archives">归档</a>
-    </li>
-    
-    <li class="nav-item">
-      <a class="nav-item-link" href="/categories">分类</a>
-    </li>
-    
-    <li class="nav-item">
-      <a class="nav-item-link" href="/tags">标签</a>
-    </li>
-    
-    <li class="nav-item">
-      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
-    </li>
-    
-    <li class="nav-item">
-      <a class="nav-item-link" target="_blank" rel="noopener" href="http://shenyu-vip.lofter.com">摄影</a>
-    </li>
-    
-    <li class="nav-item">
-      <a class="nav-item-link" href="/friends">友链</a>
-    </li>
-    
-    <li class="nav-item">
-      <a class="nav-item-link" href="/2019/about">关于我</a>
-    </li>
-    
-  </ul>
-</nav>
-<nav class="navbar navbar-bottom">
-  <ul class="nav">
-    <li class="nav-item">
-      
-      <a class="nav-item-link nav-item-search"  title="Search">
-        <i class="ri-search-line"></i>
-      </a>
-      
-      
-      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
-        <i class="ri-rss-line"></i>
-      </a>
-      
-    </li>
-  </ul>
-</nav>
-<div class="search-form-wrap">
-  <div class="local-search local-search-plugin">
-  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
-  <div id="local-search-result" class="local-search-result"></div>
-</div>
-</div>
-    </aside>
-    <script>
-      if (window.matchMedia("(max-width: 768px)").matches) {
-        document.querySelector('.content').classList.remove('on');
-        document.querySelector('.sidebar').classList.remove('on');
-      }
-    </script>
-    <div id="mask"></div>
-
-<!-- #reward -->
-<div id="reward">
-  <span class="close"><i class="ri-close-line"></i></span>
-  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
-  <div class="reward-box">
+  
     
     
-  </div>
-</div>
-    
-<script src="/js/jquery-2.0.3.min.js"></script>
 
 
-<script src="/js/lazyload.min.js"></script>
 
-<!-- Tocbot -->
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
 
 
-<script src="/js/tocbot.min.js"></script>
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90"><span class="toc-text">解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DOM%E7%89%B9%E7%82%B9"><span class="toc-text">DOM特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CSS%E8%BD%AC%E6%8D%A2"><span class="toc-text">CSS转换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%8C%96%E5%B1%9E%E6%80%A7%E5%80%BC"><span class="toc-text">标准化属性值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97DOM%E8%8A%82%E7%82%B9%E6%A0%B7%E5%BC%8F"><span class="toc-text">计算DOM节点样式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CSS%E7%BB%A7%E6%89%BF"><span class="toc-text">CSS继承</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%82%E5%8F%A0"><span class="toc-text">层叠</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%B8%83%E5%B1%80%E6%A0%91"><span class="toc-text">创建布局树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E5%B1%80%E8%AE%A1%E7%AE%97"><span class="toc-text">布局计算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%B1%82%E6%A0%91"><span class="toc-text">图层树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%8F%A3viewport"><span class="toc-text">视口viewport</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8D%E5%9B%BE"><span class="toc-text">位图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GPU%E5%8A%A0%E9%80%9F"><span class="toc-text">GPU加速</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E6%8E%92"><span class="toc-text">重排</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E7%BB%98"><span class="toc-text">重绘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%88%E6%88%90"><span class="toc-text">合成</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+        
+        
+          <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
 
 <script>
-  tocbot.init({
-    tocSelector: '.tocbot',
-    contentSelector: '.article-entry',
-    headingSelector: 'h1, h2, h3, h4, h5, h6',
-    hasInnerContainers: true,
-    scrollSmooth: true,
-    scrollContainer: 'main',
-    positionFixedSelector: '.tocbot',
-    positionFixedClass: 'is-position-fixed',
-    fixedSidebarOffset: 'auto'
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="浏览器渲染进程分析";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+
+  var l_header=document.getElementById("l_header");
+  
+  l_header.classList.add("show");
+  
+</script>
+
+        
+      </div>
+      
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        <div><p>Blog content follows the <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License</a></p>
+</div>
+      
+    
+      
+        
+          <div><p><span id="lc-sv">本站总访问量为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 次</span> <span id="lc-uv">访客数为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 人</span></p>
+</div>
+        
+      
+    
+      
+        Use
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6" target="_blank" class="codename">Volantis</a>
+        as theme
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+      <a id="s-top" class="fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+  </div>
+  <div>
+    <script>
+window.volantis={};
+window.volantis.loadcss=document.getElementById("loadcss");
+/********************脚本懒加载函数********************************/
+function loadScript(src, cb) {
+var HEAD = document.getElementsByTagName('head')[0] || document.documentElement;
+var script = document.createElement('script');
+script.setAttribute('type','text/javascript');
+if (cb) script.onload = cb;
+script.setAttribute('src', src);
+HEAD.appendChild(script);
+}
+//https://github.com/filamentgroup/loadCSS
+var loadCSS = function( href, before, media, attributes ){
+	var doc = window.document;
+	var ss = doc.createElement( "link" );
+	var ref;
+	if( before ){
+		ref = before;
+	}
+	else {
+		var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+		ref = refs[ refs.length - 1];
+	}
+	var sheets = doc.styleSheets;
+	if( attributes ){
+		for( var attributeName in attributes ){
+			if( attributes.hasOwnProperty( attributeName ) ){
+				ss.setAttribute( attributeName, attributes[attributeName] );
+			}
+		}
+	}
+	ss.rel = "stylesheet";
+	ss.href = href;
+	ss.media = "only x";
+	function ready( cb ){
+		if( doc.body ){
+			return cb();
+		}
+		setTimeout(function(){
+			ready( cb );
+		});
+	}
+	ready( function(){
+		ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
+	});
+	var onloadcssdefined = function( cb ){
+		var resolvedHref = ss.href;
+		var i = sheets.length;
+		while( i-- ){
+			if( sheets[ i ].href === resolvedHref ){
+				return cb();
+			}
+		}
+		setTimeout(function() {
+			onloadcssdefined( cb );
+		});
+	};
+	function loadCB(){
+		if( ss.addEventListener ){
+			ss.removeEventListener( "load", loadCB );
+		}
+		ss.media = media || "all";
+	}
+	if( ss.addEventListener ){
+		ss.addEventListener( "load", loadCB);
+	}
+	ss.onloadcssdefined = onloadcssdefined;
+	onloadcssdefined( loadCB );
+	return ss;
+};
+</script>
+<script>
+  
+  loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css", window.volantis.loadcss);
+  
+  
+  
+  
+</script>
+<!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script>
+  function pjax_fancybox() {
+    $(".md .gallery").find("img").each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md .gallery").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  function SCload_fancybox() {
+    if ($(".md .gallery").find("img").length == 0) return;
+    loadCSS("https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css", document.getElementById("loadcss"));
+    setTimeout(function() {
+      loadScript('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', pjax_fancybox)
+    }, 1);
+  };
+  $(function () {
+    SCload_fancybox();
   });
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
-<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
 
-<script src="/dist/main.js"></script>
+<!-- internal -->
 
-<!-- ImageViewer -->
 
-<!-- Root element of PhotoSwipe. Must have class pswp. -->
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-    <!-- Background of PhotoSwipe. 
-         It's a separate element as animating opacity is faster than rgba(). -->
-    <div class="pswp__bg"></div>
 
-    <!-- Slides wrapper with overflow:hidden. -->
-    <div class="pswp__scroll-wrap">
 
-        <!-- Container that holds slides. 
-            PhotoSwipe keeps only 3 of them in the DOM to save memory.
-            Don't modify these 3 pswp__item elements, data is added later on. -->
-        <div class="pswp__container">
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-        </div>
 
-        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
-        <div class="pswp__ui pswp__ui--hidden">
 
-            <div class="pswp__top-bar">
-
-                <!--  Controls are self-explanatory. Order can be changed. -->
-
-                <div class="pswp__counter"></div>
-
-                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-
-                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
-
-                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-
-                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-
-                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
-                <!-- element will get class pswp__preloader--active when preloader is running -->
-                <div class="pswp__preloader">
-                    <div class="pswp__preloader__icn">
-                        <div class="pswp__preloader__cut">
-                            <div class="pswp__preloader__donut"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-                <div class="pswp__share-tooltip"></div>
-            </div>
-
-            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-            </button>
-
-            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-            </button>
-
-            <div class="pswp__caption">
-                <div class="pswp__caption__center"></div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
-<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
-
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
 <script>
-    function viewer_init() {
-        let pswpElement = document.querySelectorAll('.pswp')[0];
-        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
-
-        $imgArr.forEach(($em, i) => {
-            $em.onclick = () => {
-                // slider展开状态
-                // todo: 这样不好，后面改成状态
-                if (document.querySelector('.left-col.show')) return
-                let items = []
-                $imgArr.forEach(($em2, i2) => {
-                    let img = $em2.getAttribute('data-idx', i2)
-                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
-                    let title = $em2.getAttribute('alt')
-                    // 获得原图尺寸
-                    const image = new Image()
-                    image.src = src
-                    items.push({
-                        src: src,
-                        w: image.width || $em2.width,
-                        h: image.height || $em2.height,
-                        title: title
-                    })
-                })
-                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
-                    index: parseInt(i)
-                });
-                gallery.init()
-            }
-        })
-    }
-    viewer_init()
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
 </script>
 
-<!-- MathJax -->
-
-<!-- Katex -->
-
-<!-- busuanzi  -->
 
 
-<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+  
+  
+    <script>
+      window.FPConfig = {
+        delay: 0,
+        ignoreKeywords: [],
+        maxRPS: 5,
+        hoverDelay: 25
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+  
 
 
-<!-- ClickLove -->
-
-<!-- ClickBoom1 -->
-
-<!-- ClickBoom2 -->
-
-<!-- CodeCopy -->
 
 
-<link rel="stylesheet" href="/css/clipboard.css">
 
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+
+
+
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/valine.min.js"></script>
+
+
 <script>
-  function wait(callback, seconds) {
-    var timelag = null;
-    timelag = window.setTimeout(callback, seconds);
+  var GUEST_INFO = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link'.split(',').filter(function (item) {
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick', 'mail', 'link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function (item) {
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
   }
-  !function (e, t, a) {
-    var initCopyCode = function(){
-      var copyHtml = '';
-      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
-      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
-      copyHtml += '</button>';
-      $(".highlight .code pre").before(copyHtml);
-      $(".article pre code").before(copyHtml);
-      var clipboard = new ClipboardJS('.btn-copy', {
-        target: function(trigger) {
-          return trigger.nextElementSibling;
-        }
-      });
-      clipboard.on('success', function(e) {
-        let $btn = $(e.trigger);
-        $btn.addClass('copied');
-        let $icon = $($btn.find('i'));
-        $icon.removeClass('ri-file-copy-2-line');
-        $icon.addClass('ri-checkbox-circle-line');
-        let $span = $($btn.find('span'));
-        $span[0].innerText = 'COPIED';
-        
-        wait(function () { // 等待两秒钟后恢复
-          $icon.removeClass('ri-checkbox-circle-line');
-          $icon.addClass('ri-file-copy-2-line');
-          $span[0].innerText = 'COPY';
-        }, 2000);
-      });
-      clipboard.on('error', function(e) {
-        e.clearSelection();
-        let $btn = $(e.trigger);
-        $btn.addClass('copy-failed');
-        let $icon = $($btn.find('i'));
-        $icon.removeClass('ri-file-copy-2-line');
-        $icon.addClass('ri-time-line');
-        let $span = $($btn.find('span'));
-        $span[0].innerText = 'COPY FAILED';
-        
-        wait(function () { // 等待两秒钟后恢复
-          $icon.removeClass('ri-time-line');
-          $icon.addClass('ri-file-copy-2-line');
-          $span[0].innerText = 'COPY';
-        }, 2000);
-      });
+
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
     }
-    initCopyCode();
-  }(window, document);
+
+    var valine = new Valine();
+    valine.init({
+      el: '#valine_container',
+      meta: meta,
+      placeholder: pagePlaceholder,
+      path: path,
+      appId: "",
+      appKey: "",
+      pageSize: '10',
+      avatar: 'robohash',
+      lang: 'zh-cn',
+      visitor: 'true',
+      highlight: 'true',
+      mathJax: 'false',
+      enableQQ: 'true',
+      recordIP: 'false',
+      requiredFields: requiredFields,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps
+    })
+  }
+
+  $(function () {
+    pjax_valine();
+  });
 </script>
 
 
-<!-- CanvasBackground -->
 
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/app.min.js"></script>
+
+
+
+<!-- optional -->
+
+  <script>
+const SearchServiceimagePath="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/img/";
+const ROOT =  ("/" || "/").endsWith('/') ? ("/" || "/") : ("//" || "/" );
+
+$('.input.u-search-input').one('focus',function(){
+	
+		loadScript('https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/search/hexo.min.js',setSearchService);
+	
+})
+
+function listenSearch(){
+  
+    customSearch = new HexoSearch({
+      imagePath: SearchServiceimagePath
+    });
+  
+}
+function setSearchService() {
+	listenSearch();
+	
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'u9j57bwJod4EDmXWdxrwuqQT-MdYXbMMI',
+    app_key: 'jfHtEKVE24j0IVCGHbvuFClp',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'http://yoursite.com' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'http://yoursite.com' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'http://yoursite.com' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+
+
+
+
+<script>
+function listennSidebarTOC() {
+  const navItems = document.querySelectorAll(".toc li");
+  if (!navItems.length) return;
+  const sections = [...navItems].map((element) => {
+    const link = element.querySelector(".toc-link");
+    const target = document.getElementById(
+      decodeURI(link.getAttribute("href")).replace("#", "")
+    );
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({
+		top: target.offsetTop + 100,
+		
+		behavior: "smooth"
+		
+	  });
+    });
+    return target;
+  });
+
+  function activateNavByIndex(target) {
+    if (target.classList.contains("active-current")) return;
+
+    document.querySelectorAll(".toc .active").forEach((element) => {
+      element.classList.remove("active", "active-current");
+    });
+    target.classList.add("active", "active-current");
+    let parent = target.parentNode;
+    while (!parent.matches(".toc")) {
+      if (parent.matches("li")) parent.classList.add("active");
+      parent = parent.parentNode;
+    }
+  }
+
+  function findIndex(entries) {
+    let index = 0;
+    let entry = entries[index];
+    if (entry.boundingClientRect.top > 0) {
+      index = sections.indexOf(entry.target);
+      return index === 0 ? 0 : index - 1;
+    }
+    for (; index < entries.length; index++) {
+      if (entries[index].boundingClientRect.top <= 0) {
+        entry = entries[index];
+      } else {
+        return sections.indexOf(entry.target);
+      }
+    }
+    return sections.indexOf(entry.target);
+  }
+
+  function createIntersectionObserver(marginTop) {
+    marginTop = Math.floor(marginTop + 10000);
+    let intersectionObserver = new IntersectionObserver(
+      (entries, observe) => {
+        let scrollHeight = document.documentElement.scrollHeight + 100;
+        if (scrollHeight > marginTop) {
+          observe.disconnect();
+          createIntersectionObserver(scrollHeight);
+          return;
+        }
+        let index = findIndex(entries);
+        activateNavByIndex(navItems[index]);
+      },
+      {
+        rootMargin: marginTop + "px 0px -100% 0px",
+        threshold: 0,
+      }
+    );
+    sections.forEach((element) => {
+      element && intersectionObserver.observe(element);
+    });
+  }
+  createIntersectionObserver(document.documentElement.scrollHeight);
+}
+
+document.addEventListener("DOMContentLoaded", listennSidebarTOC);
+document.addEventListener("pjax:success", listennSidebarTOC);
+</script>
+
+<!-- more -->
+
+
+
+
+    
+      
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          "#l_cover",
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+      if (typeof $.fancybox != "undefined") {
+        $.fancybox.close();    // 关闭弹窗
+      }
+      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
+      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      volantis.$topBtn.unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+	  
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 关于百度统计对 SPA 页面的处理：
+      // 方案一：百度统计>管理>单页应用设置中，打开开启按钮即可对SPA进行统计。 https://tongji.baidu.com/web/help/article?id=324
+      // 方案二：取消注释下列代码。 https://tongji.baidu.com/web/help/article?id=235
+       
+
+      // 关于谷歌统计对 SPA 页面的处理：
+      // 当应用以动态方式加载内容并更新地址栏中的网址时，也应该更新通过 gtag.js 存储的网页网址。
+      // https://developers.google.cn/analytics/devguides/collection/gtagjs/single-page-applications?hl=zh-cn
+      
+	 
+
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+          if (typeof $.fancybox == "undefined") {
+            SCload_fancybox();
+          } else {
+            pjax_fancybox();
+          }
+        
+        
+        
+        
+        
+        
+          pjax_valine();
+        
+        
+        
+        
+      } catch (e) {
+        console.log(e);
+      }
+	  
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+	  
+      window.location.href = e.triggerElement.href;
+    });
+</script>
 
     
   </div>
 </body>
-
 </html>
