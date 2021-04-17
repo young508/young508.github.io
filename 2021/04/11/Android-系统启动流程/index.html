@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+  <title>Android 系统启动流程 - YOUNG BLOG</title>
+  
+    <meta name="keywords" content="Android">
+  
+
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  
+
+  <!-- import link -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/first.css">
+
+  
+
+  
+  <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+  
+
+  <script id="loadcss"></script>
+
+</head>
+
+<body>
+  
+
+<header id="l_header" class="l_header auto shadow blur show" style='opacity: 0' >
+  <div class='container'>
+  <div id='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/Logo-NavBar@3x.png'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+  <div id="l_body">
+    <div id="l_cover">
+  
+    
+        <div id="full" class='cover-wrapper post dock' style="display: none;">
+          
+            <div class='cover-bg lazyload placeholder' data-bg="https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.jpg"></div>
+          
+          <div class='cover-body'>
+  <div class='top'>
+    
+    
+      <p class="title">Jax</p>
+    
+    
+      <p class="subtitle">Imagine if I had a real weapon!</p>
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+          
+            <a href="/v4/getting-started/"
+              
+              
+              id="v4getting-started">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f5c3.svg'><p>文档</p>
+            </a>
+          
+            <a href="/faqs/"
+              
+              
+              id="faqs">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f516.svg'><p>帮助</p>
+            </a>
+          
+            <a href="/examples/"
+              
+              
+              id="examples">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f396.svg'><p>示例</p>
+            </a>
+          
+            <a href="/contributors/"
+              
+              
+              id="contributors">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f389.svg'><p>社区</p>
+            </a>
+          
+            <a href="/archives/"
+              
+              
+              id="archives">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4f0.svg'><p>博客</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://github.com/volantis-x/hexo-theme-volantis/"
+              
+              
+              id="https:githubcomvolantis-xhexo-theme-volantis">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f9ec.svg'><p>源码</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+        </div>
+    
+  
+  </div>
+
+    <div id='safearea'>
+      <div class='body-wrapper' id="pjax-container">
+        
+
+<div class='l_main'>
+  <article class="article post white-box reveal md shadow article-type-post" id="post" itemscope itemprop="blogPost">
+  
+
+
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title">
+        Android 系统启动流程
+      </h1>
+      <div class='new-meta-box'>
+        
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>请设置文章作者</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/Android/">Android</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：Apr 11, 2021</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="Android 系统启动流程" data-path="/2021/04/11/Android-%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+      </div>
+    
+  </div>
+
+
+  
+  <h1 id="系统启动"><a href="#系统启动" class="headerlink" title="系统启动"></a>系统启动</h1><blockquote>
+<p>Android手机从开机到完全可以使用，大致会经历下面几个流程</p>
+</blockquote>
+<p><img src="../../../../images/11/01.png" class="lazyload" data-srcset="../../../../images/11/01.png" srcset="data:image/png;base64,666" alt="Image text"></p>
+<h2 id="Boot-Rom"><a href="#Boot-Rom" class="headerlink" title="Boot Rom"></a>Boot Rom</h2><blockquote>
+<p>是一个驻留在CPU专用集成电路的硬连线代码</p>
+</blockquote>
+<p>当按下电源键,硬件上电之后,会从一个固定的内存区域读取程序.这个程序是烧写到硬件上的(ROM),用于将bootloader加载到RAM中,并开始执行它.</p>
+<h2 id="Boot-Loader"><a href="#Boot-Loader" class="headerlink" title="Boot Loader"></a>Boot Loader</h2><blockquote>
+<p>引导加载程序，它是一个小程序，在Android操作系统开始运行之前运行</p>
+</blockquote>
+<p>bootloader用于告诉设备如何找到系统内核,和启动内核.</p>
+<p>手机厂商一般会在bootloader中加上密钥锁和一些限制.</p>
+<p>bootloader执行一般分为两个阶段:</p>
+<ul>
+<li><p>检测外部RAM内存,并加载一段bootloader代码用于第二阶段的执行</p>
+</li>
+<li><p>设置运行内核所需要的网络和内存等</p>
+</li>
+</ul>
+<h2 id="Kernel"><a href="#Kernel" class="headerlink" title="Kernel"></a>Kernel</h2><p>Android使用的linux kernel,当kernel启动时,会执行一系列的初始化操作,比如设置缓存,内存,加载驱动程序,挂载根文件系统,初始化输入输出等.以上都属于内核态进程。</p>
+<p>当内核启动完成之后,第一件要做的事就是在系统文件中找一个“init”,作为根进程或者第一个系统进程.</p>
+<h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><p>init进程是<strong>用户空间的</strong>第一个进程,也是所有进程的“祖父”进程.</p>
+<p>init进程主要负责两件事:</p>
+<ul>
+<li>挂载(mount) /sys, /dev 或者/proc等文件</li>
+<li>运行/init.rc脚本,<code>init.rc</code>负责系统的初始化设置.</li>
+</ul>
+<p>init.rc位置:<code>/system/core/rootdir/init.rc</code></p>
+<p><code>init.rc</code>脚本会启动servicemanager,创建zygote进程(fork方式).</p>
+<h2 id="Zygote"><a href="#Zygote" class="headerlink" title="Zygote"></a>Zygote</h2><p>Zygote是在init进程启动时创建的，它又称为孵化器，它可以通过fork（复制进程）的形式来创建应用程序进程和SystemServer进程。并且，Zygote进程在启动的时候回创建DVM或者ART，因此通过fork而创建的应用程序进程和SystemServer进程可以在内部获取一个DVM或者ART的实例副本。</p>
+<p>Zygote进程启动中承担的主要职责如下：</p>
+<ul>
+<li>1、创建AppRuntime，执行其start方法，启动Zygote进程。。</li>
+<li>2、创建JVM并为JVM注册JNI方法。</li>
+<li>3、使用JNI调用ZygoteInit的main函数进入Zygote的Java FrameWork层。</li>
+<li>4、使用registerZygoteSocket方法创建服务器端Socket，并通过runSelectLoop方法等等AMS的请求去创建新的应用进程。</li>
+<li>5、启动SystemServer进程。</li>
+</ul>
+<h2 id="SystemServer"><a href="#SystemServer" class="headerlink" title="SystemServer"></a>SystemServer</h2><p>既然system server是一个进程,那么通常也有一个main()方法作为入口:</p>
+<p>主要完成了：</p>
+<ul>
+<li>Bootstrap Service</li>
+<li>Core Service</li>
+<li>Other Service</li>
+</ul>
+<p>每个类型的服务数量都非常之多,并且服务直接的启动顺序是有讲究的.</p>
+<p>其中，Bootstrap Service中启动了AMS,在ActivityManagerService中,调用finishBooting()方法,也就意味着启动完成.</p>
+<h2 id="启动Launch-App-桌面"><a href="#启动Launch-App-桌面" class="headerlink" title="启动Launch App(桌面)"></a>启动Launch App(桌面)</h2><p>ActivityManagerService启动完毕之后,会通过默认的”homeIntent”启动Launch App.</p>
+<p>LaunchAPP启动完毕之后,会发送启动完成的广播,供应用监听.</p>
+<h1 id="SystemServer分析"><a href="#SystemServer分析" class="headerlink" title="SystemServer分析"></a>SystemServer分析</h1><p>Zygote是Java框架端的入口，在init进程中通过 <strong>init.rc</strong> 脚本启动启动的。ZygoteInit.java 文件作为JNI 层启动Zygote 的入口，我们来看其中main方法</p>
+<h3 id="main"><a href="#main" class="headerlink" title="main"></a>main</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; ZygoteInit.java main</span><br><span class="line"></span><br><span class="line">public static void main(String argv[]) &#123;</span><br><span class="line">						</span><br><span class="line">						......</span><br><span class="line">						&#x2F;&#x2F;开启SystemServer标示</span><br><span class="line">  					boolean startSystemServer &#x3D; false;</span><br><span class="line">  					&#x2F;&#x2F;zygoteSocketName名字</span><br><span class="line">            String zygoteSocketName &#x3D; &quot;zygote&quot;;</span><br><span class="line">            String abiList &#x3D; null;</span><br><span class="line">            boolean enableLazyPreload &#x3D; false;</span><br><span class="line">            &#x2F;&#x2F;根据参数赋值判断</span><br><span class="line">            for (int i &#x3D; 1; i &lt; argv.length; i++) &#123;</span><br><span class="line">                if (&quot;start-system-server&quot;.equals(argv[i])) &#123;</span><br><span class="line">                    startSystemServer &#x3D; true;</span><br><span class="line">                &#125; else if (&quot;--enable-lazy-preload&quot;.equals(argv[i])) &#123;</span><br><span class="line">                    enableLazyPreload &#x3D; true;</span><br><span class="line">                &#125; else if (argv[i].startsWith(ABI_LIST_ARG)) &#123;</span><br><span class="line">                    abiList &#x3D; argv[i].substring(ABI_LIST_ARG.length());</span><br><span class="line">                &#125; else if (argv[i].startsWith(SOCKET_NAME_ARG)) &#123;</span><br><span class="line">                    zygoteSocketName &#x3D; argv[i].substring(SOCKET_NAME_ARG.length());</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    throw new RuntimeException(&quot;Unknown command line argument: &quot; + argv[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            ......</span><br><span class="line">            &#x2F;&#x2F;创建ZygoteServer，isPrimaryZygote&#x3D;true 表示 zygote进程</span><br><span class="line">            zygoteServer &#x3D; new ZygoteServer(isPrimaryZygote);</span><br><span class="line"></span><br><span class="line">						&#x2F;&#x2F;创建SystemServer</span><br><span class="line">            if (startSystemServer) &#123;</span><br><span class="line">                Runnable r &#x3D; forkSystemServer(abiList, zygoteSocketName, zygoteServer);</span><br><span class="line">                if (r !&#x3D; null) &#123;</span><br><span class="line">                    r.run();</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">						&#x2F;&#x2F;等待通过socket， AMS 请求交互，如果可以执行到此</span><br><span class="line">            caller &#x3D; zygoteServer.runSelectLoop(abiList);</span><br><span class="line">            caller.run()</span><br><span class="line">            .......</span><br><span class="line">            </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以发现上面main方法流程如下：</p>
+<ul>
+<li>创建一个 Server 端为 ”zygote“ 名称的  Socket，用于等待 AMS 请求 Zygote 来创建新的应用程序进程。</li>
+<li>根据 JNI 传递过来的信息来判断是否启动 SystemServer 进程。</li>
+<li>等待 AMS 请求，用于创建新的应用程序进程。</li>
+</ul>
+<h3 id="ZygoteServer"><a href="#ZygoteServer" class="headerlink" title="ZygoteServer"></a>ZygoteServer</h3><p>ZygoteServer 定位就是zygote服务和客户端的连接器、处理器。客户端通过名为zygote的socket发来一些启动请求，由zygote进程fork出来子进程，享用zygote在启动初期所做好的一切（JVM初始化、JNI初始化、class预加载、资源预加载等），而后执行通过命令解析出的Runnable</p>
+<h2 id="启动-SystemServer-进程"><a href="#启动-SystemServer-进程" class="headerlink" title="启动 SystemServer 进程"></a><strong>启动 SystemServer 进程</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; ZygoteInit.java  forkSystemServer</span><br><span class="line">   private static Runnable forkSystemServer(String abiList, String socketName,</span><br><span class="line">            ZygoteServer zygoteServer) &#123;</span><br><span class="line">            ......</span><br><span class="line">            </span><br><span class="line">            &#x2F;&#x2F;1.1. 启动 SystemServer 的参数</span><br><span class="line">        String args[] &#x3D; &#123;</span><br><span class="line">                &quot;--setuid&#x3D;1000&quot;,</span><br><span class="line">                &quot;--setgid&#x3D;1000&quot;,</span><br><span class="line">                &quot;--setgroups&#x3D;1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1018,1021,1023,&quot;</span><br><span class="line">                        + &quot;1024,1032,1065,3001,3002,3003,3006,3007,3009,3010,3011&quot;,</span><br><span class="line">                &quot;--capabilities&#x3D;&quot; + capabilities + &quot;,&quot; + capabilities,</span><br><span class="line">                &quot;--nice-name&#x3D;system_server&quot;,</span><br><span class="line">                &quot;--runtime-args&quot;,</span><br><span class="line">                &quot;--target-sdk-version&#x3D;&quot; + VMRuntime.SDK_VERSION_CUR_DEVELOPMENT,</span><br><span class="line">                &quot;com.android.server.SystemServer&quot;,</span><br><span class="line">        &#125;;</span><br><span class="line">        .......</span><br><span class="line">        </span><br><span class="line">        &#x2F;&#x2F;创建一个子进程，也就是 SystemServer 进程</span><br><span class="line">         pid &#x3D; Zygote.forkSystemServer(</span><br><span class="line">                    parsedArgs.mUid, parsedArgs.mGid,</span><br><span class="line">                    parsedArgs.mGids,</span><br><span class="line">                    parsedArgs.mRuntimeFlags,</span><br><span class="line">                    null,</span><br><span class="line">                    parsedArgs.mPermittedCapabilities,</span><br><span class="line">                    parsedArgs.mEffectiveCapabilities);</span><br><span class="line">                    </span><br><span class="line">                    </span><br><span class="line">         .......</span><br><span class="line">       	&#x2F;* For child process *&#x2F;</span><br><span class="line">       	&#x2F;&#x2F;如果当前代码运行在子进程中 ，也就是 SystemServer 进程中</span><br><span class="line">        if (pid &#x3D;&#x3D; 0) &#123;</span><br><span class="line">            if (hasSecondZygote(abiList)) &#123;</span><br><span class="line">                waitForSecondaryZygote(socketName);</span><br><span class="line">            &#125;</span><br><span class="line">            zygoteServer.closeServerSocket();</span><br><span class="line">            </span><br><span class="line">            &#x2F;&#x2F;</span><br><span class="line">            return handleSystemServerProcess(parsedArgs);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return null;</span><br><span class="line">            </span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Zygote.java  forkSystemServer</span><br><span class="line">    static int forkSystemServer(int uid, int gid, int[] gids, int runtimeFlags,</span><br><span class="line">            int[][] rlimits, long permittedCapabilities, long effectiveCapabilities) &#123;</span><br><span class="line">        ZygoteHooks.preFork();</span><br><span class="line"></span><br><span class="line">        int pid &#x3D; nativeForkSystemServer(</span><br><span class="line">                uid, gid, gids, runtimeFlags, rlimits,</span><br><span class="line">                permittedCapabilities, effectiveCapabilities);</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Set the Java Language thread priority to the default value for new apps.</span><br><span class="line">        Thread.currentThread().setPriority(Thread.NORM_PRIORITY);</span><br><span class="line"></span><br><span class="line">        ZygoteHooks.postForkCommon();</span><br><span class="line">        return pid;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private static native int nativeForkSystemServer(int uid, int gid, int[] gids, int runtimeFlags,</span><br><span class="line">            int[][] rlimits, long permittedCapabilities, long effectiveCapabilities);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个调用最终在ART虚拟机中生效，虚拟机为从zygote衍生出来的子进程做了一系列的配置。当然，这个过程中，对于system_server有过很多特殊的待遇（比如，关闭JIT）。</p>
+<h3 id="handleSystemServerProcess"><a href="#handleSystemServerProcess" class="headerlink" title="handleSystemServerProcess"></a>handleSystemServerProcess</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;ZygoteInit.java handleSystemServerProcess</span><br><span class="line"> private static void handleSystemServerProcess(</span><br><span class="line">            ZygoteConnection.Arguments parsedArgs)</span><br><span class="line">            throws Zygote.MethodAndArgsCaller &#123;</span><br><span class="line">        ...</span><br><span class="line">        if (parsedArgs.invokeWith !&#x3D; null) &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            ClassLoader cl &#x3D; null;</span><br><span class="line">            if (systemServerClasspath !&#x3D; null) &#123;</span><br><span class="line">                &#x2F;**</span><br><span class="line">                 * 1. 创建了 PathClassLoader</span><br><span class="line">                 *&#x2F;</span><br><span class="line">                cl &#x3D; createPathClassLoader(systemServerClasspath, parsedArgs.targetSdkVersion);</span><br><span class="line">                Thread.currentThread().setContextClassLoader(cl);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            &#x2F;**</span><br><span class="line">             * 2. 调用自己的 zygoteInit 函数</span><br><span class="line">             *&#x2F;</span><br><span class="line">            ZygoteInit.zygoteInit(parsedArgs.targetSdkVersion, parsedArgs.remainingArgs, cl);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;* should never reach here *&#x2F;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   	public static final Runnable zygoteInit(int targetSdkVersion, long[] disabledCompatChanges,</span><br><span class="line">            String[] argv, ClassLoader classLoader) &#123;</span><br><span class="line">        if (RuntimeInit.DEBUG) &#123;</span><br><span class="line">            Slog.d(RuntimeInit.TAG, &quot;RuntimeInit: Starting application from zygote&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;ZygoteInit&quot;);</span><br><span class="line">        RuntimeInit.redirectLogStreams();</span><br><span class="line"></span><br><span class="line">        RuntimeInit.commonInit();</span><br><span class="line">        &#x2F;&#x2F;1. 启动 Binder 线程池</span><br><span class="line">        ZygoteInit.nativeZygoteInit();</span><br><span class="line">        </span><br><span class="line">        &#x2F;&#x2F;2. 进入 SystemServer 的 main 方法</span><br><span class="line">        return RuntimeInit.applicationInit(targetSdkVersion, disabledCompatChanges, argv,</span><br><span class="line">                classLoader);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过反射直接调用 <strong>SystemServer.java main()</strong></p>
+<h3 id="SystemServer-main"><a href="#SystemServer-main" class="headerlink" title="SystemServer main"></a>SystemServer main</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">       new SystemServer().run();</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">  private void run() &#123;</span><br><span class="line">       try &#123;</span><br><span class="line">          ...</span><br><span class="line">           Looper.prepareMainLooper();</span><br><span class="line">					&#x2F;&#x2F;1. 加载动态库 libandroid_servers .so</span><br><span class="line">           System.loadLibrary(&quot;android_servers&quot;);</span><br><span class="line">           performPendingShutdown();</span><br><span class="line">					&#x2F;&#x2F;创建系统级别的 Context</span><br><span class="line">           createSystemContext();</span><br><span class="line">					&#x2F;&#x2F;2. 创建 SystemServiceManager 它会对系统服务进行创建、启动和生命周期管理	</span><br><span class="line">           mSystemServiceManager &#x3D; new SystemServiceManager(mSystemContext);</span><br><span class="line">           mSystemServiceManager.setRuntimeRestarted(mRuntimeRestart);</span><br><span class="line">           LocalServices.addService(SystemServiceManager.class, mSystemServiceManager);</span><br><span class="line">           &#x2F;&#x2F; Prepare the thread pool for init tasks that can be parallelized</span><br><span class="line">           SystemServerInitThreadPool.get();</span><br><span class="line">       &#125; finally &#123;</span><br><span class="line">           traceEnd();  &#x2F;&#x2F; InitBeforeStartServices</span><br><span class="line">       &#125;</span><br><span class="line">       try &#123;</span><br><span class="line">           traceBeginAndSlog(&quot;StartServices&quot;);</span><br><span class="line">					&#x2F;&#x2F;3. SystemServiceManager启动了 AMS 、PowerMS、PackageMS 等服务</span><br><span class="line">           startBootstrapServices();</span><br><span class="line">					&#x2F;&#x2F;4. 启动了 DropBoxManagerService、BatteryService、UsageStatsService 和 WebViewUpdateService</span><br><span class="line">           startCoreServices();</span><br><span class="line">					&#x2F;&#x2F;5. 启动了CameraService、AlarmManagerService、VrManagerService 等服务。</span><br><span class="line">           startOtherServices();</span><br><span class="line">           SystemServerInitThreadPool.shutdown();</span><br><span class="line">       &#125; catch (Throwable ex) &#123;</span><br><span class="line">         </span><br><span class="line">           throw ex;</span><br><span class="line">       &#125; finally &#123;</span><br><span class="line">           traceEnd();</span><br><span class="line">       &#125;</span><br><span class="line">			...</span><br><span class="line">       Looper.loop();</span><br><span class="line">       throw new RuntimeException(&quot;Main thread loop unexpectedly exited&quot;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过上面代码主要做了哪些事儿，请看下面总结</p>
+<ul>
+<li>创建消息 Looper</li>
+<li>加载动态库 libandroid_servers .so</li>
+<li>创建系统级别的 Context</li>
+<li>创建 SystemServiceManager 它会对系统服务进行创建、启动和生命周期管理</li>
+<li>通过 SystemServiceManager 启动 AMS 、PowerMS、PackageMS 等服务</li>
+<li>启动 DropBoxManagerService、BatteryService、UsageStatsService 和 WebViewUpdateService 等核心服务，他们父类都是 SystemServer</li>
+<li>启动 CameraService、AlarmManagerService、VrManagerService 等服务</li>
+</ul>
+<p>官方把系统分为了 三种类型，分别是引导服务，核心服务和其它服务, 其中其它服务是一些非紧要和不需要立即启动的服务。这 三种类型的服务总有 100 多个，下面列出部分系统服务及其作用。</p>
+<table>
+<thead>
+<tr>
+<th>引导服务</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Installer</td>
+<td>系统安装 APK 的一个服务类，启动完成 Installer 服务之后才能启动其它系统服务</td>
+</tr>
+<tr>
+<td>ActivityManagerService</td>
+<td>负责四大组件的启动、切换、调度</td>
+</tr>
+<tr>
+<td>PowerManagerService</td>
+<td>计算系统中和 Power 相关的计算，然后决策系统应该如何反应</td>
+</tr>
+<tr>
+<td>LightsService</td>
+<td>管理和显示背光 LED</td>
+</tr>
+<tr>
+<td>DisplayManagerService</td>
+<td>用来管理所有显示设备</td>
+</tr>
+<tr>
+<td>UserManagerService</td>
+<td>多用户模式管理</td>
+</tr>
+<tr>
+<td>SensorService</td>
+<td>为系统提供各种感应器服务</td>
+</tr>
+<tr>
+<td>PackageManagerService</td>
+<td>用来对 APK 进行安装、解析、删除、卸载等操作</td>
+</tr>
+<tr>
+<td>……</td>
+<td>……</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>核心服务</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DropBoxManagerService</td>
+<td>用于生成和管理系统运行时的一些日志文件</td>
+</tr>
+<tr>
+<td>BatteryService</td>
+<td>管理电池相关服务</td>
+</tr>
+<tr>
+<td>UsageStatsService</td>
+<td>手机用户使用每一个 APP 的频率、使用时长</td>
+</tr>
+<tr>
+<td>WebViewUpdateService</td>
+<td>WebView 更新服务</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>其它服务</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CameraService</td>
+<td>摄像头相关服务</td>
+</tr>
+<tr>
+<td>AlarmManagerService</td>
+<td>全局定时器管理服务</td>
+</tr>
+<tr>
+<td>InputManagerService</td>
+<td>管理输入事件</td>
+</tr>
+<tr>
+<td>WindowManagerService</td>
+<td>窗口管理服务</td>
+</tr>
+<tr>
+<td>VrManagerService</td>
+<td>VR 模式管理服务</td>
+</tr>
+<tr>
+<td>BluetoothService</td>
+<td>蓝牙管理服务</td>
+</tr>
+<tr>
+<td>NotificationManagerService</td>
+<td>通知管理服务</td>
+</tr>
+<tr>
+<td>DeviceStorageMonitorService</td>
+<td>存储相关管理服务</td>
+</tr>
+<tr>
+<td>LocationManagerService</td>
+<td>定位管理服务</td>
+</tr>
+<tr>
+<td>AudioService</td>
+<td>音频相关管理服务</td>
+</tr>
+<tr>
+<td>……</td>
+<td>……</td>
+</tr>
+</tbody></table>
+<h3 id="ActivityManagerService-服务启动"><a href="#ActivityManagerService-服务启动" class="headerlink" title="ActivityManagerService 服务启动"></a>ActivityManagerService 服务启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;com.android.server SystemServer.java</span><br><span class="line"> private void startBootstrapServices() &#123;</span><br><span class="line">   </span><br><span class="line">   ...</span><br><span class="line">   </span><br><span class="line">   &#x2F;&#x2F;1. 调用 SystemServiceManager 的统一启动服务接口 startService</span><br><span class="line">    mActivityManagerService &#x3D; mSystemServiceManager.startService(</span><br><span class="line">                ActivityManagerService.Lifecycle.class).getService();</span><br><span class="line">   &#x2F;&#x2F;2. AMS 与 系统服务管理类进行绑定</span><br><span class="line">    mActivityManagerService.setSystemServiceManager(mSystemServiceManager);</span><br><span class="line">   &#x2F;&#x2F;3. AMS 与 APK 安装服务进行绑定 </span><br><span class="line">    mActivityManagerService.setInstaller(installer);</span><br><span class="line">   </span><br><span class="line">   ...</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> 		public &lt;T extends SystemService&gt; T startService(Class&lt;T&gt; serviceClass) &#123;</span><br><span class="line">       	&#x2F;&#x2F;1. 反射实例化对象</span><br><span class="line">        Constructor&lt;T&gt; constructor &#x3D; serviceClass.getConstructor(Context.class);</span><br><span class="line">        service &#x3D; constructor.newInstance(mContext);</span><br><span class="line">            	</span><br><span class="line">        &#x2F;&#x2F;2. </span><br><span class="line">       startService(service);</span><br><span class="line">       return service;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void startService(@NonNull final SystemService service) &#123;</span><br><span class="line">        &#x2F;&#x2F; 1. </span><br><span class="line">        mServices.add(service);</span><br><span class="line">        &#x2F;&#x2F; Start it.</span><br><span class="line">        long time &#x3D; System.currentTimeMillis();</span><br><span class="line">        try &#123;</span><br><span class="line">          	&#x2F;&#x2F;2. </span><br><span class="line">            service.onStart();</span><br><span class="line">        &#125; catch (RuntimeException ex) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>从 Java 框架入口 ZygoteInit.main() 函数到 SystemServer 进程启动和处理服务启动的逻辑执行流程大概总结说明下：</p>
+<ul>
+<li>创建一个 Server 端为 ”zygote“ 名称的  Socket，用于等待 AMS 请求 Zygote 来创建新的应用程序进程。</li>
+<li>预处理加载类跟资源。</li>
+<li>根据 JNI 传递过来的信息来判断是否创建 SystemServer 进程。</li>
+<li>启动 Binder 线程池，与其它进程进行通信。</li>
+<li>进入 SystemServer.java main() 函数并创建 SystemServiceManager ，用于对各种服务的创建、启动和生命周期的管理。</li>
+<li>启动各种系统服务。</li>
+<li>等待 AMS 请求，用于创建新的应用程序进程。</li>
+</ul>
+<h1 id="Launcher-的启动分析"><a href="#Launcher-的启动分析" class="headerlink" title="Launcher 的启动分析"></a>Launcher 的启动分析</h1><h1 id="App启动"><a href="#App启动" class="headerlink" title="App启动"></a>App启动</h1><p>服务器客户端(以下简称CS架构)的概念不仅仅存在于Web开发中，在Android的框架设计中，使用的也是CS架构。服务器端指的就是所有App共用的系统服务，比如我们这里提到的AMS、PMS、WMS等，这些基础的系统服务是被所有的App公用的，当某个App想实现某个操作的时候，要告诉这些系统服务。</p>
+<p>SystemServer进程会初始化近百个Android服务，其中AMS就是和四大组件关系非常大的服务。</p>
+<h2 id="AMS"><a href="#AMS" class="headerlink" title="AMS"></a>AMS</h2>
+  
+  
+    
+    <div class='footer'>
+      
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=http://yoursite.com/2021/04/11/Android-%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/>http://yoursite.com/2021/04/11/Android-%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-04-15T22:49:12+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：Apr 15, 2021</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Android/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Android</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2021/04/11/Android-%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/&title=Android 系统启动流程 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://yoursite.com/2021/04/11/Android-%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/&title=Android 系统启动流程 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2021/04/11/Android-%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/&title=Android 系统启动流程 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+        <a class='prev' href='/2021/04/14/AMS%E5%88%86%E6%9E%90/'>
+          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>AMS分析</p>
+          <p class='content'>AMS分析作用ActivityManagerService是Framework层的核心服务之一，ActivityManagerService是Binder的子类,它的功能主要以下三点：
+
+四大组...</p>
+        </a>
+      
+      
+        <a class='next' href='/2021/03/10/Redis%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/'>
+          <p class='title'>Redis知识汇总<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>Redis五大基本数据结构
+Redis支持5种数据类型：string（字符串），hash（哈希），list（列表），set（集合）及zset(sorted set：有序集合)
+
+Redis内部内...</p>
+        </a>
+      
+    </div>
+  
+</article>
+
+
+  
+
+  <article class="post white-box reveal shadow" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+
+</div>
+<aside class='l_side'>
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Boot-Rom"><span class="toc-text">Boot Rom</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Boot-Loader"><span class="toc-text">Boot Loader</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kernel"><span class="toc-text">Kernel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#init"><span class="toc-text">init</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zygote"><span class="toc-text">Zygote</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SystemServer"><span class="toc-text">SystemServer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8Launch-App-%E6%A1%8C%E9%9D%A2"><span class="toc-text">启动Launch App(桌面)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#main"><span class="toc-text">main</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZygoteServer"><span class="toc-text">ZygoteServer</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8-SystemServer-%E8%BF%9B%E7%A8%8B"><span class="toc-text">启动 SystemServer 进程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#handleSystemServerProcess"><span class="toc-text">handleSystemServerProcess</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SystemServer-main"><span class="toc-text">SystemServer main</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ActivityManagerService-%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8"><span class="toc-text">ActivityManagerService 服务启动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AMS"><span class="toc-text">AMS</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+        
+        
+          <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="Android 系统启动流程";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+
+  var l_header=document.getElementById("l_header");
+  
+  l_header.classList.add("show");
+  
+</script>
+
+        
+      </div>
+      
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        
+          <div><p><span id="lc-sv">本站总访问量为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 次</span> <span id="lc-uv">访客数为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 人</span></p>
+</div>
+        
+      
+    
+      
+        本站使用
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6" target="_blank" class="codename">Volantis</a>
+        作为主题
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+      <a id="s-top" class="fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+  </div>
+  <div>
+    <script>
+window.volantis={};
+window.volantis.loadcss=document.getElementById("loadcss");
+/********************脚本懒加载函数********************************/
+function loadScript(src, cb) {
+var HEAD = document.getElementsByTagName('head')[0] || document.documentElement;
+var script = document.createElement('script');
+script.setAttribute('type','text/javascript');
+if (cb) script.onload = cb;
+script.setAttribute('src', src);
+HEAD.appendChild(script);
+}
+//https://github.com/filamentgroup/loadCSS
+var loadCSS = function( href, before, media, attributes ){
+	var doc = window.document;
+	var ss = doc.createElement( "link" );
+	var ref;
+	if( before ){
+		ref = before;
+	}
+	else {
+		var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+		ref = refs[ refs.length - 1];
+	}
+	var sheets = doc.styleSheets;
+	if( attributes ){
+		for( var attributeName in attributes ){
+			if( attributes.hasOwnProperty( attributeName ) ){
+				ss.setAttribute( attributeName, attributes[attributeName] );
+			}
+		}
+	}
+	ss.rel = "stylesheet";
+	ss.href = href;
+	ss.media = "only x";
+	function ready( cb ){
+		if( doc.body ){
+			return cb();
+		}
+		setTimeout(function(){
+			ready( cb );
+		});
+	}
+	ready( function(){
+		ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
+	});
+	var onloadcssdefined = function( cb ){
+		var resolvedHref = ss.href;
+		var i = sheets.length;
+		while( i-- ){
+			if( sheets[ i ].href === resolvedHref ){
+				return cb();
+			}
+		}
+		setTimeout(function() {
+			onloadcssdefined( cb );
+		});
+	};
+	function loadCB(){
+		if( ss.addEventListener ){
+			ss.removeEventListener( "load", loadCB );
+		}
+		ss.media = media || "all";
+	}
+	if( ss.addEventListener ){
+		ss.addEventListener( "load", loadCB);
+	}
+	ss.onloadcssdefined = onloadcssdefined;
+	onloadcssdefined( loadCB );
+	return ss;
+};
+</script>
+<script>
+  
+  loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css", window.volantis.loadcss);
+  
+  
+  
+  
+</script>
+<!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script>
+  function pjax_fancybox() {
+    $(".md .gallery").find("img").each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md .gallery").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  function SCload_fancybox() {
+    if ($(".md .gallery").find("img").length == 0) return;
+    loadCSS("https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css", document.getElementById("loadcss"));
+    setTimeout(function() {
+      loadScript('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', pjax_fancybox)
+    }, 1);
+  };
+  $(function () {
+    SCload_fancybox();
+  });
+</script>
+
+
+<!-- internal -->
+
+
+
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+  
+    <script>
+      window.FPConfig = {
+        delay: 0,
+        ignoreKeywords: [],
+        maxRPS: 5,
+        hoverDelay: 25
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/valine.min.js"></script>
+
+
+<script>
+  var GUEST_INFO = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link'.split(',').filter(function (item) {
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick', 'mail', 'link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function (item) {
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+
+    var valine = new Valine();
+    valine.init({
+      el: '#valine_container',
+      meta: meta,
+      placeholder: pagePlaceholder,
+      path: path,
+      appId: "",
+      appKey: "",
+      pageSize: '10',
+      avatar: 'robohash',
+      lang: 'zh-cn',
+      visitor: 'true',
+      highlight: 'true',
+      mathJax: 'false',
+      enableQQ: 'true',
+      recordIP: 'false',
+      requiredFields: requiredFields,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps
+    })
+  }
+
+  $(function () {
+    pjax_valine();
+  });
+</script>
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/app.min.js"></script>
+
+
+
+<!-- optional -->
+
+  <script>
+const SearchServiceimagePath="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/img/";
+const ROOT =  ("/" || "/").endsWith('/') ? ("/" || "/") : ("//" || "/" );
+
+$('.input.u-search-input').one('focus',function(){
+	
+		loadScript('https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/search/hexo.min.js',setSearchService);
+	
+})
+
+function listenSearch(){
+  
+    customSearch = new HexoSearch({
+      imagePath: SearchServiceimagePath
+    });
+  
+}
+function setSearchService() {
+	listenSearch();
+	
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'u9j57bwJod4EDmXWdxrwuqQT-MdYXbMMI',
+    app_key: 'jfHtEKVE24j0IVCGHbvuFClp',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'http://yoursite.com' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'http://yoursite.com' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'http://yoursite.com' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+
+
+
+
+<script>
+function listennSidebarTOC() {
+  const navItems = document.querySelectorAll(".toc li");
+  if (!navItems.length) return;
+  const sections = [...navItems].map((element) => {
+    const link = element.querySelector(".toc-link");
+    const target = document.getElementById(
+      decodeURI(link.getAttribute("href")).replace("#", "")
+    );
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({
+		top: target.offsetTop + 100,
+		
+		behavior: "smooth"
+		
+	  });
+    });
+    return target;
+  });
+
+  function activateNavByIndex(target) {
+    if (target.classList.contains("active-current")) return;
+
+    document.querySelectorAll(".toc .active").forEach((element) => {
+      element.classList.remove("active", "active-current");
+    });
+    target.classList.add("active", "active-current");
+    let parent = target.parentNode;
+    while (!parent.matches(".toc")) {
+      if (parent.matches("li")) parent.classList.add("active");
+      parent = parent.parentNode;
+    }
+  }
+
+  function findIndex(entries) {
+    let index = 0;
+    let entry = entries[index];
+    if (entry.boundingClientRect.top > 0) {
+      index = sections.indexOf(entry.target);
+      return index === 0 ? 0 : index - 1;
+    }
+    for (; index < entries.length; index++) {
+      if (entries[index].boundingClientRect.top <= 0) {
+        entry = entries[index];
+      } else {
+        return sections.indexOf(entry.target);
+      }
+    }
+    return sections.indexOf(entry.target);
+  }
+
+  function createIntersectionObserver(marginTop) {
+    marginTop = Math.floor(marginTop + 10000);
+    let intersectionObserver = new IntersectionObserver(
+      (entries, observe) => {
+        let scrollHeight = document.documentElement.scrollHeight + 100;
+        if (scrollHeight > marginTop) {
+          observe.disconnect();
+          createIntersectionObserver(scrollHeight);
+          return;
+        }
+        let index = findIndex(entries);
+        activateNavByIndex(navItems[index]);
+      },
+      {
+        rootMargin: marginTop + "px 0px -100% 0px",
+        threshold: 0,
+      }
+    );
+    sections.forEach((element) => {
+      element && intersectionObserver.observe(element);
+    });
+  }
+  createIntersectionObserver(document.documentElement.scrollHeight);
+}
+
+document.addEventListener("DOMContentLoaded", listennSidebarTOC);
+document.addEventListener("pjax:success", listennSidebarTOC);
+</script>
+
+<!-- more -->
+
+
+
+
+    
+      
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          "#l_cover",
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+      if (typeof $.fancybox != "undefined") {
+        $.fancybox.close();    // 关闭弹窗
+      }
+      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
+      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      volantis.$topBtn.unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+	  
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 关于百度统计对 SPA 页面的处理：
+      // 方案一：百度统计>管理>单页应用设置中，打开开启按钮即可对SPA进行统计。 https://tongji.baidu.com/web/help/article?id=324
+      // 方案二：取消注释下列代码。 https://tongji.baidu.com/web/help/article?id=235
+       
+
+      // 关于谷歌统计对 SPA 页面的处理：
+      // 当应用以动态方式加载内容并更新地址栏中的网址时，也应该更新通过 gtag.js 存储的网页网址。
+      // https://developers.google.cn/analytics/devguides/collection/gtagjs/single-page-applications?hl=zh-cn
+      
+	 
+
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+          if (typeof $.fancybox == "undefined") {
+            SCload_fancybox();
+          } else {
+            pjax_fancybox();
+          }
+        
+        
+        
+        
+        
+        
+          pjax_valine();
+        
+        
+        
+        
+      } catch (e) {
+        console.log(e);
+      }
+	  
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+	  
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+
+    
+  </div>
+</body>
+</html>
