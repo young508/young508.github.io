@@ -21,7 +21,7 @@
 
   <!-- 页面元数据 -->
   
-  <title>Tag: JVM - YOUNG BLOG</title>
+  <title>Category: 线程 - YOUNG BLOG</title>
   
 
   
@@ -408,24 +408,22 @@
   
     
     <h2 class="article-title" >
-      <a href="/2020/11/25/Java-JVM/">
-        Java JVM
+      <a href="/2021/04/18/Android%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1Handler/">
+        Android线程间通信Handler
       </a>
     </h2>
   
   <div class='md'>
     
       
-        JVM 相关知识体系
-本文是构建JVM核心知识点全局知识体系
+        Handler
+Handler在android系统中有非常大的作用，比如Activity的生命周期回调，Application的绑定等。虽然真实开发中，用Handler越来越少，但是这部分源码是非常有必要了解的。难度也不是很大。
 
-文章内容主要是学习笔记，来源：https://www.pdai.tech/md/java/jvm/java-jvm-class.html
-知识体系
-学习要点
-不同的虚拟机实现方式上也有差别，如果没有特别指出，这里的JVM指的是sun的HotSpot；不同的JDK版本略有差别，这里主要以1.8
+Q1：Handler机制有什么用
+不同线程间信息传递。比如io线程进行网络请求成功后更新ui线程。
+延迟事件发生。sendMessage可以设置delay方法
 
-
-JVM 基础 - 类字节码详解多...
+...
       
     
   </div>
@@ -433,15 +431,15 @@ JVM 基础 - 类字节码详解多...
     <div class='meta-v3' line_style='solid'>
       <div>
         
-        <time>2020-11-25</time>
+        <time>2021-04-18</time>
         
           <span class="dot"></span>
-          <a class="category-link" href="/categories/Java/">Java</a><span class="sep"></span><a class="category-link" href="/categories/Java/Java%E8%AF%AD%E6%B3%95/">Java语法</a>
+          <a class="category-link" href="/categories/Android/">Android</a><span class="sep"></span><a class="category-link" href="/categories/Android/%E7%BA%BF%E7%A8%8B/">线程</a>
         
       </div>
       
         <div>
-          <a class='readmore' href='/2020/11/25/Java-JVM/'>
+          <a class='readmore' href='/2021/04/18/Android%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1Handler/'>
             Read More
           </a>
         </div>
