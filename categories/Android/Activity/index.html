@@ -21,7 +21,7 @@
 
   <!-- 页面元数据 -->
   
-  <title>标签：CAS - YOUNG BLOG</title>
+  <title>分类：Activity - YOUNG BLOG</title>
   
 
   
@@ -408,22 +408,23 @@
   
     
     <h2 class="article-title" >
-      <a href="/2020/12/14/Java-%E5%A4%9A%E7%BA%BF%E7%A8%8BJUC%E5%BA%93%EF%BC%88Atomic%EF%BC%89/">
-        Java-多线程JUC库（Atomic）
+      <a href="/2021/04/22/Activity%E7%9F%A5%E5%A4%9A%E5%B0%91/">
+        Activity知多少
       </a>
     </h2>
   
   <div class='md'>
     
       
-        简介学习笔记： https://www.pdai.tech/md/java/thread/java-thread-x-juc-AtomicInteger.html
+        生命周期
+下图是单个Activity的生命周期回调情况
 
-JUC：指jdk里面java.util.concureent下面类库，这里面是java多线程编程基础。
 
-思维导图如下：
 
-本文重点介绍Atomic相关知识点，也就是java多线程编程时，如何实现原子性操作。
-相关class类文...
+当ActivityA启动ActivityB，如下图
+
+
+Activity状态的保存和恢复状态的保存当Activity 非正常退到后台时，就会调用onSaveInstanceState()方法。非正常的情况包括：有新的Activity启动，灭屏，未设置保存状态的横竖屏切换，按home键到桌面，切换到最近任务列表。正常情况是用户点击返...
       
     
   </div>
@@ -431,15 +432,15 @@ JUC：指jdk里面java.util.concureent下面类库，这里面是java多线程�
     <div class='meta-v3' line_style='solid'>
       <div>
         
-        <time>2020-12-14</time>
+        <time>2021-04-22</time>
         
           <span class="dot"></span>
-          <a class="category-link" href="/categories/Java/">Java</a><span class="sep"></span><a class="category-link" href="/categories/Java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
+          <a class="category-link" href="/categories/Android/">Android</a><span class="sep"></span><a class="category-link" href="/categories/Android/Activity/">Activity</a>
         
       </div>
       
         <div>
-          <a class='readmore' href='/2020/12/14/Java-%E5%A4%9A%E7%BA%BF%E7%A8%8BJUC%E5%BA%93%EF%BC%88Atomic%EF%BC%89/'>
+          <a class='readmore' href='/2021/04/22/Activity%E7%9F%A5%E5%A4%9A%E5%B0%91/'>
             阅读全文
           </a>
         </div>
