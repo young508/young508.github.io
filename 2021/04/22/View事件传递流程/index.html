@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+  <title>View事件传递流程 - YOUNG BLOG</title>
+  
+    <meta name="keywords" content="Android,View">
+  
+
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  
+
+  <!-- import link -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/first.css">
+
+  
+
+  
+  <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+  
+
+  <script id="loadcss"></script>
+
+</head>
+
+<body>
+  
+
+<header id="l_header" class="l_header auto shadow blur show" style='opacity: 0' >
+  <div class='container'>
+  <div id='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/Logo-NavBar@3x.png'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+  <div id="l_body">
+    <div id="l_cover">
+  
+    
+        <div id="full" class='cover-wrapper post dock' style="display: none;">
+          
+            <div class='cover-bg lazyload placeholder' data-bg="https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.jpg"></div>
+          
+          <div class='cover-body'>
+  <div class='top'>
+    
+    
+      <p class="title">Jax</p>
+    
+    
+      <p class="subtitle">Imagine if I had a real weapon!</p>
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+          
+            <a href="/v4/getting-started/"
+              
+              
+              id="v4getting-started">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f5c3.svg'><p>文档</p>
+            </a>
+          
+            <a href="/faqs/"
+              
+              
+              id="faqs">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f516.svg'><p>帮助</p>
+            </a>
+          
+            <a href="/examples/"
+              
+              
+              id="examples">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f396.svg'><p>示例</p>
+            </a>
+          
+            <a href="/contributors/"
+              
+              
+              id="contributors">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f389.svg'><p>社区</p>
+            </a>
+          
+            <a href="/archives/"
+              
+              
+              id="archives">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4f0.svg'><p>博客</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://github.com/volantis-x/hexo-theme-volantis/"
+              
+              
+              id="https:githubcomvolantis-xhexo-theme-volantis">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f9ec.svg'><p>源码</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+        </div>
+    
+  
+  </div>
+
+    <div id='safearea'>
+      <div class='body-wrapper' id="pjax-container">
+        
+
+<div class='l_main'>
+  <article class="article post white-box reveal md shadow article-type-post" id="post" itemscope itemprop="blogPost">
+  
+
+
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title">
+        View事件传递流程
+      </h1>
+      <div class='new-meta-box'>
+        
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>请设置文章作者</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/Android/">Android</a><span class="sep"></span><a class="category-link" href="/categories/Android/%E5%9F%BA%E7%A1%80/">基础</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：Apr 22, 2021</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="View事件传递流程" data-path="/2021/04/22/View%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%B5%81%E7%A8%8B/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+      </div>
+    
+  </div>
+
+
+  
+  <blockquote>
+<p>在 Android 中，事件分发机制是一块很重要的知识点，掌握这个机制能帮你在平时的开发中解决掉很多的 View 事件冲突问题，这个问题也是面试中问的比较多的一个问题了，今天就来总结下这个知识点。</p>
+</blockquote>
+<h2 id="事件分发机制"><a href="#事件分发机制" class="headerlink" title="事件分发机制"></a>事件分发机制</h2><ul>
+<li>事件分发机制</li>
+</ul>
+<p>Android 中页面上的 View 是以树型结构显示的，View 会重叠在一起，当我们点击的地方有多个 View 可以响应的时候，这个点击事件应该给谁，为了解决这个问题就需要一个事件分发机制</p>
+<ul>
+<li>事件分发对象</li>
+</ul>
+<p>Touch 事件，即将每一个 Touch 事件（MotionEvent）传递给 View，至于最终这个事件有没有处理看接收事件者的逻辑而定</p>
+<p>当用户触摸屏幕的时候，就会产生 Touch 事件（Touch 事件被封装成 MotionEvent 对象），其主要分为如下几种</p>
+<p>​        1.MotionEvent.ACTION_DOWN：使用手指点击屏幕这一瞬间，产生该事件，是所有事件的开始</p>
+<p>​        2.MotionEvent.ACTION_MOVE：使用手指在屏幕滑动的时候产生该事件</p>
+<p>​        3.MotionEvent.ACTION_CANCLE：非人为原因结束当前事件</p>
+<p>​        4.MotionEvent.ACTION_UP：手指离开屏幕一瞬间产生该事件</p>
+<p>一次完整的 Touch 事件，是从用户手指触摸屏幕（伴随着一次 ACTION<em>DOWN 事件）到用户手指离开屏幕（伴随着一次 ACTION</em>UP 事件）这一过程，整个过程如下</p>
+<p>ACTION<em>DOWN（一次） –&gt; ACTION</em>MOVE（N 次） –&gt; ACTION_UP（一次）</p>
+<ul>
+<li><p>事件分发方法</p>
+<p>1.dispatchTouchEvent(MotionEvent ev) ：从方法名也能看出它的作用是对事件进行分发；当一个事件由底层驱动检测到了之后，会进行上报，最终会交由 Activity 的该方法处理，来决定是自己消费还是继续传递下去</p>
+<p>2.onInterceptTouchEvent(MotionEvent ev) ：当一个事件分发到 ViewGroup 后，它可以决定是否对该事件进行拦截，该方法只有 ViewGroup 拥有</p>
+<p>3.onTouchEvent(MotionEvent event) ：这是事件分发流程的最后一个方法了，即是否消费该次事件</p>
+</li>
+<li><p>事件分发参与者</p>
+<p>1.Activity：包含 ViewGroup 和 View</p>
+<p>2.ViewGroup：包含 ViewGroup 和 View</p>
+<p>3.View：并不包含其它 View，只有自己</p>
+</li>
+</ul>
+<p>事件分发流向一般是 Activity –&gt; ViewGroup –&gt; …… –&gt; View</p>
+<p>注意：</p>
+<p>​        1.子 View 可以通过 requestDisallowInterceptTouchEvent 方法干预父 View 的事件分发过程（ACTION_DOWN 事件除外），而这就是我们处理滑动冲突常用的关键方法</p>
+<p>​        2.如果 View 设置了 onTouchListener，在重写的 onTouch 方法中返回 true，那么它的 onTouchEvent 方法不会被调用，因为在 View 的 dispatchTouchEvent 中 onTouch 优先于 onTouchEvent 执行；onClick 方法也不会被调用，因为 onClick 是在 onTouchEvent 中回调的</p>
+<h2 id="事件分发流程"><a href="#事件分发流程" class="headerlink" title="事件分发流程"></a>事件分发流程</h2><ul>
+<li><p>当手指触摸屏幕后，底层 Input 驱动从/dev/input/路径下读写以 event[NUMBER]为名的硬件输入设备节点获取事件（可以通过 adb shell getevent 查看你的设备下的节点，Android 也是从这些节点获取这些原始数据再封装后提供给开发者使用；如果做游戏开发可能就直接获取这些原始数据自己处理了），经过一系列调用后传递到了 DecorView 的 dispatchTouchEvent 方法</p>
+</li>
+<li><p>在 DecorView 中，会通过 Window 的内部接口 Callback，将事件继续传递，因为 Activity 实现了该接口，故事件分发到 Activity；Activity 获取到事件后，在 dispatchTouchEvent 方法中先将事件分发到该 Activity 所在的 window，实际类型是 PhoneWindow，这个 window 又将事件交给它的顶级 view 即 DecorView 处理</p>
+</li>
+<li><p>DecorView 是 FrameLayout 的子类，即 ViewGroup 的子类，自己没有处理，只是继续将事件交由 ViewGroup 处理；就这样一个事件就从 Activity 转到了 ViewGroup</p>
+</li>
+<li><p>ViewGroup 在 dispatchTouchEvent 方法进行分发，如果自己的 onInterceptTouchEvent 方法拦截此次事件，就把事件交给自身的 onTouchEvent 方法处理；反之遍历自己的子 View，继续将事件分发下去，只要有一个子 View 消费了这个事件，那就停止遍历</p>
+</li>
+<li><p>事件会传递到子 View 的 dispatchTouchEvent 方法，如果给子 View 注册了 OnTouchListener，且返回 true，那事件分发就到此结束；反之就会继续将事件传递到子 View 的 onTouchEvent 方法</p>
+</li>
+<li><p>子 View 会在 ACTION_UP 事件中回调 View 的 onClick 监听，如果子 View 没有消费此次事件，就会按照分发流程反过来传递回去到 Activity；如果到了 Activity 还没人消费（包括 Activity 自己），那就会销毁这个事件</p>
+</li>
+</ul>
+<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><img src="../../../../images/12/12.png" class="lazyload" data-srcset="../../../../images/12/12.png" srcset="data:image/png;base64,666" alt="Image text"></p>
+<h2 id="事件分发源码"><a href="#事件分发源码" class="headerlink" title="事件分发源码"></a>事件分发源码</h2><p>当有点击事件，经过一系列传递，会进入到</p>
+<h3 id="Activity-dispatchTouchEvent"><a href="#Activity-dispatchTouchEvent" class="headerlink" title="Activity.dispatchTouchEvent"></a>Activity.dispatchTouchEvent</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public boolean dispatchTouchEvent(MotionEvent ev) &#123;</span><br><span class="line">				&#x2F;&#x2F;1.down事件会进行判断，onUserInteraction是一个空方法，开发者可以自行处理</span><br><span class="line">        if (ev.getAction() &#x3D;&#x3D; MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">            onUserInteraction();</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F;2.下层view如果消费了事件了，返回true</span><br><span class="line">        if (getWindow().superDispatchTouchEvent(ev)) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F;3.时间Activity自己进行处理</span><br><span class="line">        return onTouchEvent(ev);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法就是 Activity 用来处理触摸屏事件，我们可以重写这个方法，并返回 true/false，这样在事件分发到 window 前就能进行拦截，Activity 内的 ViewGroup 或者 View 将收不到事件。</p>
+<ul>
+<li>getWindow().superDispatchTouchEvent(ev)</li>
+</ul>
+<p>getWindow返回的是Window的子类PhoneWindow对象，</p>
+<h3 id="PhoneWindow-superDispatchTouchEvent"><a href="#PhoneWindow-superDispatchTouchEvent" class="headerlink" title="PhoneWindow.superDispatchTouchEvent"></a>PhoneWindow.superDispatchTouchEvent</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;这是窗口的顶层视图</span><br><span class="line">private DecorView mDecor</span><br><span class="line">@Override</span><br><span class="line">    public boolean superDispatchTouchEvent(MotionEvent event) &#123;</span><br><span class="line">        return mDecor.superDispatchTouchEvent(event);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DecorView .superDispatchTouchEvent</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public boolean superDispatchTouchEvent(MotionEvent event) &#123;</span><br><span class="line">        return super.dispatchTouchEvent(event);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>DecorView 是 FrameLayout 的子类，FrameLayout 又是 ViewGroup 的子类，这里就会走到 ViewGroup</p>
+<h3 id="ViewGroup-dispatchTouchEvent"><a href="#ViewGroup-dispatchTouchEvent" class="headerlink" title="ViewGroup.dispatchTouchEvent"></a>ViewGroup.dispatchTouchEvent</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public boolean dispatchTouchEvent(MotionEvent ev) &#123;</span><br><span class="line">			...</span><br><span class="line">       &#x2F;&#x2F;这个变量用于标记事件是否被消费</span><br><span class="line">       boolean handled &#x3D; false;</span><br><span class="line"></span><br><span class="line">       &#x2F;&#x2F;根据应用安全策略过滤触摸事件</span><br><span class="line">       if (onFilterTouchEventForSecurity(ev)) &#123;</span><br><span class="line">           final int action &#x3D; ev.getAction();</span><br><span class="line">           final int actionMasked &#x3D; action &amp; MotionEvent.ACTION_MASK;</span><br><span class="line"></span><br><span class="line">           &#x2F;&#x2F; 1.处理 initial down 发生后的初始化操作</span><br><span class="line">           if (actionMasked &#x3D;&#x3D; MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">               &#x2F;&#x2F; 新的 ACTION_DOWN 事件来了，需要取消并清除之前的 touch Targets</span><br><span class="line">               &#x2F;&#x2F;清空掉 mFirstTouchTarget</span><br><span class="line">               cancelAndClearTouchTargets(ev);</span><br><span class="line">               &#x2F;&#x2F;重置触摸状态</span><br><span class="line">               resetTouchState();</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           &#x2F;&#x2F;标记是否拦截事件</span><br><span class="line">           final boolean intercepted;</span><br><span class="line"></span><br><span class="line">           &#x2F;&#x2F; 2.当 ACTION_DOWN 来了或者已经发生过 ACTION_DOWN,并且将 mFirstTouchTarget 赋值 </span><br><span class="line">           &#x2F;&#x2F;就检测 ViewGroup 是否需要拦截事件.可以关注下mFirstTouchTarget在哪里赋值的</span><br><span class="line">           &#x2F;&#x2F;只有发生过 ACTION_DOWN 事件，mFirstTouchTarget !&#x3D; null</span><br><span class="line">           if (actionMasked &#x3D;&#x3D; MotionEvent.ACTION_DOWN</span><br><span class="line">                   || mFirstTouchTarget !&#x3D; null) &#123;</span><br><span class="line">               &#x2F;&#x2F;子 View 可以通过调用父 View 的 requestDisallowInterceptTouchEvent 方法设置 mGroupFlags 值</span><br><span class="line">               &#x2F;&#x2F;以此告诉父 View 是否拦截事件</span><br><span class="line">               final boolean disallowIntercept &#x3D; (mGroupFlags &amp; FLAG_DISALLOW_INTERCEPT) !&#x3D; 0;</span><br><span class="line">               &#x2F;&#x2F;如果子 view 没有告诉父 View 别拦截事件，那父 View 就判断自己是否需要拦截事件</span><br><span class="line">               if (!disallowIntercept) &#123;</span><br><span class="line">                   intercepted &#x3D; onInterceptTouchEvent(ev);</span><br><span class="line">                   ev.setAction(action); &#x2F;&#x2F; 重新恢复 action  以防被改变了</span><br><span class="line">               &#125; else &#123;</span><br><span class="line">                       &#x2F;&#x2F;这里表明子 View 告诉父 View 不要拦截事件</span><br><span class="line">                   intercepted &#x3D; false;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125; else &#123;</span><br><span class="line">               &#x2F;&#x2F;当 mFirstTouchTarget&#x3D;null（没有子 View 被分配处理），</span><br><span class="line">               &#x2F;&#x2F;且不是 initial down 事件时（事件已经初始化过了），ViewGroup 继续拦截触摸</span><br><span class="line">               &#x2F;&#x2F;继续设置为 true</span><br><span class="line">               intercepted &#x3D; true;</span><br><span class="line">           &#125;</span><br><span class="line">           &#x2F;&#x2F; 如果当前事件是 ACTION_CANCEL，或者 view.mPrivateFlags 被设置了 PFLAG_CANCEL_NEXT_UP_EVENT</span><br><span class="line">           &#x2F;&#x2F;那么当前事件就取消了</span><br><span class="line">           final boolean canceled &#x3D; resetCancelNextUpFlag(this)</span><br><span class="line">                   || actionMasked &#x3D;&#x3D; MotionEvent.ACTION_CANCEL;</span><br><span class="line">           &#x2F;&#x2F;split 表示当前的 ViewGroup 是不是支持分割 MotionEvent 到不同的 View 当中</span><br><span class="line">           final boolean split &#x3D; (mGroupFlags &amp; FLAG_SPLIT_MOTION_EVENTS) !&#x3D; 0;</span><br><span class="line">           &#x2F;&#x2F;新的 TouchTarget</span><br><span class="line">           TouchTarget newTouchTarget &#x3D; null;</span><br><span class="line">           &#x2F;&#x2F;是否把事件分发给了新的 TouchTarget</span><br><span class="line">           boolean alreadyDispatchedToNewTouchTarget &#x3D; false;</span><br><span class="line">           &#x2F;&#x2F;3.不取消事件，同时不拦截事件才进入该区域</span><br><span class="line">           if (!canceled &amp;&amp; !intercepted) &#123;</span><br><span class="line"></span><br><span class="line">               &#x2F;&#x2F;把事件分发给所有的子视图，寻找可以获取焦点的视图</span><br><span class="line">               View childWithAccessibilityFocus &#x3D; ev.isTargetAccessibilityFocus()</span><br><span class="line">                       ? findChildWithAccessibilityFocus() : null;</span><br><span class="line"></span><br><span class="line">               &#x2F;&#x2F;如果是这三种事件就得遍历子 View</span><br><span class="line">               if (actionMasked &#x3D;&#x3D; MotionEvent.ACTION_DOWN</span><br><span class="line">                       || (split &amp;&amp; actionMasked &#x3D;&#x3D; MotionEvent.ACTION_POINTER_DOWN)</span><br><span class="line">                       || actionMasked &#x3D;&#x3D; MotionEvent.ACTION_HOVER_MOVE) &#123;</span><br><span class="line"></span><br><span class="line">                   final int actionIndex &#x3D; ev.getActionIndex(); &#x2F;&#x2F; always 0 for down</span><br><span class="line">                   final int idBitsToAssign &#x3D; split ? 1 &lt;&lt; ev.getPointerId(actionIndex)</span><br><span class="line">                           : TouchTarget.ALL_POINTER_IDS;</span><br><span class="line"></span><br><span class="line">                   &#x2F;&#x2F; 对于这个 PointerId 清空更早的 touch targets </span><br><span class="line">                   removePointersFromTouchTargets(idBitsToAssign);</span><br><span class="line"></span><br><span class="line">                   final int childrenCount &#x3D; mChildrenCount;</span><br><span class="line">                   &#x2F;&#x2F;如果当前 ViewGroup 有子 View 且 newTouchTarget&#x3D;null</span><br><span class="line">                   if (newTouchTarget &#x3D;&#x3D; null &amp;&amp; childrenCount !&#x3D; 0) &#123;</span><br><span class="line">                       final float x &#x3D; ev.getX(actionIndex);</span><br><span class="line">                       final float y &#x3D; ev.getY(actionIndex);</span><br><span class="line"></span><br><span class="line">                       &#x2F;&#x2F; 在视图里从前到后扫描一遍获取可以接收事件的子 View</span><br><span class="line">                       final ArrayList&lt;View&gt; preorderedList &#x3D; buildTouchDispatchChildList();</span><br><span class="line">                       final boolean customOrder &#x3D; preorderedList &#x3D;&#x3D; null</span><br><span class="line">                               &amp;&amp; isChildrenDrawingOrderEnabled();</span><br><span class="line">                       final View[] children &#x3D; mChildren;</span><br><span class="line"></span><br><span class="line">                       &#x2F;&#x2F;遍历所有子 View，找到一个来接收事件</span><br><span class="line">                       for (int i &#x3D; childrenCount - 1; i &gt;&#x3D; 0; i--) &#123;</span><br><span class="line">                           final int childIndex &#x3D; getAndVerifyPreorderedIndex(</span><br><span class="line">                                   childrenCount, i, customOrder);</span><br><span class="line">                           final View child &#x3D; getAndVerifyPreorderedView(</span><br><span class="line">                                   preorderedList, children, childIndex);</span><br><span class="line"></span><br><span class="line">                           &#x2F;&#x2F;如果当前子 View 没有获取焦点，则跳过这个子 View</span><br><span class="line">                           if (childWithAccessibilityFocus !&#x3D; null) &#123;</span><br><span class="line">                               if (childWithAccessibilityFocus !&#x3D; child) &#123;</span><br><span class="line">                                   continue;</span><br><span class="line">                               &#125;</span><br><span class="line">                               childWithAccessibilityFocus &#x3D; null;</span><br><span class="line">                               i &#x3D; childrenCount - 1;</span><br><span class="line">                           &#125;</span><br><span class="line"></span><br><span class="line">                           &#x2F;&#x2F;如果当前子 View 不可见且没有播放动画 或者 不在触摸点范围内，跳过这个子 View</span><br><span class="line">                           if (!canViewReceivePointerEvents(child)</span><br><span class="line">                                   || !isTransformedTouchPointInView(x, y, child, null)) &#123;</span><br><span class="line">                               ev.setTargetAccessibilityFocus(false);</span><br><span class="line">                               continue;</span><br><span class="line">                           &#125;</span><br><span class="line"></span><br><span class="line">                           &#x2F;&#x2F;如果在触摸目标列表找到了与该子 View 对应的 TouchTarget，</span><br><span class="line">                           &#x2F;&#x2F;说明这个 view 正在接收事件，不需要再遍历，直接退出</span><br><span class="line">                           newTouchTarget &#x3D; getTouchTarget(child);</span><br><span class="line">                           if (newTouchTarget !&#x3D; null) &#123;</span><br><span class="line">                               newTouchTarget.pointerIdBits |&#x3D; idBitsToAssign;</span><br><span class="line">                               break;</span><br><span class="line">                           &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                           resetCancelNextUpFlag(child);</span><br><span class="line"></span><br><span class="line">                           &#x2F;&#x2F;子 view 处于触摸位置，就将事件分发给子 View，如果该子 View 返回 true，</span><br><span class="line">                           &#x2F;&#x2F;说明消费了这个事件，就跳出遍历</span><br><span class="line">                           if (dispatchTransformedTouchEvent(ev, false, child, idBitsToAssign)) &#123;</span><br><span class="line">                               &#x2F;&#x2F; 获取 TouchDown 的时间点</span><br><span class="line">                               mLastTouchDownTime &#x3D; ev.getDownTime();</span><br><span class="line">                               &#x2F;&#x2F; 获取 TouchDown 的 Index</span><br><span class="line">                               if (preorderedList !&#x3D; null) &#123;</span><br><span class="line">                                   &#x2F;&#x2F; childIndex points into presorted list, find original index</span><br><span class="line">                                   for (int j &#x3D; 0; j &lt; childrenCount; j++) &#123;</span><br><span class="line">                                       if (children[childIndex] &#x3D;&#x3D; mChildren[j]) &#123;</span><br><span class="line">                                           mLastTouchDownIndex &#x3D; j;</span><br><span class="line">                                           break;</span><br><span class="line">                                       &#125;</span><br><span class="line">                                   &#125;</span><br><span class="line">                               &#125; else &#123;</span><br><span class="line">                                   mLastTouchDownIndex &#x3D; childIndex;</span><br><span class="line">                               &#125;</span><br><span class="line">                               &#x2F;&#x2F;获取 TouchDown 的 x,y 坐标</span><br><span class="line">                               mLastTouchDownX &#x3D; ev.getX();</span><br><span class="line">                               mLastTouchDownY &#x3D; ev.getY();</span><br><span class="line">                               &#x2F;&#x2F;添加到触摸目标列表 同时给 mFirstTouchTarget 赋值</span><br><span class="line">                               newTouchTarget &#x3D; addTouchTarget(child, idBitsToAssign);</span><br><span class="line">                               alreadyDispatchedToNewTouchTarget &#x3D; true;</span><br><span class="line">                               break;</span><br><span class="line">                           &#125;</span><br><span class="line"></span><br><span class="line">                           &#x2F;&#x2F; The accessibility focus didn&#39;t handle the event, so clear</span><br><span class="line">                           &#x2F;&#x2F; the flag and do a normal dispatch to all children.</span><br><span class="line">                           ev.setTargetAccessibilityFocus(false);</span><br><span class="line">                       &#125;</span><br><span class="line">                       if (preorderedList !&#x3D; null) preorderedList.clear();</span><br><span class="line">                   &#125;</span><br><span class="line"></span><br><span class="line">                   if (newTouchTarget &#x3D;&#x3D; null &amp;&amp; mFirstTouchTarget !&#x3D; null) &#123;</span><br><span class="line">                       &#x2F;&#x2F; 到这里说明没有子 View 接收事件，那就把最近一次的触摸目标赋值给 newTouchTarget</span><br><span class="line">                       newTouchTarget &#x3D; mFirstTouchTarget;</span><br><span class="line">                       while (newTouchTarget.next !&#x3D; null) &#123;</span><br><span class="line">                           newTouchTarget &#x3D; newTouchTarget.next;</span><br><span class="line">                       &#125;</span><br><span class="line">                       newTouchTarget.pointerIdBits |&#x3D; idBitsToAssign;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           &#x2F;&#x2F; 4.mFirstTouchTarget 赋值是在通过 addTouchTarget 方法获取的；</span><br><span class="line">           &#x2F;&#x2F; 只有处理 ACTION_DOWN 事件，才会进入 addTouchTarget 方法。</span><br><span class="line">           &#x2F;&#x2F; 这也正是当 View 没有消费 ACTION_DOWN 事件，则不会接收其他 MOVE,UP 等事件的原因</span><br><span class="line">           if (mFirstTouchTarget &#x3D;&#x3D; null) &#123;</span><br><span class="line">               &#x2F;&#x2F; 那就只能 ViewGroup 自己处理事件了</span><br><span class="line">               handled &#x3D; dispatchTransformedTouchEvent(ev, canceled, null,</span><br><span class="line">                       TouchTarget.ALL_POINTER_IDS);</span><br><span class="line">           &#125; else &#123;</span><br><span class="line">               &#x2F;&#x2F; 到这里就说明有子 View 接收了 ACTION_DOWN 事件，那后续的 move up 等事件就继续分发给这个触摸目标</span><br><span class="line">               TouchTarget predecessor &#x3D; null;</span><br><span class="line">               TouchTarget target &#x3D; mFirstTouchTarget;</span><br><span class="line">               while (target !&#x3D; null) &#123;</span><br><span class="line"></span><br><span class="line">                   final TouchTarget next &#x3D; target.next;</span><br><span class="line">                   if (alreadyDispatchedToNewTouchTarget &amp;&amp; target &#x3D;&#x3D; newTouchTarget) &#123;</span><br><span class="line">                       handled &#x3D; true;</span><br><span class="line">                   &#125; else &#123;</span><br><span class="line">                       &#x2F;&#x2F;如果 view.mPrivateFlags 被设置了 PFLAG_CANCEL_NEXT_UP_EVENT 或者事件被 ViewGroup 拦截了</span><br><span class="line">                       &#x2F;&#x2F;那子 View 需要取消事件</span><br><span class="line">                       final boolean cancelChild &#x3D; resetCancelNextUpFlag(target.child)</span><br><span class="line">                               || intercepted;</span><br><span class="line"></span><br><span class="line">                       &#x2F;&#x2F;继续分发事件给子 View</span><br><span class="line">                       if (dispatchTransformedTouchEvent(ev, cancelChild,</span><br><span class="line">                               target.child, target.pointerIdBits)) &#123;</span><br><span class="line">                           handled &#x3D; true;</span><br><span class="line">                       &#125;</span><br><span class="line">                       if (cancelChild) &#123;</span><br><span class="line">                           if (predecessor &#x3D;&#x3D; null) &#123;</span><br><span class="line">                               mFirstTouchTarget &#x3D; next;</span><br><span class="line">                           &#125; else &#123;</span><br><span class="line">                               predecessor.next &#x3D; next;</span><br><span class="line">                           &#125;</span><br><span class="line">                           target.recycle();</span><br><span class="line">                           target &#x3D; next;</span><br><span class="line">                           continue;</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;</span><br><span class="line">                   predecessor &#x3D; target;</span><br><span class="line">                   target &#x3D; next;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">           &#x2F;&#x2F;当发生抬起或取消事件，更新触摸目标列表</span><br><span class="line">           if (canceled</span><br><span class="line">                   || actionMasked &#x3D;&#x3D; MotionEvent.ACTION_UP</span><br><span class="line">                   || actionMasked &#x3D;&#x3D; MotionEvent.ACTION_HOVER_MOVE) &#123;</span><br><span class="line">               resetTouchState();</span><br><span class="line">           &#125; else if (split &amp;&amp; actionMasked &#x3D;&#x3D; MotionEvent.ACTION_POINTER_UP) &#123;</span><br><span class="line">               &#x2F;&#x2F;如果是多点触摸下的手指抬起事件，就要根据 idBit 从 TouchTarget 中移除掉对应的 Pointer(触摸点)</span><br><span class="line">               final int actionIndex &#x3D; ev.getActionIndex();</span><br><span class="line">               final int idBitsToRemove &#x3D; 1 &lt;&lt; ev.getPointerId(actionIndex);</span><br><span class="line">               removePointersFromTouchTargets(idBitsToRemove);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       if (!handled &amp;&amp; mInputEventConsistencyVerifier !&#x3D; null) &#123;</span><br><span class="line">           mInputEventConsistencyVerifier.onUnhandledEvent(ev, 1);</span><br><span class="line">       &#125;</span><br><span class="line">       return handled;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="事件初始化"><a href="#事件初始化" class="headerlink" title="事件初始化"></a>事件初始化</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 处理 initial down 发生后的初始化操作</span><br><span class="line">        if (actionMasked &#x3D;&#x3D; MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">            &#x2F;&#x2F; 新的 ACTION_DOWN 事件来了，需要取消并清除之前的 touch Targets</span><br><span class="line">            &#x2F;&#x2F;清空掉 mFirstTouchTarget</span><br><span class="line">            cancelAndClearTouchTargets(ev);</span><br><span class="line">            &#x2F;&#x2F;重置触摸状态</span><br><span class="line">            resetTouchState();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一个进来的是 ACTION_DOWN 事件，那需要做一些初始化：</p>
+<ul>
+<li><p>第一件事就是清空所有的 TouchTarget，并将 mFirstTouchTarget 值为 null；mFirstTouchTarget 的类型也是 TouchTarget，是 ViewGroup 的一个内部类，描述一个触摸的视图和它捕获的指针的 id；mFirstTouchTarget 可以理解为如果事件由子 View 去处理时 mFirstTouchTarget 会被赋值并指向子 View</p>
+</li>
+<li><p>第二件事是重置状态值，通过 FLAG<em>DISALLOW</em>INTERCEPT 重置 mGroupFlags 值</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="拦截判断"><a href="#拦截判断" class="headerlink" title="拦截判断"></a>拦截判断</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;标记是否拦截事件</span><br><span class="line">          final boolean intercepted;</span><br><span class="line"></span><br><span class="line">          &#x2F;&#x2F; 当 ACTION_DOWN 来了或者已经发生过 ACTION_DOWN,并且将 mFirstTouchTarget 赋值 就检测 ViewGroup 是否需要拦截事件.</span><br><span class="line">          if (actionMasked &#x3D;&#x3D; MotionEvent.ACTION_DOWN</span><br><span class="line">                  || mFirstTouchTarget !&#x3D; null) &#123;</span><br><span class="line"></span><br><span class="line">              &#x2F;&#x2F;子 View 可以通过调用父 View 的 requestDisallowInterceptTouchEvent 方法设置 mGroupFlags 值</span><br><span class="line">              &#x2F;&#x2F;以此告诉父 View 是否拦截事件</span><br><span class="line">              final boolean disallowIntercept &#x3D; (mGroupFlags &amp; FLAG_DISALLOW_INTERCEPT) !&#x3D; 0;</span><br><span class="line">              &#x2F;&#x2F;如果子 view 没有告诉父 View 别拦截事件，那父 View 就判断自己是否需要拦截事件</span><br><span class="line">              if (!disallowIntercept) &#123;</span><br><span class="line">                  intercepted &#x3D; onInterceptTouchEvent(ev);</span><br><span class="line">                  ev.setAction(action); &#x2F;&#x2F; 重新恢复 action  以防被改变了</span><br><span class="line">              &#125; else &#123;</span><br><span class="line">                  &#x2F;&#x2F;这里表明子 View 告诉父 View 不要拦截事件</span><br><span class="line">                  intercepted &#x3D; false;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">              &#x2F;&#x2F;当 mFirstTouchTarget&#x3D;null（没有子 View 被分配处理），且不是 initial down 事件时（事件已经初始化过了），ViewGroup 继续拦截触摸</span><br><span class="line">              &#x2F;&#x2F;继续设置为 true</span><br><span class="line">              intercepted &#x3D; true;</span><br><span class="line">          &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>当事件是 ACTION<em>DOWN 或者 mFirstTouchTarget != null 才会去判断要不要拦截，由第一步可知，当事件是 ACTION</em>DOWN 的时候，mFirstTouchTarget 肯定为 null，所以这里只有两种情况会进入：ACTION<em>DOWN 事件来了需要判断拦截；ACTION</em>DOWN 事件中如果有子 View 接收了事件（这样 mFirstTouchTarget 就赋值了），那接下来的事件也需要判断是否拦截事件</p>
+</li>
+<li><p>上面条件的反向逻辑就是事件是 ACTION<em>DOWN 事件以后的事件（比如 move 或者 up）且 mFirstTouchTarget 为 null，说明在 ACTION</em>DOWN 事件中就判断了需要拦截事件或者没有子 View 处理事件，那接下来的事件就没必要分发了，继续拦截</p>
+</li>
+<li><p>requestDisallowInterceptTouchEvent ,子view可以调用此方法来控制父view是否进行拦截。</p>
+</li>
+</ul>
+<h4 id="ACTION-DOWN-事件分发"><a href="#ACTION-DOWN-事件分发" class="headerlink" title="ACTION_DOWN 事件分发"></a>ACTION_DOWN 事件分发</h4><blockquote>
+<p>接下来就需要遍历子 View，然后将 ACTION_DOWN 事件分发给能接收事件的子 View</p>
+</blockquote>
+<ul>
+<li>如果当前子 View 没有获取焦点，则跳过这个子 View</li>
+<li>如果当前子 View 不可见且没有播放动画 或者 不在触摸点范围内，跳过这个子 View</li>
+<li>如果在触摸目标列表找到了与该子 View 对应的 TouchTarget，说明这个 view 正在接收事件，不需要再遍历，直接退出</li>
+<li>如果子 view 处于触摸位置，就调用 dispatchTransformedTouchEvent 方法将事件分发给子 View，如果该方法返回 true，说明子 View 消费了这个事件，那就不需要再寻找子 view 接收事件了，跳出遍历</li>
+</ul>
+<h5 id="ViewGroup-dispatchTransformedTouchEvent"><a href="#ViewGroup-dispatchTransformedTouchEvent" class="headerlink" title="ViewGroup.dispatchTransformedTouchEvent"></a>ViewGroup.dispatchTransformedTouchEvent</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    private boolean dispatchTransformedTouchEvent(MotionEvent event, boolean cancel,</span><br><span class="line">        View child, int desiredPointerIdBits) &#123;</span><br><span class="line">    final boolean handled;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 发生取消操作时，不再执行后续的任何操作</span><br><span class="line">    final int oldAction &#x3D; event.getAction();</span><br><span class="line">    if (cancel || oldAction &#x3D;&#x3D; MotionEvent.ACTION_CANCEL) &#123;</span><br><span class="line">        event.setAction(MotionEvent.ACTION_CANCEL);</span><br><span class="line">    &#x2F;&#x2F;没有子view，只可能是ViewGroup没有子View或者本身就是View</span><br><span class="line">            if (child &#x3D;&#x3D; null) &#123;</span><br><span class="line">            		&#x2F;&#x2F;super表明这个dispatchTouchEvent是View的方法</span><br><span class="line">                handled &#x3D; super.dispatchTouchEvent(event);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">            		&#x2F;&#x2F;这个dispatchTouchEvent既可能是ViewGroup也可能是View的</span><br><span class="line">                handled &#x3D; child.dispatchTouchEvent(event);</span><br><span class="line">            &#125;</span><br><span class="line">        event.setAction(oldAction);</span><br><span class="line">        return handled;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     </span><br><span class="line"></span><br><span class="line">    final int oldPointerIdBits &#x3D; event.getPointerIdBits();</span><br><span class="line">    final int newPointerIdBits &#x3D; oldPointerIdBits &amp; desiredPointerIdBits;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;由于某些原因，发生不一致的操作，那么将抛弃该事件</span><br><span class="line">    if (newPointerIdBits &#x3D;&#x3D; 0) &#123;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;分发的主要区域</span><br><span class="line">    final MotionEvent transformedEvent;</span><br><span class="line">    &#x2F;&#x2F;判断预期的 pointer id 与事件的 pointer id 是否相等</span><br><span class="line">    if (newPointerIdBits &#x3D;&#x3D; oldPointerIdBits) &#123;</span><br><span class="line">        if (child &#x3D;&#x3D; null || child.hasIdentityMatrix()) &#123;</span><br><span class="line">            if (child &#x3D;&#x3D; null) &#123;</span><br><span class="line">                &#x2F;&#x2F;不存在子视图时，ViewGroup 调用 View.dispatchTouchEvent 分发事件，</span><br><span class="line">                &#x2F;&#x2F;再调用 ViewGroup.onTouchEvent 来处理事件</span><br><span class="line">                handled &#x3D; super.dispatchTouchEvent(event); </span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                final float offsetX &#x3D; mScrollX - child.mLeft;</span><br><span class="line">                final float offsetY &#x3D; mScrollY - child.mTop;</span><br><span class="line">                event.offsetLocation(offsetX, offsetY);</span><br><span class="line">                &#x2F;&#x2F;将触摸事件分发给子 ViewGroup 或 View;</span><br><span class="line">                handled &#x3D; child.dispatchTouchEvent(event);</span><br><span class="line"></span><br><span class="line">                event.offsetLocation(-offsetX, -offsetY); &#x2F;&#x2F;调整该事件的位置</span><br><span class="line">            &#125;</span><br><span class="line">            return handled;</span><br><span class="line">        &#125;</span><br><span class="line">        transformedEvent &#x3D; MotionEvent.obtain(event); &#x2F;&#x2F;拷贝该事件，来创建一个新的 MotionEvent</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        &#x2F;&#x2F;分离事件，获取包含 newPointerIdBits 的 MotionEvent</span><br><span class="line">        transformedEvent &#x3D; event.split(newPointerIdBits);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (child &#x3D;&#x3D; null) &#123;</span><br><span class="line">        &#x2F;&#x2F;不存在子视图时，ViewGroup 调用 View.dispatchTouchEvent 分发事件，</span><br><span class="line">        &#x2F;&#x2F;再调用 ViewGroup.onTouchEvent 来处理事件</span><br><span class="line">        handled &#x3D; super.dispatchTouchEvent(transformedEvent); </span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        final float offsetX &#x3D; mScrollX - child.mLeft;</span><br><span class="line">        final float offsetY &#x3D; mScrollY - child.mTop;</span><br><span class="line">        transformedEvent.offsetLocation(offsetX, offsetY);</span><br><span class="line">        if (! child.hasIdentityMatrix()) &#123;</span><br><span class="line">            &#x2F;&#x2F;将该视图的矩阵进行转换</span><br><span class="line">            transformedEvent.transform(child.getInverseMatrix());</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F;将触摸事件分发给子 ViewGroup 或 View;</span><br><span class="line">        handled &#x3D; child.dispatchTouchEvent(transformedEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;回收 transformedEvent</span><br><span class="line">    transformedEvent.recycle();</span><br><span class="line">    return handled;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该方法是 ViewGroup 真正处理事件的地方，分发子 View 来消费事件，过滤掉不相干的 pointer ids。当子视图为 null 时，MotionEvent 将会发送给该 ViewGroup；不为 null，最终调用 View.dispatchTouchEvent 方法来分发事件。</p>
+<h5 id="View-dispatchTouchEvent"><a href="#View-dispatchTouchEvent" class="headerlink" title="View.dispatchTouchEvent"></a>View.dispatchTouchEvent</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line">     * 将触摸事件向下传递到目标视图，或者这个 View 是目标视图。</span><br><span class="line">     *</span><br><span class="line">     * @return 返回 true 表示消费了事件，反之返回 false </span><br><span class="line">     *&#x2F;</span><br><span class="line">    public boolean dispatchTouchEvent(MotionEvent event) &#123;</span><br><span class="line"></span><br><span class="line">                ......</span><br><span class="line"></span><br><span class="line">        boolean result &#x3D; false;</span><br><span class="line"></span><br><span class="line">        final int actionMasked &#x3D; event.getActionMasked();</span><br><span class="line">        if (actionMasked &#x3D;&#x3D; MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">            &#x2F;&#x2F;在 Down 事件之前，如果存在滚动操作则停止。不存在则不进行操作</span><br><span class="line">            stopNestedScroll();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;过滤触摸事件以应用安全策略</span><br><span class="line">        if (onFilterTouchEventForSecurity(event)) &#123;</span><br><span class="line"></span><br><span class="line">            if ((mViewFlags &amp; ENABLED_MASK) &#x3D;&#x3D; ENABLED &amp;&amp; handleScrollBarDragging(event)) &#123;</span><br><span class="line">                result &#x3D; true;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ListenerInfo li &#x3D; mListenerInfo;</span><br><span class="line">            &#x2F;&#x2F; 如果给 View 设置了 OnTouchListener</span><br><span class="line">            &#x2F;&#x2F;且该 view 没有禁用的</span><br><span class="line">            &#x2F;&#x2F;且 OnTouchListener.onTouch 返回 true</span><br><span class="line">            &#x2F;&#x2F;那说明该 View 消费了该事件，返回 true</span><br><span class="line">            if (li !&#x3D; null &amp;&amp; li.mOnTouchListener !&#x3D; null</span><br><span class="line">                    &amp;&amp; (mViewFlags &amp; ENABLED_MASK) &#x3D;&#x3D; ENABLED</span><br><span class="line">                    &amp;&amp; li.mOnTouchListener.onTouch(this, event)) &#123;</span><br><span class="line">                result &#x3D; true;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">           &#x2F;&#x2F;如果 OnTouchListener.onTouch 没有消费事件且 View 的 onTouchEvent 方法返回 true，那返回 true</span><br><span class="line">            if (!result &amp;&amp; onTouchEvent(event)) &#123;</span><br><span class="line">                result &#x3D; true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 如果这是手势的结束，则在嵌套滚动后清理;</span><br><span class="line">        &#x2F;&#x2F;如果我们尝试了 ACTION_DOWN 但是我们不想要其余的手势，也要取消它。</span><br><span class="line">        if (actionMasked &#x3D;&#x3D; MotionEvent.ACTION_UP ||</span><br><span class="line">                actionMasked &#x3D;&#x3D; MotionEvent.ACTION_CANCEL ||</span><br><span class="line">                (actionMasked &#x3D;&#x3D; MotionEvent.ACTION_DOWN &amp;&amp; !result)) &#123;</span><br><span class="line">            stopNestedScroll();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有两点比较重要</p>
+<ul>
+<li>如果开发者设置 OnTouchListener 监听，且在 onTouch 方法返回 true，说明 view 消费了事件</li>
+<li>如果没有设置监听，那就调用 View 的 onTouchEvent 方法去处理事件</li>
+</ul>
+<p>可以看出 OnTouchListener.onTouch 是优先于 onTouchEvent 执行的，只要前者返回 true，那后者就不会执行了，事件到此为止结束</p>
+<h5 id="View-onTouchEvent"><a href="#View-onTouchEvent" class="headerlink" title="View.onTouchEvent"></a>View.onTouchEvent</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line">public boolean onTouchEvent(MotionEvent event) &#123;</span><br><span class="line">        final float x &#x3D; event.getX();</span><br><span class="line">        final float y &#x3D; event.getY();</span><br><span class="line">        final int viewFlags &#x3D; mViewFlags;</span><br><span class="line">        final int action &#x3D; event.getAction();</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;如果这个 view 是禁用的，可以通过 setEnabled()设置是否禁用</span><br><span class="line">        if ((viewFlags &amp; ENABLED_MASK) &#x3D;&#x3D; DISABLED) &#123;</span><br><span class="line">            if (action &#x3D;&#x3D; MotionEvent.ACTION_UP &amp;&amp; (mPrivateFlags &amp; PFLAG_PRESSED) !&#x3D; 0) &#123;</span><br><span class="line">                setPressed(false);</span><br><span class="line">            &#125;</span><br><span class="line">            &#x2F;&#x2F; 即使设置了禁用，但是只要这个 view 满足 CLICKABLE ，LONG_CLICKABLE ，CONTEXT_CLICKABLE 其中一种</span><br><span class="line">            &#x2F;&#x2F;任然算消费该事件，只是没有响应而已</span><br><span class="line">            return (((viewFlags &amp; CLICKABLE) &#x3D;&#x3D; CLICKABLE</span><br><span class="line">                    || (viewFlags &amp; LONG_CLICKABLE) &#x3D;&#x3D; LONG_CLICKABLE)</span><br><span class="line">                    || (viewFlags &amp; CONTEXT_CLICKABLE) &#x3D;&#x3D; CONTEXT_CLICKABLE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">         &#x2F;&#x2F;当 View 状态为 ENABLED</span><br><span class="line">        &#x2F;&#x2F;且这个 view 满足 CLICKABLE LONG_CLICKABLE CONTEXT_CLICKABLE 其中一种，就消费这个事件</span><br><span class="line">        if (((viewFlags &amp; CLICKABLE) &#x3D;&#x3D; CLICKABLE ||</span><br><span class="line">                (viewFlags &amp; LONG_CLICKABLE) &#x3D;&#x3D; LONG_CLICKABLE) ||</span><br><span class="line">                (viewFlags &amp; CONTEXT_CLICKABLE) &#x3D;&#x3D; CONTEXT_CLICKABLE) &#123;</span><br><span class="line">            switch (action) &#123;</span><br><span class="line">                case MotionEvent.ACTION_UP:</span><br><span class="line">                    boolean prepressed &#x3D; (mPrivateFlags &amp; PFLAG_PREPRESSED) !&#x3D; 0;</span><br><span class="line">                    if ((mPrivateFlags &amp; PFLAG_PRESSED) !&#x3D; 0 || prepressed) &#123;</span><br><span class="line">                        &#x2F;&#x2F; 获取焦点处于可触摸模式</span><br><span class="line">                        boolean focusTaken &#x3D; false;</span><br><span class="line">                        if (isFocusable() &amp;&amp; isFocusableInTouchMode() &amp;&amp; !isFocused()) &#123;</span><br><span class="line">                            focusTaken &#x3D; requestFocus();</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        if (prepressed) &#123;</span><br><span class="line">                            &#x2F;&#x2F; The button is being released before we actually</span><br><span class="line">                            &#x2F;&#x2F; showed it as pressed.  Make it show the pressed</span><br><span class="line">                            &#x2F;&#x2F; state now (before scheduling the click) to ensure</span><br><span class="line">                            &#x2F;&#x2F; the user sees it.</span><br><span class="line">                            setPressed(true, x, y);</span><br><span class="line">                       &#125;</span><br><span class="line"></span><br><span class="line">                        if (!mHasPerformedLongPress &amp;&amp; !mIgnoreNextUpEvent) &#123;</span><br><span class="line">                            &#x2F;&#x2F;这是 Tap 操作，移除长按回调方法</span><br><span class="line">                            removeLongPressCallback();</span><br><span class="line"></span><br><span class="line">                            &#x2F;&#x2F; 如果处于按下状态尽执行点击操作</span><br><span class="line">                            if (!focusTaken) &#123;</span><br><span class="line">                                &#x2F;&#x2F; 使用 Runnable 并发布而不是直接调用 performClick </span><br><span class="line">                                &#x2F;&#x2F;这样可以在单击操作开始之前更新视图的其他可视状态</span><br><span class="line">                                if (mPerformClick &#x3D;&#x3D; null) &#123;</span><br><span class="line">                                    mPerformClick &#x3D; new PerformClick();</span><br><span class="line">                                &#125;</span><br><span class="line">                                &#x2F;&#x2F;调用 View.OnClickListener</span><br><span class="line">                                if (!post(mPerformClick)) &#123;</span><br><span class="line">                                    performClick();</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        if (mUnsetPressedState &#x3D;&#x3D; null) &#123;</span><br><span class="line">                            mUnsetPressedState &#x3D; new UnsetPressedState();</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        if (prepressed) &#123;</span><br><span class="line">                            postDelayed(mUnsetPressedState,</span><br><span class="line">                                    ViewConfiguration.getPressedStateDuration());</span><br><span class="line">                        &#125; else if (!post(mUnsetPressedState)) &#123;</span><br><span class="line">                            &#x2F;&#x2F; If the post failed, unpress right now</span><br><span class="line">                            mUnsetPressedState.run();</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        removeTapCallback();</span><br><span class="line">                    &#125;</span><br><span class="line">                    mIgnoreNextUpEvent &#x3D; false;</span><br><span class="line">                    break;</span><br><span class="line"></span><br><span class="line">                case MotionEvent.ACTION_DOWN:</span><br><span class="line">                    mHasPerformedLongPress &#x3D; false;</span><br><span class="line"></span><br><span class="line">                    if (performButtonActionOnTouchDown(event)) &#123;</span><br><span class="line">                        break;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    &#x2F;&#x2F; 确定是否处于可滚动的视图内</span><br><span class="line">                    boolean isInScrollingContainer &#x3D; isInScrollingContainer();</span><br><span class="line"></span><br><span class="line">                    if (isInScrollingContainer) &#123;</span><br><span class="line">                        mPrivateFlags |&#x3D; PFLAG_PREPRESSED;</span><br><span class="line">                        if (mPendingCheckForTap &#x3D;&#x3D; null) &#123;</span><br><span class="line">                            mPendingCheckForTap &#x3D; new CheckForTap();</span><br><span class="line">                        &#125;</span><br><span class="line">                        mPendingCheckForTap.x &#x3D; event.getX();</span><br><span class="line">                        mPendingCheckForTap.y &#x3D; event.getY();</span><br><span class="line">                        &#x2F;&#x2F;当处于可滚动视图内，则延迟 TAP_TIMEOUT，再反馈按压状态，用来判断用户是否想要滚动。默认延时为 100ms</span><br><span class="line">                            postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());</span><br><span class="line"></span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        &#x2F;&#x2F;当不再滚动视图内，则立刻反馈按压状态</span><br><span class="line">                        setPressed(true, x, y);</span><br><span class="line">                        &#x2F;&#x2F;检测是否是长按，如果长按，回调 OnLongClickListener.onLongClick</span><br><span class="line">                        checkForLongClick(0, x, y);</span><br><span class="line">                    &#125;</span><br><span class="line">                    break;</span><br><span class="line"></span><br><span class="line">                case MotionEvent.ACTION_CANCEL:</span><br><span class="line">                    setPressed(false);</span><br><span class="line">                    removeTapCallback();</span><br><span class="line">                    removeLongPressCallback();</span><br><span class="line">                    mInContextButtonPress &#x3D; false;</span><br><span class="line">                    mHasPerformedLongPress &#x3D; false;</span><br><span class="line">                    mIgnoreNextUpEvent &#x3D; false;</span><br><span class="line">                    break;</span><br><span class="line"></span><br><span class="line">                case MotionEvent.ACTION_MOVE:</span><br><span class="line">                    drawableHotspotChanged(x, y);</span><br><span class="line"></span><br><span class="line">                    &#x2F;&#x2F; Be lenient about moving outside of buttons</span><br><span class="line">                    if (!pointInView(x, y, mTouchSlop)) &#123;</span><br><span class="line">                        &#x2F;&#x2F; Outside button</span><br><span class="line">                        removeTapCallback();</span><br><span class="line">                        if ((mPrivateFlags &amp; PFLAG_PRESSED) !&#x3D; 0) &#123;</span><br><span class="line">                            &#x2F;&#x2F; Remove any future long press&#x2F;tap checks</span><br><span class="line">                            removeLongPressCallback();</span><br><span class="line"></span><br><span class="line">                            setPressed(false);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    break;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有几点需要注意</p>
+<ul>
+<li><p>只要是这个 view 满足 CLICKABLE ，LONG<em>CLICKABLE ，CONTEXT</em>CLICKABLE 其中一种，不管通过 setEnabled()设置禁用还是可用，都会返回 true，认为消费事件</p>
+</li>
+<li><p>View 的 longClickable 默认为 false，clickable 需要区分情况，如 Button 的 clickable 默认为 true，而 TextView 的 clickable 默认为 false；但是 View 的 setOnClickListener 会默认将 View 的 clickable 设置成 true，View 的 setOnLongClickListener 同样会将 View 的 longClickable 设置成 true</p>
+</li>
+<li><p>在 ACTION_DOWN 操作中，如果是长按，回调 OnLongClickListener.onLongClick</p>
+</li>
+<li><p>在 ACTION_UP 操作中，回调 OnClickListener.onClick</p>
+</li>
+</ul>
+<p>这个方法调用完毕，回到 ViewGroup.dispatchTouchEvent 会调用 addTouchTarget 方法</p>
+<h5 id="ViewGroup-addTouchTarget"><a href="#ViewGroup-addTouchTarget" class="headerlink" title="ViewGroup.addTouchTarget"></a>ViewGroup.addTouchTarget</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private TouchTarget addTouchTarget(View child, int pointerIdBits) &#123;</span><br><span class="line">    TouchTarget target &#x3D; TouchTarget.obtain(child, pointerIdBits);</span><br><span class="line">    target.next &#x3D; mFirstTouchTarget;</span><br><span class="line">    mFirstTouchTarget &#x3D; target;</span><br><span class="line">    return target;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到在这里给 mFirstTouchTarget 赋值了</p>
+<p>当子控件消费了事件，mFirstTouchTarget 不为空；当子控件没有消费事件或者被拦截，mFirstTouchTarget 为空</p>
+<h4 id="ACTIONMOVE-ACTIONUP-事件分发"><a href="#ACTIONMOVE-ACTIONUP-事件分发" class="headerlink" title="ACTIONMOVE ACTIONUP 事件分发"></a>ACTION<em>MOVE ACTION</em>UP 事件分发</h4><ul>
+<li>如果ACTION_DOWN没有子View,childrenCount=0，也就是自己消费，mFirstTouchTarget==null,调用dispatchTransformedTouchEvent，child=null，</li>
+<li>否则，调用dispatchTransformedTouchEvent，child=target.child，意味着事件传递到了目标child</li>
+</ul>
+<h3 id="Activity-OnTouchEvent"><a href="#Activity-OnTouchEvent" class="headerlink" title="Activity.OnTouchEvent"></a>Activity.OnTouchEvent</h3><p>所有流程走完，假如没有一个 View 消费事件，那最终会回到 Activity.OnTouchEvent</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public boolean dispatchTouchEvent(MotionEvent ev) &#123;</span><br><span class="line">        if (ev.getAction() &#x3D;&#x3D; MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">            onUserInteraction();</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F;循环判断是否有 ViewGroup 或者 View 消费事件，如果没有，事件回到 activity</span><br><span class="line">        if (getWindow().superDispatchTouchEvent(ev)) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return onTouchEvent(ev);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">public boolean onTouchEvent(MotionEvent event) &#123;</span><br><span class="line">        if (mWindow.shouldCloseOnTouch(this, event)) &#123;</span><br><span class="line">            finish();</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
+<li><p>触摸事件由 Activity.dispatchTouchEvent 先处理；再一层层往下分发，当中间的 ViewGroup 都不消费或者拦截时，进入最底层的 View，开始由最底层的 OnTouchEvent 来处理，如果一直不消费，则最后返回到 Activity.OnTouchEvent</p>
+</li>
+<li><p>只有 ViewGroup 有 onInterceptTouchEvent 拦截方法；在分发过程中，中间任何一层 ViewGroup 都可以直接拦截，则不再往下分发，而是交由发生拦截操作的 ViewGroup 的 OnTouchEvent 来处理</p>
+</li>
+<li><p>子 View 可调用父 ViewGroup 的 requestDisallowInterceptTouchEvent 方法，来设置 disallowIntercept=true，从而阻止父 ViewGroup 的 onInterceptTouchEvent 拦截操作</p>
+</li>
+<li><p>OnTouchEvent 由下往上冒泡时，当中间任何一层的 OnTouchEvent 消费该事件，则不再往上传递，表示事件已消费</p>
+</li>
+<li><p>如果 dispatchTouchEvent 在进行事件分发的时候，View 没有消费 ACTION<em>DOWN 事件，即返回 true，则之后的 ACTION</em>MOVE 等事件都将无法接收</p>
+</li>
+<li><p>不管 View 是 DISABLED（禁用）的还是 ENABLED（可用）的，只要是 CLICKABLE （可点击），LONG_CLICKABLE（可长按） ，都会消费事件</p>
+</li>
+<li><p>View 的 setOnClickListener 会默认将 View 的 clickable 设置成 true，View 的 setOnLongClickListener 同样会将 View 的 longClickable 设置成 true；所有 View 的 setClickable 和 setLongClickable 最好在两个监听方法后调用</p>
+</li>
+<li><p>onTouch 优先于 onTouchEvent 执行，onClick 和 onLongClick 在 onTouchEvent 中被调用，且 onLongClick 优先于 onClick 被执行；如果 onTouch 返回 true，就不会执行 onTouchEvent；onTouch 只有 View 设置了 OnTouchListener，且是 enable 的才执行该方法</p>
+</li>
+</ul>
+<h2 id="Nest滑动机制"><a href="#Nest滑动机制" class="headerlink" title="Nest滑动机制"></a>Nest滑动机制</h2>
+  
+  
+    
+    <div class='footer'>
+      
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=http://yoursite.com/2021/04/22/View%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%B5%81%E7%A8%8B/>http://yoursite.com/2021/04/22/View%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%B5%81%E7%A8%8B/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-04-24T22:46:12+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：Apr 24, 2021</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Android/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Android</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/View/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>View</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2021/04/22/View%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%B5%81%E7%A8%8B/&title=View事件传递流程 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://yoursite.com/2021/04/22/View%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%B5%81%E7%A8%8B/&title=View事件传递流程 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2021/04/22/View%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%B5%81%E7%A8%8B/&title=View事件传递流程 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+      
+        <a class='next' href='/2021/04/22/Activity%E7%9F%A5%E5%A4%9A%E5%B0%91/'>
+          <p class='title'>Activity知多少<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>生命周期
+下图是单个Activity的生命周期回调情况
+
+
+
+当ActivityA启动ActivityB，如下图
+
+
+Activity状态的保存和恢复状态的保存当Activity 非正常退到后台...</p>
+        </a>
+      
+    </div>
+  
+</article>
+
+
+  
+
+  <article class="post white-box reveal shadow" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+
+</div>
+<aside class='l_side'>
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6"><span class="toc-text">事件分发机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="toc-text">事件分发流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-text">流程图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%BA%90%E7%A0%81"><span class="toc-text">事件分发源码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Activity-dispatchTouchEvent"><span class="toc-text">Activity.dispatchTouchEvent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PhoneWindow-superDispatchTouchEvent"><span class="toc-text">PhoneWindow.superDispatchTouchEvent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ViewGroup-dispatchTouchEvent"><span class="toc-text">ViewGroup.dispatchTouchEvent</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">事件初始化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8B%A6%E6%88%AA%E5%88%A4%E6%96%AD"><span class="toc-text">拦截判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ACTION-DOWN-%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91"><span class="toc-text">ACTION_DOWN 事件分发</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#ViewGroup-dispatchTransformedTouchEvent"><span class="toc-text">ViewGroup.dispatchTransformedTouchEvent</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#View-dispatchTouchEvent"><span class="toc-text">View.dispatchTouchEvent</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#View-onTouchEvent"><span class="toc-text">View.onTouchEvent</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ViewGroup-addTouchTarget"><span class="toc-text">ViewGroup.addTouchTarget</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ACTIONMOVE-ACTIONUP-%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91"><span class="toc-text">ACTIONMOVE ACTIONUP 事件分发</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Activity-OnTouchEvent"><span class="toc-text">Activity.OnTouchEvent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="toc-text">注意点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nest%E6%BB%91%E5%8A%A8%E6%9C%BA%E5%88%B6"><span class="toc-text">Nest滑动机制</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+        
+        
+          <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="View事件传递流程";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+
+  var l_header=document.getElementById("l_header");
+  
+  l_header.classList.add("show");
+  
+</script>
+
+        
+      </div>
+      
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客內容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW">姓名標示-非商業性-相同方式分享 4.0 國際 (CC BY-NC-SA 4.0) 協議</a></p>
+</div>
+      
+    
+      
+        
+          <div><p><span id="lc-sv">本站总访问量为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 次</span> <span id="lc-uv">访客数为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 人</span></p>
+</div>
+        
+      
+    
+      
+        本站使用
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6" target="_blank" class="codename">Volantis</a>
+        作為主題
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+      <a id="s-top" class="fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+  </div>
+  <div>
+    <script>
+window.volantis={};
+window.volantis.loadcss=document.getElementById("loadcss");
+/********************脚本懒加载函数********************************/
+function loadScript(src, cb) {
+var HEAD = document.getElementsByTagName('head')[0] || document.documentElement;
+var script = document.createElement('script');
+script.setAttribute('type','text/javascript');
+if (cb) script.onload = cb;
+script.setAttribute('src', src);
+HEAD.appendChild(script);
+}
+//https://github.com/filamentgroup/loadCSS
+var loadCSS = function( href, before, media, attributes ){
+	var doc = window.document;
+	var ss = doc.createElement( "link" );
+	var ref;
+	if( before ){
+		ref = before;
+	}
+	else {
+		var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+		ref = refs[ refs.length - 1];
+	}
+	var sheets = doc.styleSheets;
+	if( attributes ){
+		for( var attributeName in attributes ){
+			if( attributes.hasOwnProperty( attributeName ) ){
+				ss.setAttribute( attributeName, attributes[attributeName] );
+			}
+		}
+	}
+	ss.rel = "stylesheet";
+	ss.href = href;
+	ss.media = "only x";
+	function ready( cb ){
+		if( doc.body ){
+			return cb();
+		}
+		setTimeout(function(){
+			ready( cb );
+		});
+	}
+	ready( function(){
+		ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
+	});
+	var onloadcssdefined = function( cb ){
+		var resolvedHref = ss.href;
+		var i = sheets.length;
+		while( i-- ){
+			if( sheets[ i ].href === resolvedHref ){
+				return cb();
+			}
+		}
+		setTimeout(function() {
+			onloadcssdefined( cb );
+		});
+	};
+	function loadCB(){
+		if( ss.addEventListener ){
+			ss.removeEventListener( "load", loadCB );
+		}
+		ss.media = media || "all";
+	}
+	if( ss.addEventListener ){
+		ss.addEventListener( "load", loadCB);
+	}
+	ss.onloadcssdefined = onloadcssdefined;
+	onloadcssdefined( loadCB );
+	return ss;
+};
+</script>
+<script>
+  
+  loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css", window.volantis.loadcss);
+  
+  
+  
+  
+</script>
+<!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script>
+  function pjax_fancybox() {
+    $(".md .gallery").find("img").each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md .gallery").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  function SCload_fancybox() {
+    if ($(".md .gallery").find("img").length == 0) return;
+    loadCSS("https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css", document.getElementById("loadcss"));
+    setTimeout(function() {
+      loadScript('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', pjax_fancybox)
+    }, 1);
+  };
+  $(function () {
+    SCload_fancybox();
+  });
+</script>
+
+
+<!-- internal -->
+
+
+
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+  
+    <script>
+      window.FPConfig = {
+        delay: 0,
+        ignoreKeywords: [],
+        maxRPS: 5,
+        hoverDelay: 25
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/valine.min.js"></script>
+
+
+<script>
+  var GUEST_INFO = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link'.split(',').filter(function (item) {
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick', 'mail', 'link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function (item) {
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+
+    var valine = new Valine();
+    valine.init({
+      el: '#valine_container',
+      meta: meta,
+      placeholder: pagePlaceholder,
+      path: path,
+      appId: "",
+      appKey: "",
+      pageSize: '10',
+      avatar: 'robohash',
+      lang: 'zh-cn',
+      visitor: 'true',
+      highlight: 'true',
+      mathJax: 'false',
+      enableQQ: 'true',
+      recordIP: 'false',
+      requiredFields: requiredFields,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps
+    })
+  }
+
+  $(function () {
+    pjax_valine();
+  });
+</script>
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/app.min.js"></script>
+
+
+
+<!-- optional -->
+
+  <script>
+const SearchServiceimagePath="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/img/";
+const ROOT =  ("/" || "/").endsWith('/') ? ("/" || "/") : ("//" || "/" );
+
+$('.input.u-search-input').one('focus',function(){
+	
+		loadScript('https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/search/hexo.min.js',setSearchService);
+	
+})
+
+function listenSearch(){
+  
+    customSearch = new HexoSearch({
+      imagePath: SearchServiceimagePath
+    });
+  
+}
+function setSearchService() {
+	listenSearch();
+	
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'u9j57bwJod4EDmXWdxrwuqQT-MdYXbMMI',
+    app_key: 'jfHtEKVE24j0IVCGHbvuFClp',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'http://yoursite.com' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'http://yoursite.com' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'http://yoursite.com' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+
+
+
+
+<script>
+function listennSidebarTOC() {
+  const navItems = document.querySelectorAll(".toc li");
+  if (!navItems.length) return;
+  const sections = [...navItems].map((element) => {
+    const link = element.querySelector(".toc-link");
+    const target = document.getElementById(
+      decodeURI(link.getAttribute("href")).replace("#", "")
+    );
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({
+		top: target.offsetTop + 100,
+		
+		behavior: "smooth"
+		
+	  });
+    });
+    return target;
+  });
+
+  function activateNavByIndex(target) {
+    if (target.classList.contains("active-current")) return;
+
+    document.querySelectorAll(".toc .active").forEach((element) => {
+      element.classList.remove("active", "active-current");
+    });
+    target.classList.add("active", "active-current");
+    let parent = target.parentNode;
+    while (!parent.matches(".toc")) {
+      if (parent.matches("li")) parent.classList.add("active");
+      parent = parent.parentNode;
+    }
+  }
+
+  function findIndex(entries) {
+    let index = 0;
+    let entry = entries[index];
+    if (entry.boundingClientRect.top > 0) {
+      index = sections.indexOf(entry.target);
+      return index === 0 ? 0 : index - 1;
+    }
+    for (; index < entries.length; index++) {
+      if (entries[index].boundingClientRect.top <= 0) {
+        entry = entries[index];
+      } else {
+        return sections.indexOf(entry.target);
+      }
+    }
+    return sections.indexOf(entry.target);
+  }
+
+  function createIntersectionObserver(marginTop) {
+    marginTop = Math.floor(marginTop + 10000);
+    let intersectionObserver = new IntersectionObserver(
+      (entries, observe) => {
+        let scrollHeight = document.documentElement.scrollHeight + 100;
+        if (scrollHeight > marginTop) {
+          observe.disconnect();
+          createIntersectionObserver(scrollHeight);
+          return;
+        }
+        let index = findIndex(entries);
+        activateNavByIndex(navItems[index]);
+      },
+      {
+        rootMargin: marginTop + "px 0px -100% 0px",
+        threshold: 0,
+      }
+    );
+    sections.forEach((element) => {
+      element && intersectionObserver.observe(element);
+    });
+  }
+  createIntersectionObserver(document.documentElement.scrollHeight);
+}
+
+document.addEventListener("DOMContentLoaded", listennSidebarTOC);
+document.addEventListener("pjax:success", listennSidebarTOC);
+</script>
+
+<!-- more -->
+
+
+
+
+    
+      
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          "#l_cover",
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+      if (typeof $.fancybox != "undefined") {
+        $.fancybox.close();    // 关闭弹窗
+      }
+      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
+      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      volantis.$topBtn.unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+	  
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 关于百度统计对 SPA 页面的处理：
+      // 方案一：百度统计>管理>单页应用设置中，打开开启按钮即可对SPA进行统计。 https://tongji.baidu.com/web/help/article?id=324
+      // 方案二：取消注释下列代码。 https://tongji.baidu.com/web/help/article?id=235
+       
+
+      // 关于谷歌统计对 SPA 页面的处理：
+      // 当应用以动态方式加载内容并更新地址栏中的网址时，也应该更新通过 gtag.js 存储的网页网址。
+      // https://developers.google.cn/analytics/devguides/collection/gtagjs/single-page-applications?hl=zh-cn
+      
+	 
+
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+          if (typeof $.fancybox == "undefined") {
+            SCload_fancybox();
+          } else {
+            pjax_fancybox();
+          }
+        
+        
+        
+        
+        
+        
+          pjax_valine();
+        
+        
+        
+        
+      } catch (e) {
+        console.log(e);
+      }
+	  
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+	  
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+
+    
+  </div>
+</body>
+</html>
