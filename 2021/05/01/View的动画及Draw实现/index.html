@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+  <title>View的动画及Draw实现 - YOUNG BLOG</title>
+  
+    <meta name="keywords" content="Android,动画">
+  
+
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  
+
+  <!-- import link -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/first.css">
+
+  
+
+  
+  <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+  
+
+  <script id="loadcss"></script>
+
+</head>
+
+<body>
+  
+
+<header id="l_header" class="l_header auto shadow blur show" style='opacity: 0' >
+  <div class='container'>
+  <div id='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/Logo-NavBar@3x.png'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+  <div id="l_body">
+    <div id="l_cover">
+  
+    
+        <div id="full" class='cover-wrapper post dock' style="display: none;">
+          
+            <div class='cover-bg lazyload placeholder' data-bg="https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.jpg"></div>
+          
+          <div class='cover-body'>
+  <div class='top'>
+    
+    
+      <p class="title">Jax</p>
+    
+    
+      <p class="subtitle">Imagine if I had a real weapon!</p>
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+          
+            <a href="/v4/getting-started/"
+              
+              
+              id="v4getting-started">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f5c3.svg'><p>文档</p>
+            </a>
+          
+            <a href="/faqs/"
+              
+              
+              id="faqs">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f516.svg'><p>帮助</p>
+            </a>
+          
+            <a href="/examples/"
+              
+              
+              id="examples">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f396.svg'><p>示例</p>
+            </a>
+          
+            <a href="/contributors/"
+              
+              
+              id="contributors">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f389.svg'><p>社区</p>
+            </a>
+          
+            <a href="/archives/"
+              
+              
+              id="archives">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4f0.svg'><p>博客</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://github.com/volantis-x/hexo-theme-volantis/"
+              
+              
+              id="https:githubcomvolantis-xhexo-theme-volantis">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f9ec.svg'><p>源码</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+        </div>
+    
+  
+  </div>
+
+    <div id='safearea'>
+      <div class='body-wrapper' id="pjax-container">
+        
+
+<div class='l_main'>
+  <article class="article post white-box reveal md shadow article-type-post" id="post" itemscope itemprop="blogPost">
+  
+
+
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title">
+        View的动画及Draw实现
+      </h1>
+      <div class='new-meta-box'>
+        
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>请设置文章作者</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/Android/">Android</a><span class="sep"></span><a class="category-link" href="/categories/Android/%E5%9F%BA%E7%A1%80/">基础</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：May 1, 2021</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="View的动画及Draw实现" data-path="/2021/05/01/View%E7%9A%84%E5%8A%A8%E7%94%BB%E5%8F%8ADraw%E5%AE%9E%E7%8E%B0/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+      </div>
+    
+  </div>
+
+
+  
+  <h1 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h1><h2 id="视图动画-补间动画-View-Animation"><a href="#视图动画-补间动画-View-Animation" class="headerlink" title="视图动画/补间动画/View Animation"></a>视图动画/补间动画/View Animation</h2><blockquote>
+<p>视图动画，也叫Tween（补间）动画可以在一个视图容器内执行一系列简单变换。</p>
+</blockquote>
+<p>视图动画分为四种，分别是位置、大小、旋转、透明度，同时还有一个对这些变换组合的动画集合。基类是<code>public abstract class Animation</code>,实现类分别是 <code>TranslateAnimaton</code>,<code>ScaleAnimation</code>,<code>RotateAnimation</code>,<code>AlphaAnimation</code>和<code>AnimationSet</code></p>
+<p>视图动画可以通过java和xml两种方式设置，一般更倾向于用xml形式：</p>
+<table>
+<thead>
+<tr>
+<th><strong>java类名</strong></th>
+<th><strong>xml关键字</strong></th>
+<th><strong>描述信息</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AlphaAnimation</td>
+<td><code>&lt;alpha&gt;</code> 放置在res/anim/目录下</td>
+<td>渐变透明度动画效果</td>
+</tr>
+<tr>
+<td>RotateAnimation</td>
+<td><code>&lt;rotate&gt;</code> 放置在res/anim/目录下</td>
+<td>画面转移旋转动画效果</td>
+</tr>
+<tr>
+<td>ScaleAnimation</td>
+<td><code>&lt;scale&gt;</code> 放置在res/anim/目录下</td>
+<td>渐变尺寸伸缩动画效果</td>
+</tr>
+<tr>
+<td>TranslateAnimation</td>
+<td><code>&lt;translate&gt;</code> 放置在res/anim/目录下</td>
+<td>画面转换位置移动动画效果</td>
+</tr>
+<tr>
+<td>AnimationSet</td>
+<td><code>&lt;set&gt;</code> 放置在res/anim/目录下</td>
+<td>一个持有其它动画元素alpha、scale、translate、rotate或者其它set元素的容器</td>
+</tr>
+</tbody></table>
+<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><h4 id="Animation"><a href="#Animation" class="headerlink" title="Animation"></a><strong>Animation</strong></h4><blockquote>
+<p>animation属性是下面四种变换都有的属性</p>
+</blockquote>
+<ul>
+<li><p>android:detachWallpaper：是否在壁纸上运行</p>
+</li>
+<li><p>android:duration：动画持续时间，毫秒为单位</p>
+</li>
+<li><p>android:fillAfter：控件动画结束时是否保持动画最后的状态</p>
+</li>
+<li><p>android:fillBefore：控件动画结束时是否还原到开始动画前的状态</p>
+</li>
+<li><p>android:fillEnabled：与android:fillBefore效果相同</p>
+</li>
+<li><p>android:interpolator：设定插值器（指定的动画效果，譬如回弹等）</p>
+</li>
+<li><p>android:repeatCount：重复次数</p>
+</li>
+<li><p>android:repeatMode：重复类型有两个值，reverse表示倒序回放，restart表示从头播放</p>
+</li>
+<li><p>android:startOffset：调用start函数之后等待开始运行的时间，单位为毫秒</p>
+</li>
+<li><p>android:zAdjustment：表示被设置动画的内容运行时在Z轴上的位置（top/bottom/normal），默认为normal</p>
+</li>
+</ul>
+<h4 id="Alpha属性详解"><a href="#Alpha属性详解" class="headerlink" title="Alpha属性详解"></a><strong>Alpha属性详解</strong></h4><ul>
+<li><p>android:fromAlpha：动画开始的透明度（0.0到1.0，0.0是全透明，1.0是不透明）</p>
+</li>
+<li><p>android:toAlpha：动画结束的透明度，同上</p>
+</li>
+</ul>
+<h4 id="Rotate属性详解"><a href="#Rotate属性详解" class="headerlink" title="Rotate属性详解"></a><strong>Rotate属性详解</strong></h4><ul>
+<li>android:fromDegrees：旋转开始角度，正代表顺时针度数，负代表逆时针度数</li>
+<li>android:toDegrees：旋转结束角度，正代表顺时针度数，负代表逆时针度数</li>
+<li>android:pivotX：缩放起点X坐标（数值、百分数、百分数p，譬如50表示以当前View左上角坐标加50px为初始点、50%表示以当前View的左上角加上当前View宽高的50%做为初始点、50%p表示以当前View的左上角加上父控件宽高的50%做为初始点）</li>
+<li>android:pivotY：缩放起点Y坐标，同上规律</li>
+</ul>
+<h4 id="Scale属性详解"><a href="#Scale属性详解" class="headerlink" title="Scale属性详解"></a><strong>Scale属性详解</strong></h4><ul>
+<li><p>android:fromXScale：初始X轴缩放比例，1.0表示无变化</p>
+</li>
+<li><p>android:toXScale：结束X轴缩放比例</p>
+</li>
+<li><p>android:fromYScale：初始Y轴缩放比例</p>
+</li>
+<li><p>android:toYScale：结束Y轴缩放比例</p>
+</li>
+<li><p>android:pivotX：缩放起点X轴坐标（数值、百分数、百分数p，譬如50表示以当前View左上角坐标加50px为初始点、50%表示以当前View的左上角加上当前View宽高的50%做为初始点、50%p表示以当前View的左上角加上父控件宽高的50%做为初始点）</p>
+</li>
+<li><p>android:pivotY：缩放起点Y轴坐标，同上规律</p>
+</li>
+</ul>
+<h4 id="Translate属性详解"><a href="#Translate属性详解" class="headerlink" title="Translate属性详解"></a><strong>Translate属性详解</strong></h4><ul>
+<li>android:fromXDelta：起始点X轴坐标（数值、百分数、百分数p，譬如50表示以当前View左上角坐标加50px为初始点、50%表示以当前View的左上角加上当前View宽高的50%做为初始点、50%p表示以当前View的左上角加上父控件宽高的50%做为初始点）</li>
+<li>android:fromYDelta：起始点Y轴从标，同上规律</li>
+<li>android:toXDelta：结束点X轴坐标，同上规律</li>
+<li>android:toYDelta：结束点Y轴坐标，同上规律</li>
+</ul>
+<h4 id="AnimationSet详解"><a href="#AnimationSet详解" class="headerlink" title="AnimationSet详解"></a><strong>AnimationSet详解</strong></h4><blockquote>
+<p>AnimationSet继承自Animation，是上面四种的组合容器管理类，没有自己特有的属性，他的属性继承自Animation</p>
+</blockquote>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;translate xmlns:android&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res&#x2F;android&quot;</span><br><span class="line">        android:interpolator&#x3D;&quot;@android:anim&#x2F;accelerate_interpolator&quot;</span><br><span class="line">        android:fromXDelta&#x3D;&quot;0&quot;</span><br><span class="line">        android:toXDelta&#x3D;&quot;0&quot;</span><br><span class="line">        android:duration&#x3D;&quot;200&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;set xmlns:android&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res&#x2F;android&quot;</span><br><span class="line">    android:interpolator&#x3D;&quot;@[package:]anim&#x2F;interpolator_resource&quot;</span><br><span class="line">    android:shareInterpolator&#x3D;[&quot;true&quot; | &quot;false&quot;] &gt;</span><br><span class="line">    &lt;alpha</span><br><span class="line">        android:fromAlpha&#x3D;&quot;float&quot;</span><br><span class="line">        android:toAlpha&#x3D;&quot;float&quot; &#x2F;&gt;</span><br><span class="line">    &lt;scale</span><br><span class="line">        android:fromXScale&#x3D;&quot;float&quot;</span><br><span class="line">        android:toXScale&#x3D;&quot;float&quot;</span><br><span class="line">        android:fromYScale&#x3D;&quot;float&quot;</span><br><span class="line">        android:toYScale&#x3D;&quot;float&quot;</span><br><span class="line">        android:pivotX&#x3D;&quot;float&quot;</span><br><span class="line">        android:pivotY&#x3D;&quot;float&quot; &#x2F;&gt;</span><br><span class="line">    &lt;translate</span><br><span class="line">        android:fromXDelta&#x3D;&quot;float&quot;</span><br><span class="line">        android:toXDelta&#x3D;&quot;float&quot;</span><br><span class="line">        android:fromYDelta&#x3D;&quot;float&quot;</span><br><span class="line">        android:toYDelta&#x3D;&quot;float&quot; &#x2F;&gt;</span><br><span class="line">    &lt;rotate</span><br><span class="line">        android:fromDegrees&#x3D;&quot;float&quot;</span><br><span class="line">        android:toDegrees&#x3D;&quot;float&quot;</span><br><span class="line">        android:pivotX&#x3D;&quot;float&quot;</span><br><span class="line">        android:pivotY&#x3D;&quot;float&quot; &#x2F;&gt;</span><br><span class="line">    &lt;set&gt;</span><br><span class="line">        ...</span><br><span class="line">    &lt;&#x2F;set&gt;</span><br><span class="line">&lt;&#x2F;set&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ImageView spaceshipImage &#x3D; (ImageView) findViewById(R.id.spaceshipImage);</span><br><span class="line">Animation hyperspaceJumpAnimation &#x3D; AnimationUtils.loadAnimation(this, R.anim.hyperspace_jump);</span><br><span class="line">spaceshipImage.startAnimation(hyperspaceJumpAnimation);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Animation其他api"><a href="#Animation其他api" class="headerlink" title="Animation其他api"></a>Animation其他api</h3><table>
+<thead>
+<tr>
+<th><strong>Animation类的方法</strong></th>
+<th><strong>解释</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>reset()</td>
+<td>重置Animation的初始化</td>
+</tr>
+<tr>
+<td>cancel()</td>
+<td>取消Animation动画</td>
+</tr>
+<tr>
+<td>start()</td>
+<td>开始Animation动画</td>
+</tr>
+<tr>
+<td>setAnimationListener(AnimationListener listener)</td>
+<td>给当前Animation设置动画监听</td>
+</tr>
+<tr>
+<td>hasStarted()</td>
+<td>判断当前Animation是否开始</td>
+</tr>
+<tr>
+<td>hasEnded()</td>
+<td>判断当前Animation是否结束</td>
+</tr>
+</tbody></table>
+<h3 id="View中api"><a href="#View中api" class="headerlink" title="View中api"></a>View中api</h3><table>
+<thead>
+<tr>
+<th><strong>View类的常用动画操作方法</strong></th>
+<th><strong>解释</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>startAnimation(Animation animation)</td>
+<td>对当前View开始设置的Animation动画</td>
+</tr>
+<tr>
+<td>clearAnimation()</td>
+<td>取消当View在执行的Animation动画</td>
+</tr>
+</tbody></table>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>补间动画执行之后并未改变View的真实布局属性值。切记这一点，譬如我们在Activity中有一个Button在屏幕上方，我们设置了平移动画移动到屏幕下方然后保持动画最后执行状态呆在屏幕下方，这时如果点击屏幕下方动画执行之后的Button是没有任何反应的，而点击原来屏幕上方没有Button的地方却响应的是点击Button的事件。</p>
+<h2 id="帧动画"><a href="#帧动画" class="headerlink" title="帧动画"></a>帧动画</h2><blockquote>
+<p>实质是Drawable动画，关于Drawable,后期详细研究</p>
+</blockquote>
+<h2 id="属性动画-Property-Animator"><a href="#属性动画-Property-Animator" class="headerlink" title="属性动画/Property Animator"></a>属性动画/Property Animator</h2><blockquote>
+<p>Android 3.0 以后引入了属性动画,通过控制对象的属性，来实现动画效果。官方定义：定义一个随着时间 （注：停个顿）更改任何对象属性的动画，无论其是否绘制到屏幕上。</p>
+<p>一般我们使用属性动画都是animator而不是animation</p>
+</blockquote>
+<p>具体先看下类关系：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * This is the superclass for classes which provide basic support for animations which can be</span><br><span class="line"> * started, ended, and have &lt;code&gt;AnimatorListeners&lt;&#x2F;code&gt; added to them.</span><br><span class="line"> *&#x2F;</span><br><span class="line">public abstract class Animator implements Cloneable &#123;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一般常用的实现类有四个</p>
+<table>
+<thead>
+<tr>
+<th>java 类名</th>
+<th>xml 关键字</th>
+<th>描述信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ValueAnimator</td>
+<td><code>&lt;animator&gt;</code> 放置在 res/animator/ 目录下</td>
+<td>在一个特定的时间里执行一个动画</td>
+</tr>
+<tr>
+<td>TimeAnimator</td>
+<td>不支持</td>
+<td>时序监听回调工具</td>
+</tr>
+<tr>
+<td>ObjectAnimator</td>
+<td><code>&lt;objectAnimator&gt;</code> 放置在 res/animator/ 目录下</td>
+<td>一个对象的一个属性动画</td>
+</tr>
+<tr>
+<td>AnimatorSet</td>
+<td><code>&lt;set&gt;</code> 放置在 res/animator/ 目录下</td>
+<td>动画集合</td>
+</tr>
+</tbody></table>
+<p>所以可以看见，我们平时使用属性动画的重点就在于 AnimatorSet、ObjectAnimator、TimeAnimator、ValueAnimator。 所以接下来我们就来依次说说如何使用。</p>
+<h3 id="ValueAnimator"><a href="#ValueAnimator" class="headerlink" title="ValueAnimator"></a>ValueAnimator</h3><blockquote>
+<p>顾名思义，ValueAnimator是一个在时间的维度上对设置的值做各种变化，在监听回调中实现动画</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public class ValueAnimator extends Animator implements AnimationHandler.AnimationFrameCallback &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="java代码"><a href="#java代码" class="headerlink" title="java代码"></a>java代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">btn.setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View v) &#123;</span><br><span class="line">                ValueAnimator valueAnimator &#x3D; ValueAnimator.ofInt(0,100);</span><br><span class="line">                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void onAnimationUpdate(ValueAnimator animation) &#123;</span><br><span class="line">                        Log.i(TAG, &quot;onAnimationUpdate: &quot; + animation.getAnimatedValue());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">                valueAnimator.addListener(new Animator.AnimatorListener() &#123;</span><br><span class="line">            				@Override</span><br><span class="line">            				public void onAnimationStart(Animator animation) &#123;</span><br><span class="line">                			Toast.makeText(context, &quot;动画开始&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">            					&#125;</span><br><span class="line"></span><br><span class="line">            				@Override</span><br><span class="line">            				public void onAnimationEnd(Animator animation) &#123;</span><br><span class="line">                			Toast.makeText(context, &quot;动画结束&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">           				 		&#125;</span><br><span class="line"></span><br><span class="line">            				@Override</span><br><span class="line">            				public void onAnimationCancel(Animator animation) &#123;</span><br><span class="line">                			Toast.makeText(context, &quot;动画取消&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">            					&#125;</span><br><span class="line"></span><br><span class="line">            				@Override</span><br><span class="line">            				public void onAnimationRepeat(Animator animation) &#123;</span><br><span class="line">                			Toast.makeText(context, &quot;动画重复&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">            					&#125;</span><br><span class="line">        				&#125;);</span><br><span class="line">                valueAnimator.setInterpolator(new LinearInterpolator());</span><br><span class="line">                valueAnimator.setDuration(3000);</span><br><span class="line">                valueAnimator.setRepeatMode();</span><br><span class="line">                valueAnimator.setRepeatCount();</span><br><span class="line">                valueAnimator.start();</span><br><span class="line">                </span><br><span class="line">                </span><br><span class="line">                </span><br><span class="line">                &#x2F;&#x2F;valueAnimator.start();</span><br><span class="line">                &#x2F;&#x2F;valueAnimator.end();</span><br><span class="line">                &#x2F;&#x2F;valueAnimator.cancel();</span><br><span class="line">                &#x2F;&#x2F;valueAnimator.pause();</span><br><span class="line">                &#x2F;&#x2F;valueAnimator.resume();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>ValueAnimator.ofInt(0,100)</code>:起始值和结束值，可以传多个，表示中间的值</p>
+</li>
+<li><p><code>addUpdateListener</code>：监听值的变化，一般在回调中进行view的变化设置</p>
+</li>
+<li><p><code>addListener</code>：状态的监听</p>
+</li>
+<li><p><code>setInterpolator</code>：设置监听器</p>
+</li>
+<li><p><code>setDuration</code>：设置持续时间</p>
+</li>
+<li><p><code>setRepeatMode</code>：设置重复模式</p>
+</li>
+<li><p><code>setRepeatCount</code>：设置重复次数，-1表示无限制</p>
+</li>
+<li><p>其他of如下图</p>
+<p><img src="../../../../images/12/15.png" class="lazyload" data-srcset="../../../../images/12/15.png" srcset="data:image/png;base64,666" alt="Image text"></p>
+</li>
+<li><p>其他举例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//3秒从0到100,再到50，再到100：</span></span><br><span class="line"></span><br><span class="line">btn.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                ValueAnimator valueAnimator = ValueAnimator.ofInt(<span class="number">0</span>, <span class="number">100</span>,<span class="number">50</span>,<span class="number">100</span>);</span><br><span class="line">                valueAnimator.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">                        Log.i(TAG, <span class="string">&quot;onAnimationUpdate: &quot;</span> + animation.getAnimatedValue());</span><br><span class="line">                        pg.setProgress((Integer) animation.getAnimatedValue());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">                valueAnimator.setDuration(<span class="number">3000</span>);</span><br><span class="line">                valueAnimator.start();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line"><span class="comment">//点击按钮，让背景颜色由白变红再变蓝：      </span></span><br><span class="line">btn.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                ValueAnimator valueAnimator = ValueAnimator.ofArgb(<span class="number">0xffffffff</span>,<span class="number">0xffff0000</span>,<span class="number">0xff0000ff</span>);</span><br><span class="line">                valueAnimator.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">                        Log.i(TAG, <span class="string">&quot;onAnimationUpdate: &quot;</span> + animation.getAnimatedValue());</span><br><span class="line">                        btn.setBackgroundColor((Integer) animation.getAnimatedValue());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">                valueAnimator.setDuration(<span class="number">3000</span>);</span><br><span class="line">                valueAnimator.start();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="xml方式"><a href="#xml方式" class="headerlink" title="xml方式"></a>xml方式</h4><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>android:duration</td>
+<td>动画执行时间</td>
+</tr>
+<tr>
+<td>android:interpolator</td>
+<td>插值器</td>
+</tr>
+<tr>
+<td>android:repeatCount</td>
+<td>重复次数</td>
+</tr>
+<tr>
+<td>android:repeatMode</td>
+<td>重复模式，reverse：倒着重放动画。restart：正着重放动画</td>
+</tr>
+<tr>
+<td>android:startOffset</td>
+<td>延迟开始动画时间</td>
+</tr>
+<tr>
+<td>android:valueFrom</td>
+<td>值得开始值，int float color</td>
+</tr>
+<tr>
+<td>android:valueTo</td>
+<td>值得目标值 int float color</td>
+</tr>
+<tr>
+<td>android:valueType=</td>
+<td>值得类型 intType floatType</td>
+</tr>
+</tbody></table>
+<p>ValueAnimator对应的XML标签是<code>&lt;animator&gt;</code></p>
+<ul>
+<li><p>在res目录下建立文件夹animator</p>
+</li>
+<li><p>在在res目录下建立文件夹animator中新建anim_test.xml文件:</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;animator xmlns:android&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res&#x2F;android&quot;</span><br><span class="line">    android:duration&#x3D;&quot;2000&quot;</span><br><span class="line">    android:interpolator&#x3D;&quot;@android:anim&#x2F;linear_interpolator&quot;</span><br><span class="line">    android:repeatCount&#x3D;&quot;0&quot;</span><br><span class="line">    android:repeatMode&#x3D;&quot;restart&quot;</span><br><span class="line">    android:startOffset&#x3D;&quot;1000&quot;</span><br><span class="line">    android:valueFrom&#x3D;&quot;1&quot;</span><br><span class="line">    android:valueTo&#x3D;&quot;100&quot;</span><br><span class="line">    android:valueType&#x3D;&quot;intType&quot;</span><br><span class="line">    &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在java代码中引用，上面的initAnim()方法改成这样：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">valueAnimator = (ValueAnimator) AnimatorInflater.loadAnimator(context,R.animator.anim_test);</span><br></pre></td></tr></table></figure>
+
+<h3 id="ObjectAnimator"><a href="#ObjectAnimator" class="headerlink" title="ObjectAnimator"></a>ObjectAnimator</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public final class ObjectAnimator extends ValueAnimator &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>通过继承关系可以知道，ValueObject的Api,ObjectAnimator都有</p>
+<p>可以对对象的任意有set,get方法的属性进行值生成</p>
+</blockquote>
+<h4 id="java代码-1"><a href="#java代码-1" class="headerlink" title="java代码"></a>java代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator objectAnimator1 &#x3D; ObjectAnimator.ofFloat(imageView, &quot;translationX&quot;, 300);</span><br><span class="line">objectAnimator1.setInterpolator(new AccelerateInterpolator());</span><br><span class="line">objectAnimator1.setDuration(2000);</span><br><span class="line">objectAnimator.setRepeatCount(ValueAnimator.INFINITE);&#x2F;&#x2F;Animation.INFINITE 表示重复多次</span><br><span class="line">objectAnimator.setRepeatMode(ValueAnimator.RESTART);&#x2F;&#x2F;RESTART表示从头开始，REVERSE表示从末尾倒播</span><br><span class="line">objectAnimator1.start();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>ofFloat</code>：参数意义为 对象，属性名，多个变化值,同理，还有其他ofInt等和ValueAnimator类似的API</li>
+</ul>
+<h5 id="PropertyValuesHolder"><a href="#PropertyValuesHolder" class="headerlink" title="PropertyValuesHolder"></a>PropertyValuesHolder</h5><p>针对同一个对象多个属性，同时作用多种动画</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PropertyValuesHolder propertyValuesHolder1 &#x3D; PropertyValuesHolder.ofFloat(&quot;translationX&quot;, 300f);</span><br><span class="line">PropertyValuesHolder propertyValuesHolder2 &#x3D; PropertyValuesHolder.ofFloat(&quot;alpha&quot;, 1f, 0.5f);</span><br><span class="line">PropertyValuesHolder propertyValuesHolder3 &#x3D; PropertyValuesHolder.ofFloat(&quot;scaleX&quot;, 1f, 0, 1f);</span><br><span class="line">PropertyValuesHolder propertyValuesHolder4 &#x3D; PropertyValuesHolder.ofFloat(&quot;scaleY&quot;, 1f, 0, 1f);</span><br><span class="line">ObjectAnimator.ofPropertyValuesHolder(imageView, propertyValuesHolder1, propertyValuesHolder2, propertyValuesHolder3, propertyValuesHolder4)</span><br><span class="line">        .setDuration(5000).start();</span><br></pre></td></tr></table></figure>
+
+<h5 id="AnimatorSet"><a href="#AnimatorSet" class="headerlink" title="AnimatorSet"></a>AnimatorSet</h5><p>与PropertyValuesHolder类似，但AnimatorSet多了playTogether（同时执行）、playSequentially（顺序执行）、play(objectAnimator1).with(objectAnimator2)、before、after这些方法协同工作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator objectAnimator1 &#x3D; ObjectAnimator.ofFloat(imageView, &quot;alpha&quot;, 1f, 0.5f);</span><br><span class="line">ObjectAnimator objectAnimator2 &#x3D; ObjectAnimator.ofFloat(imageView, &quot;translationY&quot;, 300);</span><br><span class="line">ObjectAnimator objectAnimator3 &#x3D; ObjectAnimator.ofFloat(imageView, &quot;scaleX&quot;, 1f, 0, 1f);</span><br><span class="line">AnimatorSet animatorSet &#x3D; new AnimatorSet();</span><br><span class="line">animatorSet.setDuration(5000);</span><br><span class="line">animatorSet.playTogether(objectAnimator1, objectAnimator2,objectAnimator3);</span><br><span class="line">animatorSet.start();</span><br></pre></td></tr></table></figure>
+
+<h5 id="Keyframe"><a href="#Keyframe" class="headerlink" title="Keyframe"></a>Keyframe</h5><p>这个类是通过控制time/value键值对来实现动画效果的。Keyframe类里面实现的 ofInt，ofFloat，ofObject方法。来看看ofFloat(float fraction, float value)第一个参数表示动画完成度，值在0—1之间变化。第二个参数表示当前帧动画的值。还不明白那就来点简单粗暴的吧。动画向右平移200个像素之后又移动回原来位置的动画</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator animator1 &#x3D; ObjectAnimator.ofFloat(imageView, &quot;translationX&quot;, 0.0f, 200.0f, 0f);</span><br></pre></td></tr></table></figure>
+
+<p>我们利用Keyframe来实现如上动画效果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Keyframe keyframe1 &#x3D; Keyframe.ofFloat(0f, 0f);&#x2F;&#x2F;第一帧动画 动画完成度0的时候的值是0</span><br><span class="line">        Keyframe keyframe2 &#x3D; Keyframe.ofFloat(.5f, 200.0f);&#x2F;&#x2F;第二帧动画 动画完成度0.5也就是一半的时候值是200</span><br><span class="line">        Keyframe keyframe3 &#x3D; Keyframe.ofFloat(1f, 0f);&#x2F;&#x2F;第三帧动画 动画完成度1也就是动画结束的时候值是0.</span><br><span class="line"></span><br><span class="line">        PropertyValuesHolder property &#x3D; PropertyValuesHolder.ofKeyframe(&quot;translationX&quot;, keyframe1, keyframe2, keyframe3);</span><br><span class="line">        ObjectAnimator objectAnimator &#x3D; ObjectAnimator.ofPropertyValuesHolder(imageView, property);</span><br></pre></td></tr></table></figure>
+
+<h4 id="TypeEvaluator"><a href="#TypeEvaluator" class="headerlink" title="TypeEvaluator"></a>TypeEvaluator</h4><p>在ObjectAnimator中可以用 <code>ofInt()</code> 来做整数的属性动画和用 <code>ofFloat()</code> 来做小数的属性动画。这两种属性类型是属性动画最常用的两种，不过在实际的开发中，可以做属性动画的类型还是有其他的一些类型。当需要对其他类型来做属性动画的时候，就需要用到 <code>TypeEvaluator</code> 了</p>
+<p><code>TypeEvaluator</code> 最经典的用法是使用 <code>ArgbEvaluator</code> 来做颜色渐变的动画。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator animator = ObjectAnimator.ofInt(view, <span class="string">&quot;color&quot;</span>, <span class="number">0xffff0000</span>, <span class="number">0xff00ff00</span>);</span><br><span class="line">animator.setEvaluator(<span class="keyword">new</span> ArgbEvaluator());</span><br><span class="line">animator.start();</span><br></pre></td></tr></table></figure>
+
+<p>另外，在 Android 5.0 （API 21） 加入了新的方法 <code>ofArgb()</code>，所以如果你的 <code>minSdk</code> 大于或者等于 21，你可以直接用下面这种方式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator animator = ObjectAnimator.ofArgb(view, <span class="string">&quot;color&quot;</span>, <span class="number">0xffff0000</span>, <span class="number">0xff00ff00</span>);</span><br><span class="line">animator.start();</span><br></pre></td></tr></table></figure>
+
+<h6 id="自定义-Evaluator"><a href="#自定义-Evaluator" class="headerlink" title="自定义 Evaluator"></a>自定义 Evaluator</h6><p>如果你对 <code>ArgbEvaluator</code> 的效果不满意，或者你由于别的什么原因希望写一个自定义的 <code>TypeEvaluator</code>，你可以这样写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义 HslEvaluator</span></span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">HsvEvaluator</span> <span class="keyword">implements</span> <span class="title">TypeEvaluator</span>&lt;<span class="title">Integer</span>&gt; </span>&#123;</span><br><span class="line">   <span class="keyword">float</span>[] startHsv = <span class="keyword">new</span> <span class="keyword">float</span>[<span class="number">3</span>];</span><br><span class="line">   <span class="keyword">float</span>[] endHsv = <span class="keyword">new</span> <span class="keyword">float</span>[<span class="number">3</span>];</span><br><span class="line">   <span class="keyword">float</span>[] outHsv = <span class="keyword">new</span> <span class="keyword">float</span>[<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> Integer <span class="title">evaluate</span><span class="params">(<span class="keyword">float</span> fraction, Integer startValue, Integer endValue)</span> </span>&#123;</span><br><span class="line">       <span class="comment">// 把 ARGB 转换成 HSV</span></span><br><span class="line">       Color.colorToHSV(startValue, startHsv);</span><br><span class="line">       Color.colorToHSV(endValue, endHsv);</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 计算当前动画完成度（fraction）所对应的颜色值</span></span><br><span class="line">       <span class="keyword">if</span> (endHsv[<span class="number">0</span>] - startHsv[<span class="number">0</span>] &gt; <span class="number">180</span>) &#123;</span><br><span class="line">           endHsv[<span class="number">0</span>] -= <span class="number">360</span>;</span><br><span class="line">       &#125; <span class="keyword">else</span> <span class="keyword">if</span> (endHsv[<span class="number">0</span>] - startHsv[<span class="number">0</span>] &lt; -<span class="number">180</span>) &#123;</span><br><span class="line">           endHsv[<span class="number">0</span>] += <span class="number">360</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       outHsv[<span class="number">0</span>] = startHsv[<span class="number">0</span>] + (endHsv[<span class="number">0</span>] - startHsv[<span class="number">0</span>]) * fraction;</span><br><span class="line">       <span class="keyword">if</span> (outHsv[<span class="number">0</span>] &gt; <span class="number">360</span>) &#123;</span><br><span class="line">           outHsv[<span class="number">0</span>] -= <span class="number">360</span>;</span><br><span class="line">       &#125; <span class="keyword">else</span> <span class="keyword">if</span> (outHsv[<span class="number">0</span>] &lt; <span class="number">0</span>) &#123;</span><br><span class="line">           outHsv[<span class="number">0</span>] += <span class="number">360</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       outHsv[<span class="number">1</span>] = startHsv[<span class="number">1</span>] + (endHsv[<span class="number">1</span>] - startHsv[<span class="number">1</span>]) * fraction;</span><br><span class="line">       outHsv[<span class="number">2</span>] = startHsv[<span class="number">2</span>] + (endHsv[<span class="number">2</span>] - startHsv[<span class="number">2</span>]) * fraction;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 计算当前动画完成度（fraction）所对应的透明度</span></span><br><span class="line">       <span class="keyword">int</span> alpha = startValue &gt;&gt; <span class="number">24</span> + (<span class="keyword">int</span>) ((endValue &gt;&gt; <span class="number">24</span> - startValue &gt;&gt; <span class="number">24</span>) * fraction);</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 把 HSV 转换回 ARGB 返回</span></span><br><span class="line">       <span class="keyword">return</span> Color.HSVToColor(alpha, outHsv);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ObjectAnimator animator = ObjectAnimator.ofInt(view, <span class="string">&quot;color&quot;</span>, <span class="number">0xff00ff00</span>);</span><br><span class="line"><span class="comment">// 使用自定义的 HslEvaluator</span></span><br><span class="line">animator.setEvaluator(<span class="keyword">new</span> HsvEvaluator());</span><br><span class="line">animator.start();</span><br></pre></td></tr></table></figure>
+
+<h4 id="xml方式-1"><a href="#xml方式-1" class="headerlink" title="xml方式"></a>xml方式</h4><p>res下建立animator文件夹，然后建立res/animator/set_animator.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;objectAnimator xmlns:android&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res&#x2F;android&quot;</span><br><span class="line">android:duration&#x3D;&quot;2000&quot;</span><br><span class="line">android:propertyName&#x3D;&quot;alpha&quot;</span><br><span class="line">android:valueFrom&#x3D;&quot;0.1&quot;</span><br><span class="line">android:valueTo&#x3D;&quot;1.0&quot;</span><br><span class="line">android:valueType&#x3D;&quot;floatType&quot; &#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>调用:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> Animator animator &#x3D; AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.set_animator);</span><br><span class="line">animator.setTarget(imageView);</span><br><span class="line">animator.start();</span><br></pre></td></tr></table></figure>
+
+<p>动画组合<br>set标签，有一个orderring属性设置为together，还有另一个值：sequentially（表示一个接一个执行）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;set xmlns:android&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res&#x2F;android&quot;</span><br><span class="line">    android:ordering&#x3D;&quot;together&quot;&gt;</span><br><span class="line">    &lt;objectAnimator</span><br><span class="line">        android:duration&#x3D;&quot;1000&quot;</span><br><span class="line">        android:propertyName&#x3D;&quot;scaleX&quot;</span><br><span class="line">        android:valueFrom&#x3D;&quot;1&quot;</span><br><span class="line">        android:valueTo&#x3D;&quot;0.5&quot; &#x2F;&gt;</span><br><span class="line">    &lt;objectAnimator</span><br><span class="line">        android:duration&#x3D;&quot;1000&quot;</span><br><span class="line">        android:propertyName&#x3D;&quot;scaleY&quot;</span><br><span class="line">        android:valueFrom&#x3D;&quot;1&quot;</span><br><span class="line">        android:valueTo&#x3D;&quot;0.5&quot; &#x2F;&gt;</span><br><span class="line">&lt;&#x2F;set&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="View的animate方法"><a href="#View的animate方法" class="headerlink" title="View的animate方法"></a>View的animate方法</h4><p>Android 3.0后，谷歌给View增加animate方法直接驱动属性动画。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">imageView.animate()</span><br><span class="line">.alpha(0.5f)</span><br><span class="line">.y(300)</span><br><span class="line">.setDuration(2000)</span><br><span class="line">&#x2F;&#x2F;api min is 16</span><br><span class="line">.withStartAction(new Runnable() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&#x2F;&#x2F;api min is 16</span><br><span class="line">.withEndAction(new Runnable() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">.start();</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义view举例"><a href="#自定义view举例" class="headerlink" title="自定义view举例"></a>自定义view举例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class SportsView extends View &#123;</span><br><span class="line">     float progress &#x3D; 0;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 创建 getter 方法</span><br><span class="line">    public float getProgress() &#123;</span><br><span class="line">        return progress;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 创建 setter 方法</span><br><span class="line">    public void setProgress(float progress) &#123;</span><br><span class="line">        this.progress &#x3D; progress;</span><br><span class="line">        invalidate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onDraw(Canvas canvas) &#123;</span><br><span class="line">        super.onDraw(canvas);</span><br><span class="line"></span><br><span class="line">        ......</span><br><span class="line"></span><br><span class="line">        canvas.drawArc(arcRectF, 135, progress * 2.7f, false, paint);</span><br><span class="line"></span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 创建 ObjectAnimator 对象</span><br><span class="line">ObjectAnimator animator &#x3D; ObjectAnimator.ofFloat(view, &quot;progress&quot;, 0, 65);</span><br><span class="line">&#x2F;&#x2F; 执行动画</span><br><span class="line">animator.start();</span><br></pre></td></tr></table></figure>
+
+<p><img src="../../../../images/12/16.gif" class="lazyload" data-srcset="../../../../images/12/16.gif" srcset="data:image/png;base64,666" alt="Image text"></p>
+<h1 id="Draw"><a href="#Draw" class="headerlink" title="Draw"></a>Draw</h1>
+  
+  
+    
+    <div class='footer'>
+      
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=http://yoursite.com/2021/05/01/View%E7%9A%84%E5%8A%A8%E7%94%BB%E5%8F%8ADraw%E5%AE%9E%E7%8E%B0/>http://yoursite.com/2021/05/01/View%E7%9A%84%E5%8A%A8%E7%94%BB%E5%8F%8ADraw%E5%AE%9E%E7%8E%B0/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-05-05T20:49:35+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：May 5, 2021</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Android/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Android</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%8A%A8%E7%94%BB/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>动画</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2021/05/01/View%E7%9A%84%E5%8A%A8%E7%94%BB%E5%8F%8ADraw%E5%AE%9E%E7%8E%B0/&title=View的动画及Draw实现 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://yoursite.com/2021/05/01/View%E7%9A%84%E5%8A%A8%E7%94%BB%E5%8F%8ADraw%E5%AE%9E%E7%8E%B0/&title=View的动画及Draw实现 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2021/05/01/View%E7%9A%84%E5%8A%A8%E7%94%BB%E5%8F%8ADraw%E5%AE%9E%E7%8E%B0/&title=View的动画及Draw实现 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+      
+        <a class='next' href='/2021/04/26/View%E7%BB%98%E5%88%B6%E6%B5%81%E7%A8%8B%E5%8F%8A%E6%BB%91%E5%8A%A8/'>
+          <p class='title'>View绘制流程及滑动<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>View的创建inflater
+Activity的setContentView来设置View界面，最终会调用LayoutInflater.from(mContext).inflate(resId...</p>
+        </a>
+      
+    </div>
+  
+</article>
+
+
+  
+
+  <article class="post white-box reveal shadow" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+
+</div>
+<aside class='l_side'>
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E5%8A%A8%E7%94%BB-%E8%A1%A5%E9%97%B4%E5%8A%A8%E7%94%BB-View-Animation"><span class="toc-text">视图动画&#x2F;补间动画&#x2F;View Animation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-text">属性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Animation"><span class="toc-text">Animation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Alpha%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Alpha属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rotate%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Rotate属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scale%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Scale属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Translate%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Translate属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AnimationSet%E8%AF%A6%E8%A7%A3"><span class="toc-text">AnimationSet详解</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B"><span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Animation%E5%85%B6%E4%BB%96api"><span class="toc-text">Animation其他api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#View%E4%B8%ADapi"><span class="toc-text">View中api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-text">注意</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A7%E5%8A%A8%E7%94%BB"><span class="toc-text">帧动画</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-Property-Animator"><span class="toc-text">属性动画&#x2F;Property Animator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ValueAnimator"><span class="toc-text">ValueAnimator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81"><span class="toc-text">java代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xml%E6%96%B9%E5%BC%8F"><span class="toc-text">xml方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectAnimator"><span class="toc-text">ObjectAnimator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81-1"><span class="toc-text">java代码</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#PropertyValuesHolder"><span class="toc-text">PropertyValuesHolder</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#AnimatorSet"><span class="toc-text">AnimatorSet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Keyframe"><span class="toc-text">Keyframe</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TypeEvaluator"><span class="toc-text">TypeEvaluator</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xml%E6%96%B9%E5%BC%8F-1"><span class="toc-text">xml方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#View%E7%9A%84animate%E6%96%B9%E6%B3%95"><span class="toc-text">View的animate方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89view%E4%B8%BE%E4%BE%8B"><span class="toc-text">自定义view举例</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+        
+        
+          <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="View的动画及Draw实现";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+
+  var l_header=document.getElementById("l_header");
+  
+  l_header.classList.add("show");
+  
+</script>
+
+        
+      </div>
+      
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        <div><p>Blog content follows the <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License</a></p>
+</div>
+      
+    
+      
+        
+          <div><p><span id="lc-sv">本站总访问量为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 次</span> <span id="lc-uv">访客数为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 人</span></p>
+</div>
+        
+      
+    
+      
+        Use
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6" target="_blank" class="codename">Volantis</a>
+        as theme
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+      <a id="s-top" class="fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+  </div>
+  <div>
+    <script>
+window.volantis={};
+window.volantis.loadcss=document.getElementById("loadcss");
+/********************脚本懒加载函数********************************/
+function loadScript(src, cb) {
+var HEAD = document.getElementsByTagName('head')[0] || document.documentElement;
+var script = document.createElement('script');
+script.setAttribute('type','text/javascript');
+if (cb) script.onload = cb;
+script.setAttribute('src', src);
+HEAD.appendChild(script);
+}
+//https://github.com/filamentgroup/loadCSS
+var loadCSS = function( href, before, media, attributes ){
+	var doc = window.document;
+	var ss = doc.createElement( "link" );
+	var ref;
+	if( before ){
+		ref = before;
+	}
+	else {
+		var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+		ref = refs[ refs.length - 1];
+	}
+	var sheets = doc.styleSheets;
+	if( attributes ){
+		for( var attributeName in attributes ){
+			if( attributes.hasOwnProperty( attributeName ) ){
+				ss.setAttribute( attributeName, attributes[attributeName] );
+			}
+		}
+	}
+	ss.rel = "stylesheet";
+	ss.href = href;
+	ss.media = "only x";
+	function ready( cb ){
+		if( doc.body ){
+			return cb();
+		}
+		setTimeout(function(){
+			ready( cb );
+		});
+	}
+	ready( function(){
+		ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
+	});
+	var onloadcssdefined = function( cb ){
+		var resolvedHref = ss.href;
+		var i = sheets.length;
+		while( i-- ){
+			if( sheets[ i ].href === resolvedHref ){
+				return cb();
+			}
+		}
+		setTimeout(function() {
+			onloadcssdefined( cb );
+		});
+	};
+	function loadCB(){
+		if( ss.addEventListener ){
+			ss.removeEventListener( "load", loadCB );
+		}
+		ss.media = media || "all";
+	}
+	if( ss.addEventListener ){
+		ss.addEventListener( "load", loadCB);
+	}
+	ss.onloadcssdefined = onloadcssdefined;
+	onloadcssdefined( loadCB );
+	return ss;
+};
+</script>
+<script>
+  
+  loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css", window.volantis.loadcss);
+  
+  
+  
+  
+</script>
+<!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script>
+  function pjax_fancybox() {
+    $(".md .gallery").find("img").each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md .gallery").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  function SCload_fancybox() {
+    if ($(".md .gallery").find("img").length == 0) return;
+    loadCSS("https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css", document.getElementById("loadcss"));
+    setTimeout(function() {
+      loadScript('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', pjax_fancybox)
+    }, 1);
+  };
+  $(function () {
+    SCload_fancybox();
+  });
+</script>
+
+
+<!-- internal -->
+
+
+
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+  
+    <script>
+      window.FPConfig = {
+        delay: 0,
+        ignoreKeywords: [],
+        maxRPS: 5,
+        hoverDelay: 25
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/valine.min.js"></script>
+
+
+<script>
+  var GUEST_INFO = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link'.split(',').filter(function (item) {
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick', 'mail', 'link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function (item) {
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+
+    var valine = new Valine();
+    valine.init({
+      el: '#valine_container',
+      meta: meta,
+      placeholder: pagePlaceholder,
+      path: path,
+      appId: "",
+      appKey: "",
+      pageSize: '10',
+      avatar: 'robohash',
+      lang: 'zh-cn',
+      visitor: 'true',
+      highlight: 'true',
+      mathJax: 'false',
+      enableQQ: 'true',
+      recordIP: 'false',
+      requiredFields: requiredFields,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps
+    })
+  }
+
+  $(function () {
+    pjax_valine();
+  });
+</script>
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/app.min.js"></script>
+
+
+
+<!-- optional -->
+
+  <script>
+const SearchServiceimagePath="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/img/";
+const ROOT =  ("/" || "/").endsWith('/') ? ("/" || "/") : ("//" || "/" );
+
+$('.input.u-search-input').one('focus',function(){
+	
+		loadScript('https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/search/hexo.min.js',setSearchService);
+	
+})
+
+function listenSearch(){
+  
+    customSearch = new HexoSearch({
+      imagePath: SearchServiceimagePath
+    });
+  
+}
+function setSearchService() {
+	listenSearch();
+	
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'u9j57bwJod4EDmXWdxrwuqQT-MdYXbMMI',
+    app_key: 'jfHtEKVE24j0IVCGHbvuFClp',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'http://yoursite.com' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'http://yoursite.com' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'http://yoursite.com' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+
+
+
+
+<script>
+function listennSidebarTOC() {
+  const navItems = document.querySelectorAll(".toc li");
+  if (!navItems.length) return;
+  const sections = [...navItems].map((element) => {
+    const link = element.querySelector(".toc-link");
+    const target = document.getElementById(
+      decodeURI(link.getAttribute("href")).replace("#", "")
+    );
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({
+		top: target.offsetTop + 100,
+		
+		behavior: "smooth"
+		
+	  });
+    });
+    return target;
+  });
+
+  function activateNavByIndex(target) {
+    if (target.classList.contains("active-current")) return;
+
+    document.querySelectorAll(".toc .active").forEach((element) => {
+      element.classList.remove("active", "active-current");
+    });
+    target.classList.add("active", "active-current");
+    let parent = target.parentNode;
+    while (!parent.matches(".toc")) {
+      if (parent.matches("li")) parent.classList.add("active");
+      parent = parent.parentNode;
+    }
+  }
+
+  function findIndex(entries) {
+    let index = 0;
+    let entry = entries[index];
+    if (entry.boundingClientRect.top > 0) {
+      index = sections.indexOf(entry.target);
+      return index === 0 ? 0 : index - 1;
+    }
+    for (; index < entries.length; index++) {
+      if (entries[index].boundingClientRect.top <= 0) {
+        entry = entries[index];
+      } else {
+        return sections.indexOf(entry.target);
+      }
+    }
+    return sections.indexOf(entry.target);
+  }
+
+  function createIntersectionObserver(marginTop) {
+    marginTop = Math.floor(marginTop + 10000);
+    let intersectionObserver = new IntersectionObserver(
+      (entries, observe) => {
+        let scrollHeight = document.documentElement.scrollHeight + 100;
+        if (scrollHeight > marginTop) {
+          observe.disconnect();
+          createIntersectionObserver(scrollHeight);
+          return;
+        }
+        let index = findIndex(entries);
+        activateNavByIndex(navItems[index]);
+      },
+      {
+        rootMargin: marginTop + "px 0px -100% 0px",
+        threshold: 0,
+      }
+    );
+    sections.forEach((element) => {
+      element && intersectionObserver.observe(element);
+    });
+  }
+  createIntersectionObserver(document.documentElement.scrollHeight);
+}
+
+document.addEventListener("DOMContentLoaded", listennSidebarTOC);
+document.addEventListener("pjax:success", listennSidebarTOC);
+</script>
+
+<!-- more -->
+
+
+
+
+    
+      
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          "#l_cover",
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+      if (typeof $.fancybox != "undefined") {
+        $.fancybox.close();    // 关闭弹窗
+      }
+      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
+      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      volantis.$topBtn.unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+	  
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 关于百度统计对 SPA 页面的处理：
+      // 方案一：百度统计>管理>单页应用设置中，打开开启按钮即可对SPA进行统计。 https://tongji.baidu.com/web/help/article?id=324
+      // 方案二：取消注释下列代码。 https://tongji.baidu.com/web/help/article?id=235
+       
+
+      // 关于谷歌统计对 SPA 页面的处理：
+      // 当应用以动态方式加载内容并更新地址栏中的网址时，也应该更新通过 gtag.js 存储的网页网址。
+      // https://developers.google.cn/analytics/devguides/collection/gtagjs/single-page-applications?hl=zh-cn
+      
+	 
+
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+          if (typeof $.fancybox == "undefined") {
+            SCload_fancybox();
+          } else {
+            pjax_fancybox();
+          }
+        
+        
+        
+        
+        
+        
+          pjax_valine();
+        
+        
+        
+        
+      } catch (e) {
+        console.log(e);
+      }
+	  
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+	  
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+
+    
+  </div>
+</body>
+</html>
