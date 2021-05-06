@@ -781,7 +781,259 @@
 <h4 id="自定义view举例"><a href="#自定义view举例" class="headerlink" title="自定义view举例"></a>自定义view举例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class SportsView extends View &#123;</span><br><span class="line">     float progress &#x3D; 0;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 创建 getter 方法</span><br><span class="line">    public float getProgress() &#123;</span><br><span class="line">        return progress;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 创建 setter 方法</span><br><span class="line">    public void setProgress(float progress) &#123;</span><br><span class="line">        this.progress &#x3D; progress;</span><br><span class="line">        invalidate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onDraw(Canvas canvas) &#123;</span><br><span class="line">        super.onDraw(canvas);</span><br><span class="line"></span><br><span class="line">        ......</span><br><span class="line"></span><br><span class="line">        canvas.drawArc(arcRectF, 135, progress * 2.7f, false, paint);</span><br><span class="line"></span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 创建 ObjectAnimator 对象</span><br><span class="line">ObjectAnimator animator &#x3D; ObjectAnimator.ofFloat(view, &quot;progress&quot;, 0, 65);</span><br><span class="line">&#x2F;&#x2F; 执行动画</span><br><span class="line">animator.start();</span><br></pre></td></tr></table></figure>
 
 <p><img src="../../../../images/12/16.gif" class="lazyload" data-srcset="../../../../images/12/16.gif" srcset="data:image/png;base64,666" alt="Image text"></p>
-<h1 id="Draw"><a href="#Draw" class="headerlink" title="Draw"></a>Draw</h1>
+<h1 id="Draw"><a href="#Draw" class="headerlink" title="Draw"></a>Draw</h1><blockquote>
+<p>在自定义view时，大概率会重写onDraw方法，这里面会涉及比较的API</p>
+</blockquote>
+<h2 id="Paint"><a href="#Paint" class="headerlink" title="Paint"></a>Paint</h2><blockquote>
+<p>意为画笔，是自定义view的关键类</p>
+</blockquote>
+<p><code>Paint</code> 的 API 大致可以分为 4 类：</p>
+<ul>
+<li>颜色</li>
+<li>效果</li>
+<li>drawText() 相关</li>
+<li>初始化</li>
+</ul>
+<h3 id="颜色"><a href="#颜色" class="headerlink" title="颜色"></a>颜色</h3><blockquote>
+<p><code>Paint</code> 设置颜色的方法有两种：一种是直接用 <code>Paint.setColor/ARGB()</code> 来设置颜色，另一种是使用 <code>Shader</code> 来指定着色方案。</p>
+</blockquote>
+<h4 id="直接设置颜色"><a href="#直接设置颜色" class="headerlink" title="直接设置颜色"></a>直接设置颜色</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">paint.setColor(Color.parseColor(&quot;#009688&quot;))</span><br><span class="line">paint.setARGB(100, 255, 0, 0);</span><br></pre></td></tr></table></figure>
+
+<h4 id="setShader-Shader-shader-设置-Shader"><a href="#setShader-Shader-shader-设置-Shader" class="headerlink" title="setShader(Shader shader) 设置 Shader"></a>setShader(Shader shader) 设置 Shader</h4><p>在 Android 的绘制里使用 <code>Shader</code> ，并不直接用 <code>Shader</code> 这个类，而是用它的几个子类。具体来讲有 <code>LinearGradient</code> <code>RadialGradient</code> <code>SweepGradient</code> <code>BitmapShader</code> <code>ComposeShader</code> 这么几个：</p>
+<ul>
+<li><h5 id="LinearGradient-线性渐变"><a href="#LinearGradient-线性渐变" class="headerlink" title="LinearGradient 线性渐变"></a>LinearGradient 线性渐变</h5></li>
+</ul>
+<p>设置两个点和两种颜色，以这两个点作为端点，使用两种颜色的渐变来绘制颜色。就像这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Shader shader = <span class="keyword">new</span> LinearGradient(<span class="number">100</span>, <span class="number">100</span>, <span class="number">500</span>, <span class="number">500</span>, Color.parseColor(<span class="string">&quot;#E91E63&quot;</span>),</span><br><span class="line">        Color.parseColor(<span class="string">&quot;#2196F3&quot;</span>), Shader.TileMode.CLAMP);</span><br><span class="line">paint.setShader(shader);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">canvas.drawCircle(<span class="number">300</span>, <span class="number">300</span>, <span class="number">200</span>, paint);</span><br></pre></td></tr></table></figure>
+
+<p><img src="../../../../images/12/17.jpg" class="lazyload" data-srcset="../../../../images/12/17.jpg" srcset="data:image/png;base64,666" alt="Image text"></p>
+<blockquote>
+<p>设置了 <code>Shader</code> 之后，绘制出了渐变颜色的圆。</p>
+<p>注意：在设置了 <code>Shader</code> 的情况下， <code>Paint.setColor/ARGB()</code> 所设置的颜色就不再起作用。</p>
+</blockquote>
+<p>构造方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LinearGradient(float x0, float y0, float x1, float y1, int color0, int color1, Shader.TileMode tile)</span><br></pre></td></tr></table></figure>
+
+<p>参数：<br><code>x0</code> <code>y0</code> <code>x1</code> <code>y1</code>：渐变的两个端点的位置<br><code>color0</code> <code>color1</code> 是端点的颜色<br><code>tile</code>：端点范围之外的着色规则，类型是 <code>TileMode</code>。<code>TileMode</code> 一共有 3 个值可选： <code>CLAMP</code>, <code>MIRROR</code> 和 <code>REPEAT</code></p>
+<ul>
+<li><h5 id="RadialGradient-辐射渐变"><a href="#RadialGradient-辐射渐变" class="headerlink" title="RadialGradient 辐射渐变"></a>RadialGradient 辐射渐变</h5></li>
+</ul>
+<p>辐射渐变很好理解，就是从中心向周围辐射状的渐变。大概像这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Shader shader = <span class="keyword">new</span> RadialGradient(<span class="number">300</span>, <span class="number">300</span>, <span class="number">200</span>, Color.parseColor(<span class="string">&quot;#E91E63&quot;</span>),</span><br><span class="line">        Color.parseColor(<span class="string">&quot;#2196F3&quot;</span>), Shader.TileMode.CLAMP);</span><br><span class="line">paint.setShader(shader);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">canvas.drawCircle(<span class="number">300</span>, <span class="number">300</span>, <span class="number">200</span>, paint);  </span><br></pre></td></tr></table></figure>
+
+<p><img src="../../../../images/12/18.jpg" class="lazyload" data-srcset="../../../../images/12/18.jpg" srcset="data:image/png;base64,666" alt="Image text"></p>
+<p>构造方法：<br><code>RadialGradient(float centerX, float centerY, float radius, int centerColor, int edgeColor, TileMode tileMode)</code>。</p>
+<p>参数：<br><code>centerX</code> <code>centerY</code>：辐射中心的坐标<br><code>radius</code>：辐射半径<br><code>centerColor</code>：辐射中心的颜色<br><code>edgeColor</code>：辐射边缘的颜色<br><code>tileMode</code>：辐射范围之外的着色模式。 <code>CLAMP</code>, <code>MIRROR</code> 和 <code>REPEAT</code></p>
+<ul>
+<li><h5 id="SweepGradient-扫描渐变"><a href="#SweepGradient-扫描渐变" class="headerlink" title="SweepGradient 扫描渐变"></a>SweepGradient 扫描渐变</h5></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Shader shader &#x3D; new SweepGradient(300, 300, Color.parseColor(&quot;#E91E63&quot;),</span><br><span class="line">        Color.parseColor(&quot;#2196F3&quot;));</span><br><span class="line">paint.setShader(shader);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">canvas.drawCircle(300, 300, 200, paint);</span><br></pre></td></tr></table></figure>
+
+<p><img src="../../../../images/12/19.jpg" class="lazyload" data-srcset="../../../../images/12/19.jpg" srcset="data:image/png;base64,666" alt="Image text"></p>
+<p>构造方法：<br><code>SweepGradient(float cx, float cy, int color0, int color1)</code></p>
+<p>参数：<br><code>cx</code> <code>cy</code> ：扫描的中心<br><code>color0</code>：扫描的起始颜色<br><code>color1</code>：扫描的终止颜色</p>
+<ul>
+<li><h5 id="BitmapShader"><a href="#BitmapShader" class="headerlink" title="BitmapShader"></a>BitmapShader</h5></li>
+</ul>
+<p>用 <code>Bitmap</code> 来着色。其实也就是用 <code>Bitmap</code> 的像素来作为图形或文字的填充。大概像这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Bitmap bitmap &#x3D; BitmapFactory.decodeResource(getResources(), R.drawable.batman);</span><br><span class="line">Shader shader &#x3D; new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);</span><br><span class="line">paint.setShader(shader);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">canvas.drawCircle(300, 300, 200, paint);</span><br></pre></td></tr></table></figure>
+
+<p><img src="../../../../images/12/20.jpg" class="lazyload" data-srcset="../../../../images/12/20.jpg" srcset="data:image/png;base64,666" alt="Image text"></p>
+<p>构造方法：<br><code>BitmapShader(Bitmap bitmap, Shader.TileMode tileX, Shader.TileMode tileY)</code></p>
+<p>参数：<br><code>bitmap</code>：用来做模板的 <code>Bitmap</code> 对象<br><code>tileX</code>：横向的 <code>TileMode</code><br><code>tileY</code>：纵向的 <code>TileMode</code>。</p>
+<ul>
+<li><h5 id="ComposeShader-混合着色器"><a href="#ComposeShader-混合着色器" class="headerlink" title="ComposeShader 混合着色器"></a>ComposeShader 混合着色器</h5></li>
+</ul>
+<p>所谓混合，就是把两个 <code>Shader</code> 一起使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 第一个 Shader：头像的 Bitmap</span><br><span class="line">Bitmap bitmap1 &#x3D; BitmapFactory.decodeResource(getResources(), R.drawable.batman);</span><br><span class="line">Shader shader1 &#x3D; new BitmapShader(bitmap1, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 第二个 Shader：从上到下的线性渐变（由透明到黑色）</span><br><span class="line">Bitmap bitmap2 &#x3D; BitmapFactory.decodeResource(getResources(), R.drawable.batman_logo);</span><br><span class="line">Shader shader2 &#x3D; new BitmapShader(bitmap2, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; ComposeShader：结合两个 Shader</span><br><span class="line">Shader shader &#x3D; new ComposeShader(shader1, shader2, PorterDuff.Mode.SRC_OVER);</span><br><span class="line">paint.setShader(shader);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">canvas.drawCircle(300, 300, 300, paint);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><em>注意：上面这段代码中我使用了两个</em> <code>BitmapShader</code> <em>来作为</em> <code>ComposeShader()</code> <em>的参数，而</em> <code>ComposeShader()</code> <em>在硬件加速下是不支持两个相同类型的</em> <code>Shader</code> <em>的，所以这里也需要关闭硬件加速才能看到效果。</em></p>
+</blockquote>
+<p><img src="../../../../images/12/21.jpg" class="lazyload" data-srcset="../../../../images/12/21.jpg" srcset="data:image/png;base64,666" alt="Image text"></p>
+<p>构造方法：<code>ComposeShader(Shader shaderA, Shader shaderB, PorterDuff.Mode mode)</code></p>
+<p>参数：<br><code>shaderA</code>, <code>shaderB</code>：两个相继使用的 <code>Shader</code><br><code>mode</code>: 两个 <code>Shader</code> 的叠加模式，即 <code>shaderA</code> 和 <code>shaderB</code> 应该怎样共同绘制。它的类型是 <code>PorterDuff.Mode</code> 。</p>
+<h4 id="setColorFilter-ColorFilter-colorFilter"><a href="#setColorFilter-ColorFilter-colorFilter" class="headerlink" title="setColorFilter(ColorFilter colorFilter)"></a>setColorFilter(ColorFilter colorFilter)</h4><blockquote>
+<p><code>ColorFilter</code> 这个类，它的名字已经足够解释它的作用：为绘制设置颜色过滤。颜色过滤的意思，就是为绘制的内容设置一个统一的过滤策略，然后 <code>Canvas.drawXXX()</code> 方法会对每个像素都进行过滤后再绘制出来。举几个现实中比较常见的颜色过滤的例子：</p>
+</blockquote>
+<p>在 <code>Paint</code> 里设置 <code>ColorFilter</code> ，使用的是 <code>Paint.setColorFilter(ColorFilter filter)</code> 方法。 <code>ColorFilter</code> 并不直接使用，而是使用它的子类。它共有三个子类：<code>LightingColorFilter</code> <code>PorterDuffColorFilter</code> 和 <code>ColorMatrixColorFilter</code>。</p>
+<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><ul>
+<li><p>setAntiAlias (boolean aa) 设置抗锯齿</p>
+</li>
+<li><p>setStyle(Paint.Style style)</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">paint.setStyle(Paint.Style.FILL); &#x2F;&#x2F; FILL 模式，填充</span><br><span class="line">paint.setStyle(Paint.Style.STROKE); &#x2F;&#x2F; STROKE 模式，画线</span><br></pre></td></tr></table></figure>
+
+<p><code>FILL</code> 模式是默认模式，所以如果之前没有设置过其他的 <code>Style</code>，可以不用 <code>setStyle(Paint.Style.FILL)</code> 这句。</p>
+<ul>
+<li>setStrokeWidth(float width)</li>
+</ul>
+<p>设置线条宽度。单位为像素，默认值是 0。</p>
+<ul>
+<li>setStrokeCap</li>
+</ul>
+<p>设置线头的形状。线头形状有三种：<code>BUTT</code> 平头、<code>ROUND</code> 圆头、<code>SQUARE</code> 方头。默认为 <code>BUTT</code>。</p>
+<ul>
+<li>setStrokeJoin</li>
+</ul>
+<p>设置拐角的形状。有三个值可以选择：<code>MITER</code> 尖角、 <code>BEVEL</code> 平角和 <code>ROUND</code> 圆角。默认为 <code>MITER</code>。</p>
+<ul>
+<li>setStrokeMiter</li>
+</ul>
+<p>这个方法是对于 <code>setStrokeJoin()</code> 的一个补充，它用于设置 <code>MITER</code> 型拐角的延长线的最大值。</p>
+<ul>
+<li>setDither</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">paint.setDither(true);</span><br></pre></td></tr></table></figure>
+
+<p>设置图像的抖动。</p>
+<ul>
+<li>setFilterBitmap</li>
+</ul>
+<p>设置是否使用双线性过滤来绘制 <code>Bitmap</code> 。</p>
+<ul>
+<li>setPathEffect</li>
+</ul>
+<p>使用 <code>PathEffect</code> 来给图形的轮廓设置效果。对 <code>Canvas</code> 所有的图形绘制有效，也就是 <code>drawLine()</code> <code>drawCircle()</code> <code>drawPath()</code> 这些方法。大概像这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PathEffect pathEffect = <span class="keyword">new</span> DashPathEffect(<span class="keyword">new</span> <span class="keyword">float</span>[]&#123;<span class="number">10</span>, <span class="number">5</span>&#125;, <span class="number">10</span>);</span><br><span class="line">paint.setPathEffect(pathEffect);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">canvas.drawCircle(<span class="number">300</span>, <span class="number">300</span>, <span class="number">200</span>, paint);</span><br></pre></td></tr></table></figure>
+
+<p><img src="../../../../images/12/22.jpg" class="lazyload" data-srcset="../../../../images/12/22.jpg" srcset="data:image/png;base64,666" alt="Image text"></p>
+<p>具体说一下 Android 中的 6 种 <code>PathEffect</code>。<code>PathEffect</code> 分为两类，单一效果的 <code>CornerPathEffect</code> <code>DiscretePathEffect</code> <code>DashPathEffect</code> <code>PathDashPathEffect</code> ，和组合效果的 <code>SumPathEffect</code> <code>ComposePathEffect</code>。</p>
+<ul>
+<li>setShadowLayer</li>
+</ul>
+<p>在之后的绘制内容下面加一层阴影。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">paint.setShadowLayer(10, 0, 0, Color.RED);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">canvas.drawText(text, 80, 300, paint);</span><br></pre></td></tr></table></figure>
+
+<p>方法的参数里， <code>radius</code> 是阴影的模糊范围； <code>dx</code> <code>dy</code> 是阴影的偏移量； <code>shadowColor</code> 是阴影的颜色。</p>
+<p>如果要清除阴影层，使用 <code>clearShadowLayer()</code> 。</p>
+<blockquote>
+<ul>
+<li>在硬件加速开启的情况下， <code>setShadowLayer()</code> 只支持文字的绘制，文字之外的绘制必须关闭硬件加速才能正常绘制阴影。</li>
+<li>如果 <code>shadowColor</code> 是半透明的，阴影的透明度就使用 <code>shadowColor</code> 自己的透明度；而如果 <code>shadowColor</code> 是不透明的，阴影的透明度就使用 <code>paint</code> 的透明度。</li>
+</ul>
+</blockquote>
+<h3 id="drawText-相关"><a href="#drawText-相关" class="headerlink" title="drawText() 相关"></a>drawText() 相关</h3><ul>
+<li>drawText(String text, float x, float y, Paint paint)</li>
+</ul>
+<blockquote>
+<p><code>drawText()</code> 参数中的 <code>y</code> ，指的是文字的**<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%9F%BA%E7%B7%9A">基线（ baseline ）</a>** 的位置</p>
+</blockquote>
+<ul>
+<li>drawTextOnPath</li>
+</ul>
+<p>沿着一条 <code>Path</code> 来绘制文字。这是一个耍杂技的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">canvas.drawPath(path, paint); &#x2F;&#x2F; 把 Path 也绘制出来，理解起来更方便</span><br><span class="line">canvas.drawTextOnPath(&quot;Hello HeCoder&quot;, path, 0, 0, paint);</span><br></pre></td></tr></table></figure>
+
+<p><img src="../../../../images/12/23.jpg" class="lazyload" data-srcset="../../../../images/12/23.jpg" srcset="data:image/png;base64,666" alt="Image text"></p>
+<h3 id="初始化类"><a href="#初始化类" class="headerlink" title="初始化类"></a>初始化类</h3><ul>
+<li>reset()</li>
+</ul>
+<p>重置 <code>Paint</code> 的所有属性为默认值。相当于重新 <code>new</code> 一个，不过性能当然高一些啦。</p>
+<ul>
+<li>set(Paint src)</li>
+</ul>
+<p>把 <code>src</code> 的所有属性全部复制过来。相当于调用 <code>src</code> 所有的 <code>get</code> 方法，然后调用这个 <code>Paint</code> 的对应的 <code>set</code> 方法来设置它们。</p>
+<ul>
+<li>setFlags</li>
+</ul>
+<p>批量设置 flags。相当于依次调用它们的 <code>set</code> 方法。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">paint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;等价于</span><br><span class="line">paint.setAntiAlias(true);</span><br><span class="line">paint.setDither(true);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>setTextSize</li>
+</ul>
+<p>设置文字大小。</p>
+<ul>
+<li>setTypeface</li>
+</ul>
+<p>设置字体。</p>
+<ul>
+<li>setFakeBoldText</li>
+</ul>
+<p>是否使用伪粗体。</p>
+<ul>
+<li>setStrikeThruText</li>
+</ul>
+<p>是否加删除线。</p>
+<ul>
+<li>setUnderlineText</li>
+</ul>
+<p>是否加下划线。</p>
+<ul>
+<li>setTextSkewX</li>
+</ul>
+<p>设置文字横向错切角度。其实就是文字倾斜度。</p>
+<ul>
+<li>setTextScaleX</li>
+</ul>
+<p>设置文字横向放缩。也就是文字变胖变瘦。</p>
+<ul>
+<li>setLetterSpacing</li>
+</ul>
+<p>设置字符间距。默认值是 0。</p>
+<ul>
+<li>setTextAlign</li>
+</ul>
+<p>设置文字的对齐方式。一共有三个值：<code>LEFT</code> <code>CETNER</code> 和 <code>RIGHT</code>。默认值为 <code>LEFT</code>。</p>
+<ul>
+<li>getFontSpacing</li>
+</ul>
+<p>获取推荐的行距。即推荐的两行文字的 baseline 的距离。这个值是系统根据文字的字体和字号自动计算的。它的作用是当你要手动绘制多行文字（而不是使用 StaticLayout）的时候，可以在换行的时候给 <code>y</code> 坐标加上这个值来下移文字。</p>
+<ul>
+<li>getTextBounds</li>
+</ul>
+<p>获取文字的显示范围。</p>
+<p>参数里，<code>text</code> 是要测量的文字，<code>start</code> 和 <code>end</code> 分别是文字的起始和结束位置，<code>bounds</code> 是存储文字显示范围的对象，方法在测算完成之后会把结果写进 <code>bounds</code></p>
+<ul>
+<li>measureText</li>
+</ul>
+<p>测量文字的宽度并返回。</p>
+<h2 id="Canvas"><a href="#Canvas" class="headerlink" title="Canvas"></a>Canvas</h2><h4 id="范围裁切"><a href="#范围裁切" class="headerlink" title="范围裁切"></a>范围裁切</h4><ul>
+<li>clipRect()</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">canvas.save();</span><br><span class="line">canvas.clipRect(left, top, right, bottom);</span><br><span class="line">canvas.drawBitmap(bitmap, x, y, paint);</span><br><span class="line">canvas.restore();</span><br></pre></td></tr></table></figure>
+
+<p> <code>Canvas.save()</code> 和 <code>Canvas.restore()</code> 来及时恢复绘制范围</p>
+<ul>
+<li>clipPath</li>
+</ul>
+<p>其实和 clipRect() 用法完全一样，只是把参数换成了 <code>Path</code> ，所以能裁切的形状更多一些：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">canvas.save();</span><br><span class="line">canvas.clipPath(path1);</span><br><span class="line">canvas.drawBitmap(bitmap, point1.x, point1.y, paint);</span><br><span class="line">canvas.restore();</span><br><span class="line"></span><br><span class="line">canvas.save();</span><br><span class="line">canvas.clipPath(path2);</span><br><span class="line">canvas.drawBitmap(bitmap, point2.x, point2.y, paint);</span><br><span class="line">canvas.restore();</span><br></pre></td></tr></table></figure>
+
+<p><img src="../../../../images/12/24.jpg" class="lazyload" data-srcset="../../../../images/12/24.jpg" srcset="data:image/png;base64,666" alt="Image text"></p>
+<h4 id="几何变换"><a href="#几何变换" class="headerlink" title="几何变换"></a>几何变换</h4><p>几何变换的使用大概分为三类：</p>
+<ol>
+<li>使用 <code>Canvas</code> 来做常见的二维变换；</li>
+<li>使用 <code>Matrix</code> 来做常见和不常见的二维变换；</li>
+<li>使用 <code>Camera</code> 来做三维变换。</li>
+</ol>
+<h5 id="常见二维"><a href="#常见二维" class="headerlink" title="常见二维"></a>常见二维</h5><ul>
+<li><p>Canvas.translate(float dx, float dy) 平移</p>
+</li>
+<li><p>Canvas.rotate(float degrees, float px, float py) 旋转</p>
+</li>
+<li><p>Canvas.scale(float sx, float sy, float px, float py) 放缩</p>
+</li>
+<li><p>skew(float sx, float sy) 错切</p>
+</li>
+</ul>
+<h5 id="使用-Matrix-来做变换"><a href="#使用-Matrix-来做变换" class="headerlink" title="使用 Matrix 来做变换"></a>使用 Matrix 来做变换</h5><h5 id="使用-Camera-来做三维变换"><a href="#使用-Camera-来做三维变换" class="headerlink" title="使用 Camera 来做三维变换"></a>使用 Camera 来做三维变换</h5><p><code>Camera</code> 的三维变换有三类：旋转、平移、移动相机。</p>
+<ul>
+<li><p>Camera.rotate*() 三维旋转</p>
+<p><code>Camera</code> 和 <code>Canvas</code> 一样也需要保存和恢复状态才能正常绘制，不然在界面刷新之后绘制就会出现问题。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">canvas.save();</span><br><span class="line"></span><br><span class="line">camera.save(); <span class="comment">// 保存 Camera 的状态</span></span><br><span class="line">camera.rotateX(<span class="number">30</span>); <span class="comment">// 旋转 Camera 的三维空间</span></span><br><span class="line">camera.applyToCanvas(canvas); <span class="comment">// 把旋转投影到 Canvas</span></span><br><span class="line">camera.restore(); <span class="comment">// 恢复 Camera 的状态</span></span><br><span class="line"></span><br><span class="line">canvas.drawBitmap(bitmap, point1.x, point1.y, paint);</span><br><span class="line">canvas.restore();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Camera.translate(float x, float y, float z) 移动</p>
+</li>
+<li><p>Camera.setLocation(x, y, z) 设置虚拟相机的位置</p>
+</li>
+</ul>
+
   
   
     
@@ -815,10 +1067,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-05-05T20:49:35+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-05-06T22:55:13+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：May 5, 2021</p>
+    <p>更新于：May 6, 2021</p>
   </a>
 </div>
 
@@ -941,7 +1193,7 @@ Activity的setContentView来设置View界面，最终会调用LayoutInflater.fro
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E5%8A%A8%E7%94%BB-%E8%A1%A5%E9%97%B4%E5%8A%A8%E7%94%BB-View-Animation"><span class="toc-text">视图动画&#x2F;补间动画&#x2F;View Animation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-text">属性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Animation"><span class="toc-text">Animation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Alpha%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Alpha属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rotate%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Rotate属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scale%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Scale属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Translate%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Translate属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AnimationSet%E8%AF%A6%E8%A7%A3"><span class="toc-text">AnimationSet详解</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B"><span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Animation%E5%85%B6%E4%BB%96api"><span class="toc-text">Animation其他api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#View%E4%B8%ADapi"><span class="toc-text">View中api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-text">注意</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A7%E5%8A%A8%E7%94%BB"><span class="toc-text">帧动画</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-Property-Animator"><span class="toc-text">属性动画&#x2F;Property Animator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ValueAnimator"><span class="toc-text">ValueAnimator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81"><span class="toc-text">java代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xml%E6%96%B9%E5%BC%8F"><span class="toc-text">xml方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectAnimator"><span class="toc-text">ObjectAnimator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81-1"><span class="toc-text">java代码</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#PropertyValuesHolder"><span class="toc-text">PropertyValuesHolder</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#AnimatorSet"><span class="toc-text">AnimatorSet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Keyframe"><span class="toc-text">Keyframe</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TypeEvaluator"><span class="toc-text">TypeEvaluator</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xml%E6%96%B9%E5%BC%8F-1"><span class="toc-text">xml方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#View%E7%9A%84animate%E6%96%B9%E6%B3%95"><span class="toc-text">View的animate方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89view%E4%B8%BE%E4%BE%8B"><span class="toc-text">自定义view举例</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E5%8A%A8%E7%94%BB-%E8%A1%A5%E9%97%B4%E5%8A%A8%E7%94%BB-View-Animation"><span class="toc-text">视图动画&#x2F;补间动画&#x2F;View Animation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-text">属性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Animation"><span class="toc-text">Animation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Alpha%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Alpha属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rotate%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Rotate属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scale%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Scale属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Translate%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Translate属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AnimationSet%E8%AF%A6%E8%A7%A3"><span class="toc-text">AnimationSet详解</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B"><span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Animation%E5%85%B6%E4%BB%96api"><span class="toc-text">Animation其他api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#View%E4%B8%ADapi"><span class="toc-text">View中api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-text">注意</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A7%E5%8A%A8%E7%94%BB"><span class="toc-text">帧动画</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-Property-Animator"><span class="toc-text">属性动画&#x2F;Property Animator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ValueAnimator"><span class="toc-text">ValueAnimator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81"><span class="toc-text">java代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xml%E6%96%B9%E5%BC%8F"><span class="toc-text">xml方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectAnimator"><span class="toc-text">ObjectAnimator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81-1"><span class="toc-text">java代码</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#PropertyValuesHolder"><span class="toc-text">PropertyValuesHolder</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#AnimatorSet"><span class="toc-text">AnimatorSet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Keyframe"><span class="toc-text">Keyframe</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TypeEvaluator"><span class="toc-text">TypeEvaluator</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xml%E6%96%B9%E5%BC%8F-1"><span class="toc-text">xml方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#View%E7%9A%84animate%E6%96%B9%E6%B3%95"><span class="toc-text">View的animate方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89view%E4%B8%BE%E4%BE%8B"><span class="toc-text">自定义view举例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Paint"><span class="toc-text">Paint</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%9C%E8%89%B2"><span class="toc-text">颜色</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E8%AE%BE%E7%BD%AE%E9%A2%9C%E8%89%B2"><span class="toc-text">直接设置颜色</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#setShader-Shader-shader-%E8%AE%BE%E7%BD%AE-Shader"><span class="toc-text">setShader(Shader shader) 设置 Shader</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#LinearGradient-%E7%BA%BF%E6%80%A7%E6%B8%90%E5%8F%98"><span class="toc-text">LinearGradient 线性渐变</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#RadialGradient-%E8%BE%90%E5%B0%84%E6%B8%90%E5%8F%98"><span class="toc-text">RadialGradient 辐射渐变</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SweepGradient-%E6%89%AB%E6%8F%8F%E6%B8%90%E5%8F%98"><span class="toc-text">SweepGradient 扫描渐变</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#BitmapShader"><span class="toc-text">BitmapShader</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ComposeShader-%E6%B7%B7%E5%90%88%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-text">ComposeShader 混合着色器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#setColorFilter-ColorFilter-colorFilter"><span class="toc-text">setColorFilter(ColorFilter colorFilter)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-text">效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#drawText-%E7%9B%B8%E5%85%B3"><span class="toc-text">drawText() 相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B1%BB"><span class="toc-text">初始化类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Canvas"><span class="toc-text">Canvas</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8C%83%E5%9B%B4%E8%A3%81%E5%88%87"><span class="toc-text">范围裁切</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2"><span class="toc-text">几何变换</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E4%BA%8C%E7%BB%B4"><span class="toc-text">常见二维</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Matrix-%E6%9D%A5%E5%81%9A%E5%8F%98%E6%8D%A2"><span class="toc-text">使用 Matrix 来做变换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Camera-%E6%9D%A5%E5%81%9A%E4%B8%89%E7%BB%B4%E5%8F%98%E6%8D%A2"><span class="toc-text">使用 Camera 来做三维变换</span></a></li></ol></li></ol></li></ol></li></ol>
     </div>
   </section>
 
