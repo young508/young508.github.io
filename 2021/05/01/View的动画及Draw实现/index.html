@@ -1019,19 +1019,62 @@
 <li><p>skew(float sx, float sy) 错切</p>
 </li>
 </ul>
-<h5 id="使用-Matrix-来做变换"><a href="#使用-Matrix-来做变换" class="headerlink" title="使用 Matrix 来做变换"></a>使用 Matrix 来做变换</h5><h5 id="使用-Camera-来做三维变换"><a href="#使用-Camera-来做三维变换" class="headerlink" title="使用 Camera 来做三维变换"></a>使用 Camera 来做三维变换</h5><p><code>Camera</code> 的三维变换有三类：旋转、平移、移动相机。</p>
-<ul>
-<li><p>Camera.rotate*() 三维旋转</p>
-<p><code>Camera</code> 和 <code>Canvas</code> 一样也需要保存和恢复状态才能正常绘制，不然在界面刷新之后绘制就会出现问题。</p>
+<h4 id="注意-1"><a href="#注意-1" class="headerlink" title="注意"></a>注意</h4><p>Canvas的几何变换是坐标系的变换，可视区域没有改变。可以通过canvas.save和canvas.restore使得坐标系回到原点。</p>
+<p><img src="../../../../images/12/25.png" class="lazyload" data-srcset="../../../../images/12/25.png" srcset="data:image/png;base64,666" alt="Image text"></p>
+<p>这两幅图可以看出，canvas.rotate(90)和canvas.rotate(-90)之后图形的样子。但是需要注意的是，不过经过什么变换，显示区域还是原来canvas的区域，所以这样变换在屏幕上将会什么都看不到。</p>
+<p><img src="../../../../images/12/26.png" class="lazyload" data-srcset="../../../../images/12/26.png" srcset="data:image/png;base64,666" alt="Image text"></p>
+<p>经过canvas.translate(100,100)的变换后，整个canvas向x和y正方向移动了100的距离。</p>
+<p>canvas.translate(-100,-100)就是向X和Y的负方向移动100，这样Rect就有一部分不在可视范围内了。</p>
+<p><img src="../../../../images/12/27.png" class="lazyload" data-srcset="../../../../images/12/27.png" srcset="data:image/png;base64,666" alt="Image text"></p>
+<p>上左图是经过canvas.scale(0.5f,0.5f)之后得到的图形，可以看到canvas以及上面的Rect都的width和height都变为一半。</p>
+<p>上有图是经过canvas.scale(2f,2f)之后得到的图形，可以看到canvas以及上面的Rect都的width和height都变为原来的一倍，还可以看到Rect已经有一部分超出可视范围，超出部分是看不到的。</p>
+<h5 id="使用-Matrix-来做变换"><a href="#使用-Matrix-来做变换" class="headerlink" title="使用 Matrix 来做变换"></a>使用 Matrix 来做变换</h5><ul>
+<li><p><strong>Matrix相关方法如下</strong></p>
+</li>
+<li><p>setTranslate(floatdx,floatdy)：控制Matrix进行平移</p>
+</li>
+<li><p>setSkew(floatkx,floatky,floatpx,floatpy)：控制Matrix以px,py为轴心进行倾斜，kx,ky为X,Y方向上的倾斜距离</p>
+</li>
+<li><p>setRotate(floatdegress)：控制Matrix进行旋转，degress控制旋转的角度</p>
+</li>
+<li><p>setRorate(floatdegress,floatpx,floatpy)：设置以px,py为轴心进行旋转，degress控制旋转角度</p>
+</li>
+<li><p>setScale(floatsx,floatsy)：设置Matrix进行缩放，sx,sy控制X,Y方向上的缩放比例</p>
+</li>
+<li><p>setScale(floatsx,floatsy,floatpx,floatpy)：设置Matrix以px,py为轴心进行缩放，sx,sy控制X,Y方向上的缩放比例</p>
 </li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">canvas.save();</span><br><span class="line"></span><br><span class="line">camera.save(); <span class="comment">// 保存 Camera 的状态</span></span><br><span class="line">camera.rotateX(<span class="number">30</span>); <span class="comment">// 旋转 Camera 的三维空间</span></span><br><span class="line">camera.applyToCanvas(canvas); <span class="comment">// 把旋转投影到 Canvas</span></span><br><span class="line">camera.restore(); <span class="comment">// 恢复 Camera 的状态</span></span><br><span class="line"></span><br><span class="line">canvas.drawBitmap(bitmap, point1.x, point1.y, paint);</span><br><span class="line">canvas.restore();</span><br></pre></td></tr></table></figure>
-
+<p>API提供了set、post和pre三种操作，下面这个重点看下,之后效果会用到</p>
+<blockquote>
+<p>post是后乘，当前的矩阵乘以参数给出的矩阵。可以连续多次使用post，来完成所需的整个变换。pre是前乘，参数给出的矩阵乘以当前的矩阵。所以操作是在当前矩阵的最前面发生的。</p>
+</blockquote>
+<h5 id="使用-Camera-来做三维变换"><a href="#使用-Camera-来做三维变换" class="headerlink" title="使用 Camera 来做三维变换"></a>使用 Camera 来做三维变换</h5><h4 id="Camera坐标系与Android坐标系"><a href="#Camera坐标系与Android坐标系" class="headerlink" title="Camera坐标系与Android坐标系"></a>Camera坐标系与Android坐标系</h4><p> camera的坐标系是左手坐标系。伸出左手，让拇指和食指成L形，大拇指向右，食指向上，中指指向前方，这样我们就建立了一个左手坐标系，拇指，食指，中指的指向分别代表了x，y，z轴的正方向。如下图所示：</p>
+<p><img src="../../../../images/12/28.png" class="lazyload" data-srcset="../../../../images/12/28.png" srcset="data:image/png;base64,666" alt="Image text"></p>
+<p>下面是一些细节点：</p>
+<p>1，camera位于坐标点（0,0），也就是视图的左上角；</p>
+<p>2，camera.translate(10, 20, 30)的意思是把观察物体右移10，上移20，向前移30（即让物体远离camera，这样物体将会变小）；<br>3，camera.rotateX(45)的意思是绕x轴顺时针旋转45度。举例来说，如果物体中间线和x轴重合的话，绕x轴顺时针旋转45度就是指物体上半部分向里翻转，下半部分向外翻转；<br>4，camera.rotateY(45)的意思是绕y轴顺时针旋转45度。举例来说，如果物体中间线和y轴重合的话，绕y轴顺时针旋转45度就是指物体右半部分向里翻转，左半部分向外翻转；<br>5，camera.rotateZ(45)的意思是绕z轴顺时针旋转45度。举例来说，如果物体中间线和z轴重合的话，绕z轴顺时针旋转45度就是指物体上半部分向左翻转，下半部分向右翻转；</p>
+<p>Android坐标系是二维的</p>
+<p>1，camera位于坐标点（0,0），也就是视图的左上角；</p>
+<p>2，垂直向下为y轴正方向</p>
+<p>3、垂直向右为x轴正方向</p>
 <ul>
-<li><p>Camera.translate(float x, float y, float z) 移动</p>
-</li>
-<li><p>Camera.setLocation(x, y, z) 设置虚拟相机的位置</p>
-</li>
+<li><strong>相关api</strong></li>
+</ul>
+<p>Camera创建一个没有任何转换效果的新的Camera实例</p>
+<ul>
+<li>applyToCanvas(Canvas canvas) 根据当前的变换计算出相应的矩阵，然后应用到制定的画布上</li>
+<li>getLocationX() 获取Camera的x坐标</li>
+<li>getLocationY() 获取Camera的y坐标</li>
+<li>getLocationZ() 获取Camera的z坐标</li>
+<li>getMatrix(Matrixmatrix) 获取转换效果后的Matrix对象</li>
+<li>restore() 恢复保存的状态</li>
+<li>rotate(float x, float y, float z) 沿X、Y、Z坐标进行旋转</li>
+<li>rotateX(float deg)</li>
+<li>rotateY(float deg)</li>
+<li>rotateZ(float deg)</li>
+<li>save() 保存状态</li>
+<li>setLocation(float x, float y, float z)</li>
+<li>translate(float x, float y, float z)沿X、Y、Z轴进行平移</li>
 </ul>
 
   
@@ -1067,10 +1110,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-05-06T22:55:13+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-05-07T20:59:55+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：May 6, 2021</p>
+    <p>更新于：May 7, 2021</p>
   </a>
 </div>
 
@@ -1146,6 +1189,11 @@
   
     <div class="prev-next">
       
+        <a class='prev' href='/2021/05/06/kotlin%E7%9B%B8%E5%85%B3/'>
+          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>kotlin相关</p>
+          <p class='content'></p>
+        </a>
+      
       
         <a class='next' href='/2021/04/26/View%E7%BB%98%E5%88%B6%E6%B5%81%E7%A8%8B%E5%8F%8A%E6%BB%91%E5%8A%A8/'>
           <p class='title'>View绘制流程及滑动<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
@@ -1193,7 +1241,7 @@ Activity的setContentView来设置View界面，最终会调用LayoutInflater.fro
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E5%8A%A8%E7%94%BB-%E8%A1%A5%E9%97%B4%E5%8A%A8%E7%94%BB-View-Animation"><span class="toc-text">视图动画&#x2F;补间动画&#x2F;View Animation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-text">属性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Animation"><span class="toc-text">Animation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Alpha%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Alpha属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rotate%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Rotate属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scale%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Scale属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Translate%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Translate属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AnimationSet%E8%AF%A6%E8%A7%A3"><span class="toc-text">AnimationSet详解</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B"><span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Animation%E5%85%B6%E4%BB%96api"><span class="toc-text">Animation其他api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#View%E4%B8%ADapi"><span class="toc-text">View中api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-text">注意</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A7%E5%8A%A8%E7%94%BB"><span class="toc-text">帧动画</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-Property-Animator"><span class="toc-text">属性动画&#x2F;Property Animator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ValueAnimator"><span class="toc-text">ValueAnimator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81"><span class="toc-text">java代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xml%E6%96%B9%E5%BC%8F"><span class="toc-text">xml方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectAnimator"><span class="toc-text">ObjectAnimator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81-1"><span class="toc-text">java代码</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#PropertyValuesHolder"><span class="toc-text">PropertyValuesHolder</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#AnimatorSet"><span class="toc-text">AnimatorSet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Keyframe"><span class="toc-text">Keyframe</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TypeEvaluator"><span class="toc-text">TypeEvaluator</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xml%E6%96%B9%E5%BC%8F-1"><span class="toc-text">xml方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#View%E7%9A%84animate%E6%96%B9%E6%B3%95"><span class="toc-text">View的animate方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89view%E4%B8%BE%E4%BE%8B"><span class="toc-text">自定义view举例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Paint"><span class="toc-text">Paint</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%9C%E8%89%B2"><span class="toc-text">颜色</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E8%AE%BE%E7%BD%AE%E9%A2%9C%E8%89%B2"><span class="toc-text">直接设置颜色</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#setShader-Shader-shader-%E8%AE%BE%E7%BD%AE-Shader"><span class="toc-text">setShader(Shader shader) 设置 Shader</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#LinearGradient-%E7%BA%BF%E6%80%A7%E6%B8%90%E5%8F%98"><span class="toc-text">LinearGradient 线性渐变</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#RadialGradient-%E8%BE%90%E5%B0%84%E6%B8%90%E5%8F%98"><span class="toc-text">RadialGradient 辐射渐变</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SweepGradient-%E6%89%AB%E6%8F%8F%E6%B8%90%E5%8F%98"><span class="toc-text">SweepGradient 扫描渐变</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#BitmapShader"><span class="toc-text">BitmapShader</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ComposeShader-%E6%B7%B7%E5%90%88%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-text">ComposeShader 混合着色器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#setColorFilter-ColorFilter-colorFilter"><span class="toc-text">setColorFilter(ColorFilter colorFilter)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-text">效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#drawText-%E7%9B%B8%E5%85%B3"><span class="toc-text">drawText() 相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B1%BB"><span class="toc-text">初始化类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Canvas"><span class="toc-text">Canvas</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8C%83%E5%9B%B4%E8%A3%81%E5%88%87"><span class="toc-text">范围裁切</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2"><span class="toc-text">几何变换</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E4%BA%8C%E7%BB%B4"><span class="toc-text">常见二维</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Matrix-%E6%9D%A5%E5%81%9A%E5%8F%98%E6%8D%A2"><span class="toc-text">使用 Matrix 来做变换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Camera-%E6%9D%A5%E5%81%9A%E4%B8%89%E7%BB%B4%E5%8F%98%E6%8D%A2"><span class="toc-text">使用 Camera 来做三维变换</span></a></li></ol></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E5%8A%A8%E7%94%BB-%E8%A1%A5%E9%97%B4%E5%8A%A8%E7%94%BB-View-Animation"><span class="toc-text">视图动画&#x2F;补间动画&#x2F;View Animation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-text">属性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Animation"><span class="toc-text">Animation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Alpha%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Alpha属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rotate%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Rotate属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scale%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Scale属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Translate%E5%B1%9E%E6%80%A7%E8%AF%A6%E8%A7%A3"><span class="toc-text">Translate属性详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AnimationSet%E8%AF%A6%E8%A7%A3"><span class="toc-text">AnimationSet详解</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B"><span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Animation%E5%85%B6%E4%BB%96api"><span class="toc-text">Animation其他api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#View%E4%B8%ADapi"><span class="toc-text">View中api</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-text">注意</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A7%E5%8A%A8%E7%94%BB"><span class="toc-text">帧动画</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB-Property-Animator"><span class="toc-text">属性动画&#x2F;Property Animator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ValueAnimator"><span class="toc-text">ValueAnimator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81"><span class="toc-text">java代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xml%E6%96%B9%E5%BC%8F"><span class="toc-text">xml方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectAnimator"><span class="toc-text">ObjectAnimator</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81-1"><span class="toc-text">java代码</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#PropertyValuesHolder"><span class="toc-text">PropertyValuesHolder</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#AnimatorSet"><span class="toc-text">AnimatorSet</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Keyframe"><span class="toc-text">Keyframe</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TypeEvaluator"><span class="toc-text">TypeEvaluator</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xml%E6%96%B9%E5%BC%8F-1"><span class="toc-text">xml方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#View%E7%9A%84animate%E6%96%B9%E6%B3%95"><span class="toc-text">View的animate方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89view%E4%B8%BE%E4%BE%8B"><span class="toc-text">自定义view举例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Paint"><span class="toc-text">Paint</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%9C%E8%89%B2"><span class="toc-text">颜色</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E8%AE%BE%E7%BD%AE%E9%A2%9C%E8%89%B2"><span class="toc-text">直接设置颜色</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#setShader-Shader-shader-%E8%AE%BE%E7%BD%AE-Shader"><span class="toc-text">setShader(Shader shader) 设置 Shader</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#LinearGradient-%E7%BA%BF%E6%80%A7%E6%B8%90%E5%8F%98"><span class="toc-text">LinearGradient 线性渐变</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#RadialGradient-%E8%BE%90%E5%B0%84%E6%B8%90%E5%8F%98"><span class="toc-text">RadialGradient 辐射渐变</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SweepGradient-%E6%89%AB%E6%8F%8F%E6%B8%90%E5%8F%98"><span class="toc-text">SweepGradient 扫描渐变</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#BitmapShader"><span class="toc-text">BitmapShader</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ComposeShader-%E6%B7%B7%E5%90%88%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-text">ComposeShader 混合着色器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#setColorFilter-ColorFilter-colorFilter"><span class="toc-text">setColorFilter(ColorFilter colorFilter)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-text">效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#drawText-%E7%9B%B8%E5%85%B3"><span class="toc-text">drawText() 相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B1%BB"><span class="toc-text">初始化类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Canvas"><span class="toc-text">Canvas</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8C%83%E5%9B%B4%E8%A3%81%E5%88%87"><span class="toc-text">范围裁切</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%A0%E4%BD%95%E5%8F%98%E6%8D%A2"><span class="toc-text">几何变换</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E4%BA%8C%E7%BB%B4"><span class="toc-text">常见二维</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F-1"><span class="toc-text">注意</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Matrix-%E6%9D%A5%E5%81%9A%E5%8F%98%E6%8D%A2"><span class="toc-text">使用 Matrix 来做变换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Camera-%E6%9D%A5%E5%81%9A%E4%B8%89%E7%BB%B4%E5%8F%98%E6%8D%A2"><span class="toc-text">使用 Camera 来做三维变换</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Camera%E5%9D%90%E6%A0%87%E7%B3%BB%E4%B8%8EAndroid%E5%9D%90%E6%A0%87%E7%B3%BB"><span class="toc-text">Camera坐标系与Android坐标系</span></a></li></ol></li></ol></li></ol>
     </div>
   </section>
 
@@ -1252,7 +1300,7 @@ Activity的setContentView来设置View界面，最终会调用LayoutInflater.fro
       
     
       
-        <div><p>Blog content follows the <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License</a></p>
+        <div><p>博客內容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW">姓名標示-非商業性-相同方式分享 4.0 國際 (CC BY-NC-SA 4.0) 協議</a></p>
 </div>
       
     
@@ -1264,9 +1312,9 @@ Activity的setContentView来设置View界面，最终会调用LayoutInflater.fro
       
     
       
-        Use
+        本站使用
         <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6" target="_blank" class="codename">Volantis</a>
-        as theme
+        作為主題
       
     
       
