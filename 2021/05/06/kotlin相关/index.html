@@ -454,7 +454,23 @@
 
 
   
-  
+  <blockquote>
+<p>Kotlin是JVM语言，可以100%兼容Java，目前在Android开发领域应用非常广泛。文章主要简单介绍Kotlin与Java有所不同的相关内容</p>
+</blockquote>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><h3 id="Getters-与-Setters"><a href="#Getters-与-Setters" class="headerlink" title="Getters 与 Setters"></a>Getters 与 Setters</h3><p>声明一个属性的完整语法是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var &lt;propertyName&gt;[: &lt;PropertyType&gt;] [&#x3D; &lt;property_initializer&gt;]</span><br><span class="line">    [&lt;getter&gt;]</span><br><span class="line">    [&lt;setter&gt;]</span><br></pre></td></tr></table></figure>
+
+<p>其初始器（initializer）、getter 和 setter 都是可选的。</p>
+<p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var name : String</span><br><span class="line">var age &#x3D; 10</span><br><span class="line">var stringRepresentation: String</span><br><span class="line">    get() &#x3D; this.toString()</span><br><span class="line">    set(value) &#123;</span><br><span class="line">        &quot;$value has value&quot; &#x2F;&#x2F; 解析字符串并赋值给其他属性</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<h3 id="幕后字段"><a href="#幕后字段" class="headerlink" title="幕后字段"></a>幕后字段</h3><p>在set/get中引用变量自身会报错，所以此时需要一个变量表示自己，类似this,kotlin默认提供field</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    &#x2F;&#x2F;错误的演示</span><br><span class="line">    var name &#x3D; &quot;&quot;</span><br><span class="line">        set(value) &#123;</span><br><span class="line">            this.name &#x3D; value</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Person &#123;</span><br><span class="line">    &#x2F;&#x2F;正确的演示</span><br><span class="line">    var name &#x3D; &quot;&quot;</span><br><span class="line">        set(value) &#123;</span><br><span class="line">            field &#x3D; value</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h2><blockquote>
+<p>高阶函数即指：将函数用作一个函数的参数或者返回值的函数。</p>
+</blockquote>
+
   
   
     
@@ -488,10 +504,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-05-06T23:23:49+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-05-17T23:28:09+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：May 6, 2021</p>
+    <p>更新于：May 17, 2021</p>
   </a>
 </div>
 
@@ -611,6 +627,20 @@
 
 
 
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-text">属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Getters-%E4%B8%8E-Setters"><span class="toc-text">Getters 与 Setters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%95%E5%90%8E%E5%AD%97%E6%AE%B5"><span class="toc-text">幕后字段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0"><span class="toc-text">高阶函数</span></a></li></ol>
+    </div>
+  </section>
+
 
   
 
@@ -666,7 +696,7 @@
       
     
       
-        <div><p>博客內容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW">姓名標示-非商業性-相同方式分享 4.0 國際 (CC BY-NC-SA 4.0) 協議</a></p>
+        <div><p>Blog content follows the <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License</a></p>
 </div>
       
     
@@ -678,9 +708,9 @@
       
     
       
-        本站使用
+        Use
         <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6" target="_blank" class="codename">Volantis</a>
-        作為主題
+        as theme
       
     
       

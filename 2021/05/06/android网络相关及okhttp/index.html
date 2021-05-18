@@ -19,7 +19,9 @@
 
   <!-- 页面元数据 -->
   
-  <title>android网络相关及okhttp - YOUNG BLOG</title>
+  <title>okhttp及retrofit封装 - YOUNG BLOG</title>
+  
+    <meta name="keywords" content="框架,网络,okhttp">
   
 
   
@@ -393,7 +395,7 @@
     
     
       <h1 class="title">
-        android网络相关及okhttp
+        okhttp及retrofit封装
       </h1>
       <div class='new-meta-box'>
         
@@ -410,6 +412,13 @@
         
           
             
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/Android/">Android</a><span class="sep"></span><a class="category-link" href="/categories/Android/%E5%9F%BA%E7%A1%80/">基础</a><span class="sep"></span><a class="category-link" href="/categories/Android/%E5%9F%BA%E7%A1%80/%E7%BD%91%E7%BB%9C/">网络</a>
+    </a>
+  </div>
+
 
           
         
@@ -428,7 +437,7 @@
   <div class="new-meta-item browse leancloud">
     <a class='notlink'>
       
-      <div id="lc-pv" data-title="android网络相关及okhttp" data-path="/2021/05/06/android%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E5%8F%8Aokhttp/">
+      <div id="lc-pv" data-title="okhttp及retrofit封装" data-path="/2021/05/06/android%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E5%8F%8Aokhttp/">
         <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
         <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
         次浏览
@@ -445,7 +454,634 @@
 
 
   
-  
+  <h2 id="okhttp"><a href="#okhttp" class="headerlink" title="okhttp"></a>okhttp</h2><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> okHttpClient = OkHttpClient()</span><br><span class="line"><span class="keyword">val</span> request = Request.Builder().url(<span class="string">&quot;http://www.baidu.com&quot;</span>).<span class="keyword">get</span>().build()</span><br><span class="line">okHttpClient.newCall(request).enqueue(<span class="keyword">object</span> :Callback&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onFailure</span><span class="params">(call: <span class="type">Call</span>, e: <span class="type">IOException</span>)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onResponse</span><span class="params">(call: <span class="type">Call</span>, response: <span class="type">Response</span>)</span></span> &#123;</span><br><span class="line">     </span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>为了有宏观上的认识，举例上面的代码是最普通的okhttp的网络请求。分为三个步骤</p>
+<ul>
+<li>构建OkHttpClient对象</li>
+<li>构建Request对象</li>
+<li>发起网络请求，回调Response结果</li>
+</ul>
+<h3 id="OkHttpClient"><a href="#OkHttpClient" class="headerlink" title="OkHttpClient"></a>OkHttpClient</h3><p>这个是整个OkHttp的核心管理类，所有的内部逻辑和对象归OkHttpClient统一来管理，它通过Builder构造器生成，构造参数和类成员很多。</p>
+<p>OkHttpClient是通过Build构建者模式生成对象的，这种对象构建方式适合参数比较多，并且可随意配置的情况。在框架源码中用的非常多。</p>
+<p>看下构建对象所传递的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class Builder constructor() &#123;</span><br><span class="line">  internal var dispatcher: Dispatcher &#x3D; Dispatcher()</span><br><span class="line">  internal var connectionPool: ConnectionPool &#x3D; ConnectionPool()</span><br><span class="line">  internal val interceptors: MutableList&lt;Interceptor&gt; &#x3D; mutableListOf()</span><br><span class="line">  internal val networkInterceptors: MutableList&lt;Interceptor&gt; &#x3D; mutableListOf()</span><br><span class="line">  internal var eventListenerFactory: EventListener.Factory &#x3D; EventListener.NONE.asFactory()</span><br><span class="line">  internal var retryOnConnectionFailure &#x3D; true</span><br><span class="line">  internal var authenticator: Authenticator &#x3D; Authenticator.NONE</span><br><span class="line">  internal var followRedirects &#x3D; true</span><br><span class="line">  internal var followSslRedirects &#x3D; true</span><br><span class="line">  internal var cookieJar: CookieJar &#x3D; CookieJar.NO_COOKIES</span><br><span class="line">  internal var cache: Cache? &#x3D; null</span><br><span class="line">  internal var dns: Dns &#x3D; Dns.SYSTEM</span><br><span class="line">  internal var proxy: Proxy? &#x3D; null</span><br><span class="line">  internal var proxySelector: ProxySelector? &#x3D; null</span><br><span class="line">  internal var proxyAuthenticator: Authenticator &#x3D; Authenticator.NONE</span><br><span class="line">  internal var socketFactory: SocketFactory &#x3D; SocketFactory.getDefault()</span><br><span class="line">  internal var sslSocketFactoryOrNull: SSLSocketFactory? &#x3D; null</span><br><span class="line">  internal var x509TrustManagerOrNull: X509TrustManager? &#x3D; null</span><br><span class="line">  internal var connectionSpecs: List&lt;ConnectionSpec&gt; &#x3D; DEFAULT_CONNECTION_SPECS</span><br><span class="line">  internal var protocols: List&lt;Protocol&gt; &#x3D; DEFAULT_PROTOCOLS</span><br><span class="line">  internal var hostnameVerifier: HostnameVerifier &#x3D; OkHostnameVerifier</span><br><span class="line">  internal var certificatePinner: CertificatePinner &#x3D; CertificatePinner.DEFAULT</span><br><span class="line">  internal var certificateChainCleaner: CertificateChainCleaner? &#x3D; null</span><br><span class="line">  internal var callTimeout &#x3D; 0</span><br><span class="line">  internal var connectTimeout &#x3D; 10_000</span><br><span class="line">  internal var readTimeout &#x3D; 10_000</span><br><span class="line">  internal var writeTimeout &#x3D; 10_000</span><br><span class="line">  internal var pingInterval &#x3D; 0</span><br><span class="line">  internal var minWebSocketMessageToCompress &#x3D; RealWebSocket.DEFAULT_MINIMUM_DEFLATE_SIZE</span><br><span class="line">  internal var routeDatabase: RouteDatabase? &#x3D; null</span><br><span class="line">  </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们一个一个来看</p>
+<ul>
+<li>Dispatcher：调度器，该类主要是请求call的调度管理，比如同时最多并发默认为64，单个host最大并发5，维护了三个ArrayDeque，一个保存了正在执行的同步任务；一个保存异步正在执行的请求，另一个是异步等待执行的请求。</li>
+<li>ConnectionPool：链接池，默认池大小，5个空闲，5个活跃。内部功能由代理类<code>RealConnectionPool</code>实现，维护这链接池的添加和移除等。</li>
+<li>interceptors：用户使用的时候，自定义的拦截器数组</li>
+<li>networkInterceptors：websocket链接时使用的拦截器数组</li>
+<li>eventListenerFactory：事件监听工厂</li>
+<li>retryOnConnectionFailure：失败重试</li>
+<li>Authenticator：鉴权，默认空</li>
+</ul>
+<p>。。。</p>
+<h3 id="Request"><a href="#Request" class="headerlink" title="Request"></a>Request</h3><p>同样，构建者模式创建对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  open class Builder &#123;</span><br><span class="line">    internal var url: HttpUrl? &#x3D; null</span><br><span class="line">    internal var method: String</span><br><span class="line">    internal var headers: Headers.Builder</span><br><span class="line">    internal var body: RequestBody? &#x3D; null</span><br><span class="line"></span><br><span class="line">    &#x2F;** A mutable map of tags, or an immutable empty map if we don&#39;t have any. *&#x2F;</span><br><span class="line">    internal var tags: MutableMap&lt;Class&lt;*&gt;, Any&gt; &#x3D; mutableMapOf()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>HttpUrl：网络统一资源定位符的封装。构建者模式，scheme+host+port+segment+query</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HttpUrl url &#x3D; new HttpUrl.Builder()</span><br><span class="line">    .scheme(&quot;https&quot;)</span><br><span class="line">    .host(&quot;www.google.com&quot;)</span><br><span class="line">    .addPathSegment(&quot;search&quot;)</span><br><span class="line">    .addQueryParameter(&quot;q&quot;, &quot;polar&quot;)</span><br><span class="line">    .build();</span><br><span class="line"></span><br><span class="line">&#x3D;&gt;: https:&#x2F;&#x2F;www.google.com&#x2F;search?q&#x3D;polar</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>method：get/post等</p>
+</li>
+<li><p>headers：请求头</p>
+</li>
+<li><p>RequestBody：请求体，一般Post请求才有请求体。RequestBody是abstract类型，是继承类有FormBody和MultipartBody</p>
+</li>
+</ul>
+<h3 id="newCall"><a href="#newCall" class="headerlink" title="newCall"></a>newCall</h3><p>封装好了client和request参数后，就可以发起网络请求</p>
+<ul>
+<li>enqueue,异步执行，synchronized保证了多线程，实质执行<code>client.dispatcher.enqueue</code>,调度器进行分发执行</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">override fun enqueue(responseCallback: Callback) &#123;</span><br><span class="line">  synchronized(this) &#123;</span><br><span class="line">    check(!executed) &#123; &quot;Already Executed&quot; &#125;</span><br><span class="line">    executed &#x3D; true</span><br><span class="line">  &#125;</span><br><span class="line">  callStart()</span><br><span class="line">  client.dispatcher.enqueue(AsyncCall(responseCallback))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调度器进行判断和双端队列增减后，对符合的asyncCall进行多线程执行</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">for (i in 0 until executableCalls.size) &#123;</span><br><span class="line">    val asyncCall &#x3D; executableCalls[i]</span><br><span class="line">    asyncCall.executeOn(executorService)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行AsyncCall的run</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">override fun run() &#123;</span><br><span class="line">    threadName(&quot;OkHttp $&#123;redactedUrl()&#125;&quot;) &#123;</span><br><span class="line">      var signalledCallback &#x3D; false</span><br><span class="line">      timeout.enter()</span><br><span class="line">      try &#123;</span><br><span class="line">      	&#x2F;&#x2F;核心代码</span><br><span class="line">        val response &#x3D; getResponseWithInterceptorChain()</span><br><span class="line">        signalledCallback &#x3D; true</span><br><span class="line">        responseCallback.onResponse(this@RealCall, response)</span><br><span class="line">      &#125; catch (e: IOException) &#123;</span><br><span class="line">        if (signalledCallback) &#123;</span><br><span class="line">          &#x2F;&#x2F; Do not signal the callback twice!</span><br><span class="line">          Platform.get().log(&quot;Callback failure for $&#123;toLoggableString()&#125;&quot;, Platform.INFO, e)</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          responseCallback.onFailure(this@RealCall, e)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; catch (t: Throwable) &#123;</span><br><span class="line">        cancel()</span><br><span class="line">        if (!signalledCallback) &#123;</span><br><span class="line">          val canceledException &#x3D; IOException(&quot;canceled due to $t&quot;)</span><br><span class="line">          canceledException.addSuppressed(t)</span><br><span class="line">          responseCallback.onFailure(this@RealCall, canceledException)</span><br><span class="line">        &#125;</span><br><span class="line">        throw t</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        client.dispatcher.finished(this)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>核心代码：val response = getResponseWithInterceptorChain()</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">internal fun getResponseWithInterceptorChain(): Response &#123;</span><br><span class="line">  &#x2F;&#x2F; 这里数组的+&#x3D;是自定义的扩展函数</span><br><span class="line">  val interceptors &#x3D; mutableListOf&lt;Interceptor&gt;()</span><br><span class="line">  interceptors +&#x3D; client.interceptors</span><br><span class="line">  interceptors +&#x3D; RetryAndFollowUpInterceptor(client)</span><br><span class="line">  interceptors +&#x3D; BridgeInterceptor(client.cookieJar)</span><br><span class="line">  interceptors +&#x3D; CacheInterceptor(client.cache)</span><br><span class="line">  interceptors +&#x3D; ConnectInterceptor</span><br><span class="line">  if (!forWebSocket) &#123;</span><br><span class="line">    interceptors +&#x3D; client.networkInterceptors</span><br><span class="line">  &#125;</span><br><span class="line">  interceptors +&#x3D; CallServerInterceptor(forWebSocket)</span><br><span class="line"></span><br><span class="line">  val chain &#x3D; RealInterceptorChain(</span><br><span class="line">      call &#x3D; this,</span><br><span class="line">      interceptors &#x3D; interceptors,</span><br><span class="line">      index &#x3D; 0,</span><br><span class="line">      exchange &#x3D; null,</span><br><span class="line">      request &#x3D; originalRequest,</span><br><span class="line">      connectTimeoutMillis &#x3D; client.connectTimeoutMillis,</span><br><span class="line">      readTimeoutMillis &#x3D; client.readTimeoutMillis,</span><br><span class="line">      writeTimeoutMillis &#x3D; client.writeTimeoutMillis</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">  var calledNoMoreExchanges &#x3D; false</span><br><span class="line">  try &#123;</span><br><span class="line">    val response &#x3D; chain.proceed(originalRequest)</span><br><span class="line">    if (isCanceled()) &#123;</span><br><span class="line">      response.closeQuietly()</span><br><span class="line">      throw IOException(&quot;Canceled&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    return response</span><br><span class="line">  &#125; catch (e: IOException) &#123;</span><br><span class="line">    calledNoMoreExchanges &#x3D; true</span><br><span class="line">    throw noMoreExchanges(e) as Throwable</span><br><span class="line">  &#125; finally &#123;</span><br><span class="line">    if (!calledNoMoreExchanges) &#123;</span><br><span class="line">      noMoreExchanges(null)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段是请求的最为核心代码，涉及到了我们常说的责任链模式。</p>
+<h4 id="chain-责任链模式"><a href="#chain-责任链模式" class="headerlink" title="chain 责任链模式"></a>chain 责任链模式</h4><p>okhttp的责任链模式设计的非常巧妙，所有的拦截器内部都需要调用<code>chain.proceed</code>，该方法可以串联起下一个拦截器。调用逻辑如下图所示：</p>
+<p><img src="../../../../images/12/30.png" class="lazyload" data-srcset="../../../../images/12/30.png" srcset="data:image/png;base64,666" alt="Image text"></p>
+<p>当调用第一个拦截器intercept的时候，执行request相关逻辑代码，在执行拦截器内部的<code>chain.proceed</code>时，该拦截器intercept函数跳转执行下一个拦截器的intercept的函数，以此类推，当执行完最后一个拦截器<code>CallServerInterceptor</code>时，再依次返回执行上一个拦截器proceed后的代码，直到执行第一个拦截器的proceed后的代码，返回response。</p>
+<p>简单看下流程源码：</p>
+<ul>
+<li><pre><code>val response = chain.proceed(originalRequest)
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- &#96;&#96;&#96;</span><br><span class="line">    override fun proceed(request: Request): Response &#123;</span><br><span class="line">      check(index &lt; interceptors.size)</span><br><span class="line">  </span><br><span class="line">      calls++</span><br><span class="line">  </span><br><span class="line">      if (exchange !&#x3D; null) &#123;</span><br><span class="line">        check(exchange.finder.sameHostAndPort(request.url)) &#123;</span><br><span class="line">          &quot;network interceptor $&#123;interceptors[index - 1]&#125; must retain the same host and port&quot;</span><br><span class="line">        &#125;</span><br><span class="line">        check(calls &#x3D;&#x3D; 1) &#123;</span><br><span class="line">          &quot;network interceptor $&#123;interceptors[index - 1]&#125; must call proceed() exactly once&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  </span><br><span class="line">      &#x2F;&#x2F; Call the next interceptor in the chain.</span><br><span class="line">      val next &#x3D; copy(index &#x3D; index + 1, request &#x3D; request)</span><br><span class="line">      val interceptor &#x3D; interceptors[index]</span><br><span class="line">  </span><br><span class="line">      @Suppress(&quot;USELESS_ELVIS&quot;)</span><br><span class="line">      val response &#x3D; interceptor.intercept(next) ?: throw NullPointerException(</span><br><span class="line">          &quot;interceptor $interceptor returned null&quot;)</span><br><span class="line">  </span><br><span class="line">      if (exchange !&#x3D; null) &#123;</span><br><span class="line">        check(index + 1 &gt;&#x3D; interceptors.size || next.calls &#x3D;&#x3D; 1) &#123;</span><br><span class="line">          &quot;network interceptor $interceptor must call proceed() exactly once&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  </span><br><span class="line">      check(response.body !&#x3D; null) &#123; &quot;interceptor $interceptor returned a response with no body&quot; &#125;</span><br><span class="line">  </span><br><span class="line">      return response</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></code></pre>
+</li>
+<li><pre><code>val response = interceptor.intercept(next) ?: throw NullPointerException(
+       &quot;interceptor $interceptor returned null&quot;)
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### intercepter</span><br><span class="line"></span><br><span class="line">okhttp的网络核心代码都是在拦截器中实现的，有必要对系统定义好的拦截器进行源码分析</span><br><span class="line"></span><br><span class="line">#### RetryAndFollowUpInterceptor</span><br><span class="line"></span><br><span class="line">&gt;负责失败重试和重定向。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+override fun intercept(chain: Interceptor.Chain): Response &#123;
+val realChain = chain as RealInterceptorChain
+var request = chain.request
+val call = realChain.call
+var followUpCount = 0
+var priorResponse: Response? = null
+var newExchangeFinder = true
+var recoveredFailures = listOf&lt;IOException&gt;()
+while (true) &#123;
+ call.enterNetworkInterceptorExchange(request, newExchangeFinder)
+ var response: Response
+ var closeActiveExchange = true
+ try &#123;
+  // 1.如果任务被取消，就抛出异常
+   if (call.isCanceled()) &#123;
+     throw IOException(&quot;Canceled&quot;)
+   &#125;
+
+   try &#123;
+   //2.责任链调用下一个拦截器
+     response = realChain.proceed(request)
+     newExchangeFinder = true
+   &#125; catch (e: RouteException) &#123;
+     // 路由连接失败，进行recover重试
+     if (!recover(e.lastConnectException, call, request, requestSendStarted = false)) &#123;
+       throw e.firstConnectException.withSuppressed(recoveredFailures)
+     &#125; else &#123;
+       recoveredFailures += e.firstConnectException
+     &#125;
+     newExchangeFinder = false
+     continue
+   &#125; catch (e: IOException) &#123;
+     // 服务器连接失败，进行recover重试
+     if (!recover(e, call, request, requestSendStarted = e !is ConnectionShutdownException)) &#123;
+       throw e.withSuppressed(recoveredFailures)
+     &#125; else &#123;
+       recoveredFailures += e
+     &#125;
+     newExchangeFinder = false
+     continue
+   &#125;
+
+     // 重定向时关联上一次的 Response，并将上一次 Response 的 body 置为 null，
+     // 因为可能while循环，priorResponse可能会被赋值
+   if (priorResponse != null) &#123;
+     response = response.newBuilder()
+         .priorResponse(priorResponse.newBuilder()
+             .body(null)
+             .build())
+         .build()
+   &#125;
+
+   val exchange = call.interceptorScopedExchange
+   // 根据响应码判断是否需要重定向
+   val followUp = followUpRequest(response, exchange)
+
+   if (followUp == null) &#123;
+     if (exchange != null &amp;&amp; exchange.isDuplex) &#123;
+       call.timeoutEarlyExit()
+     &#125;
+     closeActiveExchange = false
+     return response
+   &#125;
+
+   val followUpBody = followUp.body
+   //没有重定向
+   if (followUpBody != null &amp;&amp; followUpBody.isOneShot()) &#123;
+     closeActiveExchange = false
+     return response
+   &#125;
+
+   response.body?.closeQuietly()
+
+   if (++followUpCount &gt; MAX_FOLLOW_UPS) &#123;
+     throw ProtocolException(&quot;Too many follow-up requests: $followUpCount&quot;)
+   &#125;
+         //重定向，while循序继续执行
+   request = followUp
+   priorResponse = response
+ &#125; finally &#123;
+   call.exitNetworkInterceptorExchange(closeActiveExchange)
+ &#125;
+&#125;
+&#125;
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">源码重点涉及到了重试和重定向的逻辑</span><br><span class="line"></span><br><span class="line">- 重试 recover</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+private fun recover(
+e: IOException,
+call: RealCall,
+userRequest: Request,
+requestSendStarted: Boolean
+): Boolean &#123;
+// The application layer has forbidden retries.
+if (!client.retryOnConnectionFailure) return false
+
+// We can&#39;t send the request body again.
+if (requestSendStarted &amp;&amp; requestIsOneShot(e, userRequest)) return false
+
+// This exception is fatal.
+if (!isRecoverable(e, requestSendStarted)) return false
+
+// No more routes to attempt.
+if (!call.retryAfterFailure()) return false
+
+// For failure recovery, use the same route selector with a new connection.
+return true
+&#125;
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 可以看到，在四种情况下，不再重写请求：</span><br><span class="line">&gt;</span><br><span class="line">&gt; - 用户设置了拒绝重连</span><br><span class="line">&gt;</span><br><span class="line">&gt; - 请求已发送，并且该请求为不能重新发送的类型</span><br><span class="line">&gt;</span><br><span class="line">&gt; - 发生的是再次重试也不能解决的问题，例如协议问题、证书问题</span><br><span class="line">&gt;</span><br><span class="line">&gt; - 没有更多的路由</span><br><span class="line"></span><br><span class="line">- 重定向判断 followUpRequest</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+private fun followUpRequest(userResponse: Response, exchange: Exchange?): Request? &#123;
+ val route = exchange?.connection?.route()
+ val responseCode = userResponse.code
+
+ val method = userResponse.request.method
+ when (responseCode) &#123;
+   HTTP_PROXY_AUTH -&gt; &#123;
+     val selectedProxy = route!!.proxy
+     if (selectedProxy.type() != Proxy.Type.HTTP) &#123;
+       throw ProtocolException(&quot;Received HTTP_PROXY_AUTH (407) code while not using proxy&quot;)
+     &#125;
+     return client.proxyAuthenticator.authenticate(route, userResponse)
+   &#125;
+
+   HTTP_UNAUTHORIZED -&gt; return client.authenticator.authenticate(route, userResponse)
+
+   HTTP_PERM_REDIRECT, HTTP_TEMP_REDIRECT, HTTP_MULT_CHOICE, HTTP_MOVED_PERM, HTTP_MOVED_TEMP, HTTP_SEE_OTHER -&gt; &#123;
+     return buildRedirectRequest(userResponse, method)
+   &#125;
+
+   HTTP_CLIENT_TIMEOUT -&gt; &#123;
+     if (!client.retryOnConnectionFailure) &#123;
+       // The application layer has directed us not to retry the request.
+       return null
+     &#125;
+
+     val requestBody = userResponse.request.body
+     if (requestBody != null &amp;&amp; requestBody.isOneShot()) &#123;
+       return null
+     &#125;
+     val priorResponse = userResponse.priorResponse
+     if (priorResponse != null &amp;&amp; priorResponse.code == HTTP_CLIENT_TIMEOUT) &#123;
+       // We attempted to retry and got another timeout. Give up.
+       return null
+     &#125;
+
+     if (retryAfter(userResponse, 0) &gt; 0) &#123;
+       return null
+     &#125;
+
+     return userResponse.request
+   &#125;
+
+   HTTP_UNAVAILABLE -&gt; &#123;
+     val priorResponse = userResponse.priorResponse
+     if (priorResponse != null &amp;&amp; priorResponse.code == HTTP_UNAVAILABLE) &#123;
+       // We attempted to retry and got another timeout. Give up.
+       return null
+     &#125;
+
+     if (retryAfter(userResponse, Integer.MAX_VALUE) == 0) &#123;
+       // specifically received an instruction to retry without delay
+       return userResponse.request
+     &#125;
+
+     return null
+   &#125;
+
+   HTTP_MISDIRECTED_REQUEST -&gt; &#123;
+     // OkHttp can coalesce HTTP/2 connections even if the domain names are different. See
+     // RealConnection.isEligible(). If we attempted this and the server returned HTTP 421, then
+     // we can retry on a different connection.
+     val requestBody = userResponse.request.body
+     if (requestBody != null &amp;&amp; requestBody.isOneShot()) &#123;
+       return null
+     &#125;
+
+     if (exchange == null || !exchange.isCoalescedConnection) &#123;
+       return null
+     &#125;
+
+     exchange.connection.noCoalescedConnections()
+     return userResponse.request
+   &#125;
+
+   else -&gt; return null
+ &#125;
+&#125;
+</code></pre>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt;重定向是根据返回的code码进行判断，比较简单。</span><br><span class="line"></span><br><span class="line">#### BridgeInterceptor</span><br><span class="line"></span><br><span class="line">&gt;负责把用户请求转换为发送到服务器的请求，并把服务器的响应转化为用户需要的响应。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>override fun intercept(chain: Interceptor.Chain): Response {<br>  val userRequest = chain.request()<br>  val requestBuilder = userRequest.newBuilder()</p>
+<p>  val body = userRequest.body<br>  //设置Content-Type<br>  if (body != null) {<br>    val contentType = body.contentType()<br>    if (contentType != null) {<br>      requestBuilder.header(“Content-Type”, contentType.toString())<br>    }<br>        //设置 contentLength<br>    val contentLength = body.contentLength()<br>    if (contentLength != -1L) {<br>      requestBuilder.header(“Content-Length”, contentLength.toString())<br>      requestBuilder.removeHeader(“Transfer-Encoding”)<br>    } else {<br>      requestBuilder.header(“Transfer-Encoding”, “chunked”)<br>      requestBuilder.removeHeader(“Content-Length”)<br>    }<br>  }<br>    //设置host<br>  if (userRequest.header(“Host”) == null) {<br>    requestBuilder.header(“Host”, userRequest.url.toHostHeader())<br>  }<br>    //keep-alive<br>  if (userRequest.header(“Connection”) == null) {<br>    requestBuilder.header(“Connection”, “Keep-Alive”)<br>  }</p>
+<p>  //gzip压缩<br>  var transparentGzip = false<br>  if (userRequest.header(“Accept-Encoding”) == null &amp;&amp; userRequest.header(“Range”) == null) {<br>    transparentGzip = true<br>    requestBuilder.header(“Accept-Encoding”, “gzip”)<br>  }</p>
+<pre><code>//cookie</code></pre>
+<p>  val cookies = cookieJar.loadForRequest(userRequest.url)<br>  if (cookies.isNotEmpty()) {<br>    requestBuilder.header(“Cookie”, cookieHeader(cookies))<br>  }<br>    //user-agent<br>  if (userRequest.header(“User-Agent”) == null) {<br>    requestBuilder.header(“User-Agent”, userAgent)<br>  }</p>
+<p>  val networkResponse = chain.proceed(requestBuilder.build())</p>
+<p>  cookieJar.receiveHeaders(userRequest.url, networkResponse.headers)</p>
+<p>  val responseBuilder = networkResponse.newBuilder()<br>      .request(userRequest)</p>
+<pre><code>//处理response</code></pre>
+<p>  if (transparentGzip &amp;&amp;<br>      “gzip”.equals(networkResponse.header(“Content-Encoding”), ignoreCase = true) &amp;&amp;<br>      networkResponse.promisesBody()) {<br>    val responseBody = networkResponse.body<br>    if (responseBody != null) {<br>      val gzipSource = GzipSource(responseBody.source())<br>      val strippedHeaders = networkResponse.headers.newBuilder()<br>          .removeAll(“Content-Encoding”)<br>          .removeAll(“Content-Length”)<br>          .build()<br>      responseBuilder.headers(strippedHeaders)<br>      val contentType = networkResponse.header(“Content-Type”)<br>      responseBuilder.body(RealResponseBody(contentType, -1L, gzipSource.buffer()))<br>    }<br>  }</p>
+<p>  return responseBuilder.build()<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">BridgeInterceptor 的执行步骤如下：</span><br><span class="line"></span><br><span class="line">1. 将用户的 Request 构造为发送给服务器的 Request，该过程会添加各种请求报头(包括 Host、Connection、cookie 等)</span><br><span class="line">2. 构造完成后，将新的 Request 交给下一拦截器来处理</span><br><span class="line">3. 得到服务器的 Response 后，先保存 cookies，接着将服务器的 Response 转换为用户需要的 Response 并返回（如果使用了 gzip 压缩并且服务器的 Response 有 body 的话，还要给用户的 Response 设置相应 body）</span><br><span class="line"></span><br><span class="line">#### CacheInterceptor</span><br><span class="line"></span><br><span class="line">&gt;负责读取缓存、更新缓存。代码稍微有点长</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>  override fun intercept(chain: Interceptor.Chain): Response {<br>    val call = chain.call()<br>    val cacheCandidate = cache?.get(chain.request())</p>
+<pre><code>val now = System.currentTimeMillis()
+
+    //得到缓存策略
+val strategy = CacheStrategy.Factory(now, chain.request(), cacheCandidate).compute()
+val networkRequest = strategy.networkRequest
+val cacheResponse = strategy.cacheResponse
+
+cache?.trackResponse(strategy)
+val listener = (call as? RealCall)?.eventListener ?: EventListener.NONE
+
+    // 缓存不适用，关闭缓存
+if (cacheCandidate != null &amp;&amp; cacheResponse == null) &#123;
+  cacheCandidate.body?.closeQuietly()
+&#125;
+
+// 如果缓存策略中设置禁止使用网络，并且缓存又为空，则直接构建一个返回码为 504 的 Response，说明返回失败
+if (networkRequest == null &amp;&amp; cacheResponse == null) &#123;
+  return Response.Builder()
+      .request(chain.request())
+      .protocol(Protocol.HTTP_1_1)
+      .code(HTTP_GATEWAY_TIMEOUT)
+      .message(&quot;Unsatisfiable Request (only-if-cached)&quot;)
+      .body(EMPTY_RESPONSE)
+      .sentRequestAtMillis(-1L)
+      .receivedResponseAtMillis(System.currentTimeMillis())
+      .build().also &#123;
+        listener.satisfactionFailure(call, it)
+      &#125;
+&#125;
+
+// 禁用网络，但有缓存，那么返回缓存
+if (networkRequest == null) &#123;
+  return cacheResponse!!.newBuilder()
+      .cacheResponse(stripBody(cacheResponse))
+      .build().also &#123;
+        listener.cacheHit(call, it)
+      &#125;
+&#125;
+
+if (cacheResponse != null) &#123;
+  listener.cacheConditionalHit(call, cacheResponse)
+&#125; else if (cache != null) &#123;
+  listener.cacheMiss(call)
+&#125;
+
+var networkResponse: Response? = null
+try &#123;
+    // 如果可以使用网络，就交给下一拦截器执行请求
+  networkResponse = chain.proceed(networkRequest)
+&#125; finally &#123;
+  // 如果执行请求时抛出异常，记得要关闭缓存，避免内存异常
+  if (networkResponse == null &amp;&amp; cacheCandidate != null) &#123;
+    cacheCandidate.body?.closeQuietly()
+  &#125;
+&#125;
+
+// 当缓存和网络返回的 Response 同时存在时
+    // 如果返回的状态码为 304（说明服务器的文件未更新，可以使用缓存），则返回缓存
+if (cacheResponse != null) &#123;
+  if (networkResponse?.code == HTTP_NOT_MODIFIED) &#123;
+    val response = cacheResponse.newBuilder()
+        .headers(combine(cacheResponse.headers, networkResponse.headers))
+        .sentRequestAtMillis(networkResponse.sentRequestAtMillis)
+        .receivedResponseAtMillis(networkResponse.receivedResponseAtMillis)
+        .cacheResponse(stripBody(cacheResponse))
+        .networkResponse(stripBody(networkResponse))
+        .build()
+
+    networkResponse.body!!.close()
+
+    // Update the cache after combining headers but before stripping the
+    // Content-Encoding header (as performed by initContentStream()).
+    cache!!.trackConditionalCacheHit()
+    cache.update(cacheResponse, response)
+    return response.also &#123;
+      listener.cacheHit(call, it)
+    &#125;
+  &#125; else &#123;
+    cacheResponse.body?.closeQuietly()
+  &#125;
+&#125;
+
+val response = networkResponse!!.newBuilder()
+    .cacheResponse(stripBody(cacheResponse))
+    .networkResponse(stripBody(networkResponse))
+    .build()
+    // 更新缓存
+if (cache != null) &#123;
+  if (response.promisesBody() &amp;&amp; CacheStrategy.isCacheable(response, networkRequest)) &#123;
+    // Offer this request to the cache.
+    val cacheRequest = cache.put(response)
+    return cacheWritingResponse(cacheRequest, response).also &#123;
+      if (cacheResponse != null) &#123;
+        // This will log a conditional cache miss only.
+        listener.cacheMiss(call)
+      &#125;
+    &#125;
+  &#125;
+
+  if (HttpMethod.invalidatesCache(networkRequest.method)) &#123;
+    try &#123;
+      cache.remove(networkRequest)
+    &#125; catch (_: IOException) &#123;
+      // The cache cannot be written.
+    &#125;
+  &#125;
+&#125;
+
+return response</code></pre>
+<p>  }</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">执行步骤如下：</span><br><span class="line"></span><br><span class="line">1. 从 Cache 中得到 Request 对应的缓存，默认没有设置 Cache，需要用户自己配置</span><br><span class="line">2. 得到缓存策略</span><br><span class="line">3. 如果通过缓存策略没有得到缓存，则关闭缓存</span><br><span class="line">4. 如果缓存策略设置了禁用网络，看得到的缓存是否为空，如果缓存为空，则构建一个返回码为 504 的 Response，说明返回失败。如果缓存不为空，则返回缓存</span><br><span class="line">5. 如果可以使用网络，就交给下一拦截器执行请求，执行请求的过程发生异常，及时关闭缓存，并抛出异常，让上一拦截器处理。</span><br><span class="line">6. 当缓存和网络返回的 Response 同时存在时，如果返回的状态码为 304（说明服务器的文件未更新，可以使用缓存），则返回缓存。否则更新缓存，并返回网络请求后的 Response。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### ConnectInterceptor</span><br><span class="line"></span><br><span class="line">&gt;负责和服务器建立连接</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>  override fun intercept(chain: Interceptor.Chain): Response {<br>    val realChain = chain as RealInterceptorChain<br>    val exchange = realChain.call.initExchange(chain)<br>    val connectedChain = realChain.copy(exchange = exchange)<br>    return connectedChain.proceed(realChain.request)<br>  }</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- realCall.kt  initExchange</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>/** Finds a new or pooled connection to carry a forthcoming request and response. */<br>internal fun initExchange(chain: RealInterceptorChain): Exchange {<br>  synchronized(connectionPool) {<br>    check(!noMoreExchanges) { “released” }<br>    check(exchange == null)<br>  }</p>
+<p>  val codec = exchangeFinder!!.find(client, chain)<br>  val result = Exchange(this, eventListener, exchangeFinder!!, codec)<br>  this.interceptorScopedExchange = result</p>
+<p>  synchronized(connectionPool) {<br>    this.exchange = result<br>    this.exchangeRequestDone = false<br>    this.exchangeResponseDone = false<br>    return result<br>  }<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- RealConnection.kt connect</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>fun connect(<br>  …<br>) {<br>  check(protocol == null) { “already connected” }<br>    …<br>  while (true) {<br>    try {<br>      if (route.requiresTunnel()) {<br>          //connectTunnel<br>        connectTunnel(connectTimeout, readTimeout, writeTimeout, call, eventListener)<br>        …<br>      } else {<br>             //connectSocket<br>        connectSocket(connectTimeout, readTimeout, call, eventListener)<br>      }<br>      establishProtocol(connectionSpecSelector, pingIntervalMillis, call, eventListener)<br>      eventListener.connectEnd(call, route.socketAddress, route.proxy, protocol)<br>      break<br>    } catch (e: IOException) {<br>      …<br>    }<br>  }<br>…</p>
+<p>  idleAtNs = System.nanoTime()<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这里进行真正的连接</span><br><span class="line"></span><br><span class="line">步骤如下：</span><br><span class="line"></span><br><span class="line">1. 找到一个可用的 RealConnection， 再利用这个 RealConnection 的输入输出（BufferSource 和 BufferSink）创建 HttpCodec。（ HttpCodec 有两个实现：Http1Codec 和 Http2Codec，分别对应 HTTP&#x2F;1.1 和 HTTP&#x2F;2 版本）</span><br><span class="line">2. 调用下一拦截器进行后续请求操作。</span><br><span class="line"></span><br><span class="line">#### CallServerInterceptor</span><br><span class="line"></span><br><span class="line">&gt;负责向服务器发送数据，从服务器读取响应数据</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>override fun intercept(chain: Interceptor.Chain): Response {<br>    val realChain = chain as RealInterceptorChain<br>    val exchange = realChain.exchange!!<br>    val request = realChain.request<br>    val requestBody = request.body<br>    val sentRequestMillis = System.currentTimeMillis()<br>        //写入请求头<br>    exchange.writeRequestHeaders(request)</p>
+<pre><code>var invokeStartEvent = true
+var responseBuilder: Response.Builder? = null
+if (HttpMethod.permitsRequestBody(request.method) &amp;&amp; requestBody != null) &#123;
+        // 如果请求头有 Expect: 100-continue，需要根据服务器返回的结果决定是否可以继续写入
+  if (&quot;100-continue&quot;.equals(request.header(&quot;Expect&quot;), ignoreCase = true)) &#123;
+    exchange.flushRequest()
+    responseBuilder = exchange.readResponseHeaders(expectContinue = true)
+    exchange.responseHeadersStart()
+    invokeStartEvent = false
+  &#125;
+  // 可以继续写入就写入请求体
+  if (responseBuilder == null) &#123;
+    if (requestBody.isDuplex()) &#123;
+      // Prepare a duplex body so that the application can send a request body later.
+      exchange.flushRequest()
+      val bufferedRequestBody = exchange.createRequestBody(request, true).buffer()
+      requestBody.writeTo(bufferedRequestBody)
+    &#125; else &#123;
+      // Write the request body if the &quot;Expect: 100-continue&quot; expectation was met.
+      val bufferedRequestBody = exchange.createRequestBody(request, false).buffer()
+      requestBody.writeTo(bufferedRequestBody)
+      bufferedRequestBody.close()
+    &#125;
+  &#125; else &#123;
+    exchange.noRequestBody()
+    if (!exchange.connection.isMultiplexed) &#123;
+      // If the &quot;Expect: 100-continue&quot; expectation wasn&#39;t met, prevent the HTTP/1 connection
+      // from being reused. Otherwise we&#39;re still obligated to transmit the request body to
+      // leave the connection in a consistent state.
+      exchange.noNewExchangesOnConnection()
+    &#125;
+  &#125;
+&#125; else &#123;
+  exchange.noRequestBody()
+&#125;
+
+if (requestBody == null || !requestBody.isDuplex()) &#123;
+  exchange.finishRequest()
+&#125;
+if (responseBuilder == null) &#123;
+  responseBuilder = exchange.readResponseHeaders(expectContinue = false)!!
+  if (invokeStartEvent) &#123;
+    exchange.responseHeadersStart()
+    invokeStartEvent = false
+  &#125;
+&#125;
+//// 构建带有响应头的 Response
+var response = responseBuilder
+    .request(request)
+    .handshake(exchange.connection.handshake())
+    .sentRequestAtMillis(sentRequestMillis)
+    .receivedResponseAtMillis(System.currentTimeMillis())
+    .build()
+var code = response.code
+if (code == 100) &#123;
+  // Server sent a 100-continue even though we did not request one. Try again to read the actual
+  // response status.
+  responseBuilder = exchange.readResponseHeaders(expectContinue = false)!!
+  if (invokeStartEvent) &#123;
+    exchange.responseHeadersStart()
+  &#125;
+  response = responseBuilder
+      .request(request)
+      .handshake(exchange.connection.handshake())
+      .sentRequestAtMillis(sentRequestMillis)
+      .receivedResponseAtMillis(System.currentTimeMillis())
+      .build()
+  code = response.code
+&#125;
+
+exchange.responseHeadersEnd(response)
+// 为 Response 构建响应体
+response = if (forWebSocket &amp;&amp; code == 101) &#123;
+
+  response.newBuilder()
+      .body(EMPTY_RESPONSE)
+      .build()
+&#125; else &#123;
+  response.newBuilder()
+      .body(exchange.openResponseBody(response))
+      .build()
+&#125;
+if (&quot;close&quot;.equals(response.request.header(&quot;Connection&quot;), ignoreCase = true) ||
+    &quot;close&quot;.equals(response.header(&quot;Connection&quot;), ignoreCase = true)) &#123;
+  exchange.noNewExchangesOnConnection()
+&#125;
+if ((code == 204 || code == 205) &amp;&amp; response.body?.contentLength() ?: -1L &gt; 0L) &#123;
+  throw ProtocolException(
+      &quot;HTTP $code had non-zero Content-Length: $&#123;response.body?.contentLength()&#125;&quot;)
+&#125;
+return response</code></pre>
+<p>  }</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">步骤如下：</span><br><span class="line"></span><br><span class="line">1. 向服务器写入请求头，如果请求头有 Expect: 100-continue，需要根据服务器返回的结果决定是否可以继续写入请求体。</span><br><span class="line">2. 得到响应头并构建带有响应头的 Response，接着为 Response 构建响应体并返回。</span><br><span class="line"></span><br><span class="line">### OKIO</span><br><span class="line"></span><br><span class="line">&gt;OkHttp的底层使用该库作为IO的支持，它补充了java.io和java.nio的不足，以便能够更加方便，快速的访问、存储和处理你的数据。</span><br><span class="line"></span><br><span class="line">Okio中有两个关键的接口，**Sink**和**Source**，这两个接口都继承了Closeable接口；而Sink可以简单的看做OutputStream，Source可以简单的看做InputStream。</span><br><span class="line"></span><br><span class="line">## Retrofit</span><br><span class="line"></span><br><span class="line">&gt;A type-safe **HTTP client** for Android and Java。一个类型安全的 Http 请求的客户端。</span><br><span class="line">&gt;</span><br><span class="line">&gt;底层的网络请求是基于 OkHttp 的，Retrofit 对其做了封装，提供了即方便又高效的网络访问框架。</span><br><span class="line"></span><br><span class="line">项目中，retrofit的使用为：</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>val retrofit= Retrofit.Builder()<br>    .baseUrl(ApiDefine.BASE_URL)  //自己配置<br>    .client(getOkHttpClient())<br>    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())<br>    .addConverterFactory(GsonConverterFactory.create())<br>    .build()<br>//ApiService是我们自己定义的接口<br>val service=retrofit.create(ApiService::class.java)    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">通过Build构建者模式创建Retrofit对象我们非常熟悉，重点先看下&#96;retrofit.create&#96;</span><br><span class="line"></span><br><span class="line">### retrofit.create</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>  public <T> T create(final Class<T> service) {<br>    validateServiceInterface(service);<br>    return (T)<br>        Proxy.newProxyInstance(<br>            service.getClassLoader(),<br>            new Class&lt;?&gt;[] {service},<br>            new InvocationHandler() {<br>              private final Platform platform = Platform.get();<br>              private final Object[] emptyArgs = new Object[0];</p>
+<pre><code>          @Override
+          public @Nullable Object invoke(Object proxy, Method method, @Nullable Object[] args)
+              throws Throwable &#123;
+            // If the method is a method from Object then defer to normal invocation.
+            if (method.getDeclaringClass() == Object.class) &#123;
+              return method.invoke(this, args);
+            &#125;
+            args = args != null ? args : emptyArgs;
+            return platform.isDefaultMethod(method)
+                ? platform.invokeDefaultMethod(method, service, proxy, args)
+                : loadServiceMethod(method).invoke(args);
+          &#125;
+        &#125;);</code></pre>
+<p>  }</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- create需要传入一个类对象</span><br><span class="line">- 通过JDK动态代理的方式获取该类对象的方法，并且这个类是一个接口类</span><br><span class="line">- 一般我们可以定义如下接口类</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>interface ApiService {</p>
+<pre><code>@FormUrlEncoded
+@POST(ApiDefine.getHomeCourseList)
+suspend fun getHomeCourseList(@FieldMap map: ArrayMap&lt;String, Any&gt;): BaseResponse&lt;List&lt;CourseBean&gt;?&gt;
+
+@FormUrlEncoded
+@POST(ApiDefine.getShortVideoList)
+suspend fun getShortVideoList(@FieldMap map: ArrayMap&lt;String, Any&gt;): BaseResponse&lt;ShortVideoPage?&gt;
+
+@FormUrlEncoded
+@POST(ApiDefine.getWhaleCircleList)
+suspend fun getWhaleCircleList(@FieldMap map: ArrayMap&lt;String, Any&gt;): BaseResponse&lt;WhaleCirclePage?&gt;</code></pre>
+<p>}</p>
+<p>//使用如下：<br>  val service: ApiService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {<br>        getRetrofit().create(ApiService::class.java)<br>    }<br> servive.getHomeCourseList()    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 上面ApiServive结合了协程</span><br><span class="line">- 执行&#96;servive.getHomeCourseList()  &#96;时，就会执行动态代理里面的invoke函数</span><br><span class="line"></span><br><span class="line">#### loadServiceMethod</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>ServiceMethod<?> loadServiceMethod(Method method) {
+  ServiceMethod<?> result = serviceMethodCache.get(method);<br>  if (result != null) return result;</p>
+<p>  synchronized (serviceMethodCache) {<br>    result = serviceMethodCache.get(method);<br>    if (result == null) {<br>      result = ServiceMethod.parseAnnotations(this, method);<br>      serviceMethodCache.put(method, result);<br>    }<br>  }<br>  return result;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- serviceMethodCache对函数做缓存，方便App调用多次同一个函数更快。</span><br><span class="line">- &#96;ServiceMethod.parseAnnotations&#96;:对函数上的注解进行解析</span><br><span class="line"></span><br><span class="line">#### ServiceMethod.parseAnnotations</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>static <T> ServiceMethod<T> parseAnnotations(Retrofit retrofit, Method method) {<br>  RequestFactory requestFactory = RequestFactory.parseAnnotations(retrofit, method);</p>
+<p>  Type returnType = method.getGenericReturnType();<br>  if (Utils.hasUnresolvableType(returnType)) {<br>    throw methodError(<br>        method,<br>        “Method return type must not include a type variable or wildcard: %s”,<br>        returnType);<br>  }<br>  if (returnType == void.class) {<br>    throw methodError(method, “Service methods cannot return void.”);<br>  }</p>
+<p>  return HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory);<br>}</p>
+<p>abstract @Nullable T invoke(Object[] args);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### RequestFactory.parseAnnotations</span><br><span class="line"></span><br><span class="line">&gt;根据方法和注解信息，构建请求</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>//RequestFactory<br>Builder(Retrofit retrofit, Method method) {<br>  this.retrofit = retrofit;<br>  this.method = method;<br>  this.methodAnnotations = method.getAnnotations();<br>  this.parameterTypes = method.getGenericParameterTypes();<br>  this.parameterAnnotationsArray = method.getParameterAnnotations();<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- &#96;method.getAnnotations&#96;:方法上的注解</span><br><span class="line">- &#96;method.getGenericParameterTypes&#96;：方法的参数类型</span><br><span class="line">- &#96;method.getParameterAnnotations&#96;:方法参数上的注解</span><br><span class="line"></span><br><span class="line">#### HttpServiceMethod.parseAnnotations</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>static &lt;ResponseT, ReturnT&gt; HttpServiceMethod&lt;ResponseT, ReturnT&gt; parseAnnotations(<br>    Retrofit retrofit, Method method, RequestFactory requestFactory) {<br>  boolean isKotlinSuspendFunction = requestFactory.isKotlinSuspendFunction;<br>  boolean continuationWantsResponse = false;<br>  boolean continuationBodyNullable = false;</p>
+<p>  Annotation[] annotations = method.getAnnotations();<br>  Type adapterType;<br>  //是否使用了协程，构建返回值类型<br>  if (isKotlinSuspendFunction) {<br>    Type[] parameterTypes = method.getGenericParameterTypes();<br>    Type responseType =<br>        Utils.getParameterLowerBound(<br>            0, (ParameterizedType) parameterTypes[parameterTypes.length - 1]);<br>    if (getRawType(responseType) == Response.class &amp;&amp; responseType instanceof ParameterizedType) {<br>      // Unwrap the actual body type from Response<T>.<br>      responseType = Utils.getParameterUpperBound(0, (ParameterizedType) responseType);<br>      continuationWantsResponse = true;<br>    } </p>
+<pre><code>adapterType = new Utils.ParameterizedTypeImpl(null, Call.class, responseType);
+annotations = SkipCallbackExecutorImpl.ensurePresent(annotations);</code></pre>
+<p>  } else {<br>    adapterType = method.getGenericReturnType();<br>  }</p>
+<p>  CallAdapter&lt;ResponseT, ReturnT&gt; callAdapter =<br>      createCallAdapter(retrofit, method, adapterType, annotations);<br>  Type responseType = callAdapter.responseType();<br> …</p>
+<p>  Converter&lt;ResponseBody, ResponseT&gt; responseConverter =<br>      createResponseConverter(retrofit, method, responseType);</p>
+<p>  okhttp3.Call.Factory callFactory = retrofit.callFactory;<br>  if (!isKotlinSuspendFunction) {<br>    return new CallAdapted&lt;&gt;(requestFactory, callFactory, responseConverter, callAdapter);<br>  } else if (continuationWantsResponse) {<br>    //noinspection unchecked Kotlin compiler guarantees ReturnT to be Object.<br>    return (HttpServiceMethod&lt;ResponseT, ReturnT&gt;)<br>        new SuspendForResponse&lt;&gt;(<br>            requestFactory,<br>            callFactory,<br>            responseConverter,<br>            (CallAdapter&lt;ResponseT, Call<ResponseT>&gt;) callAdapter);<br>  } else {<br>    //noinspection unchecked Kotlin compiler guarantees ReturnT to be Object.<br>    return (HttpServiceMethod&lt;ResponseT, ReturnT&gt;)<br>        new SuspendForBody&lt;&gt;(<br>            requestFactory,<br>            callFactory,<br>            responseConverter,<br>            (CallAdapter&lt;ResponseT, Call<ResponseT>&gt;) callAdapter,<br>            continuationBodyNullable);<br>  }<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这个方法非常关键，注意做了四个事情</span><br><span class="line"></span><br><span class="line">- 构建返回值类型</span><br><span class="line">- 创建网络适配器&#96;CallAdapter&#96;</span><br><span class="line">- 创建json转换器&#96;Converter&#96;</span><br><span class="line">- 创建请求客户端，发送请求</span><br><span class="line"></span><br><span class="line">##### createCallAdapter</span><br><span class="line"></span><br><span class="line">创建返回值适配器</span><br><span class="line"></span><br><span class="line">&gt; Retrofit默认使用的DefaultCallAdapterFactory，默认不做处理直接返回Call。但是一般我们会结合Rxjava，所以项目会有&#96;addCallAdapterFactory(RxJava2CallAdapterFactory.create())&#96;,通过自定义的适配器，可以返回我们需要的类型。</span><br><span class="line">&gt;</span><br><span class="line">&gt; 事实上，结合协程后，不需要添加自定义的适配器的。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>public CallAdapter<?, ?> nextCallAdapter(<br>    @Nullable CallAdapter.Factory skipPast, Type returnType, Annotation[] annotations) {<br>  Objects.requireNonNull(returnType, “returnType == null”);<br>  Objects.requireNonNull(annotations, “annotations == null”);</p>
+<p>  int start = callAdapterFactories.indexOf(skipPast) + 1;<br>  for (int i = start, count = callAdapterFactories.size(); i &lt; count; i++) {<br>    CallAdapter<?, ?> adapter = callAdapterFactories.get(i).get(returnType, annotations, this);<br>    if (adapter != null) {<br>      return adapter;<br>    }<br>  }<br>…<br>  throw new IllegalArgumentException(builder.toString());<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这里可以清楚的看到，callAdapterFactories存储的是多个calladapter，循环判断合适的返回。</span><br><span class="line"></span><br><span class="line">##### createResponseConverter</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>public <T> Converter&lt;ResponseBody, T&gt; nextResponseBodyConverter(<br>    @Nullable Converter.Factory skipPast, Type type, Annotation[] annotations) {<br>  Objects.requireNonNull(type, “type == null”);<br>  Objects.requireNonNull(annotations, “annotations == null”);</p>
+<p>  int start = converterFactories.indexOf(skipPast) + 1;<br>  for (int i = start, count = converterFactories.size(); i &lt; count; i++) {<br>    Converter&lt;ResponseBody, ?&gt; converter =<br>        converterFactories.get(i).responseBodyConverter(type, annotations, this);<br>    if (converter != null) {<br>      //noinspection unchecked<br>      return (Converter&lt;ResponseBody, T&gt;) converter;<br>    }<br>  }<br>。。。<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 遍历解析器工厂</span><br><span class="line">- 执行解析器的responseBodyConverter方法</span><br><span class="line">- 以&#96;GsonConverterFactory&#96;为例：</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>public Converter&lt;ResponseBody, ?&gt; responseBodyConverter(<br>    Type type, Annotation[] annotations, Retrofit retrofit) {<br>  TypeAdapter&lt;?&gt; adapter = gson.getAdapter(TypeToken.get(type));<br>  return new GsonResponseBodyConverter&lt;&gt;(gson, adapter);<br>}</p>
+<p>//<br>final class GsonResponseBodyConverter<T> implements Converter&lt;ResponseBody, T&gt; {<br>  private final Gson gson;<br>  private final TypeAdapter<T> adapter;</p>
+<p>  GsonResponseBodyConverter(Gson gson, TypeAdapter<T> adapter) {<br>    this.gson = gson;<br>    this.adapter = adapter;<br>  }</p>
+<p>  @Override<br>  public T convert(ResponseBody value) throws IOException {<br>    JsonReader jsonReader = gson.newJsonReader(value.charStream());<br>    try {<br>      T result = adapter.read(jsonReader);<br>      if (jsonReader.peek() != JsonToken.END_DOCUMENT) {<br>        throw new JsonIOException(“JSON document was not fully consumed.”);<br>      }<br>      return result;<br>    } finally {<br>      value.close();<br>    }<br>  }<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">##### 发起请求</span><br><span class="line"></span><br><span class="line">- 如果不是协程的情况下</span><br><span class="line"></span><br><span class="line">&#96;new CallAdapted&#96;,注意区别上面的返回类型CallAdapter</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>static final class CallAdapted&lt;ResponseT, ReturnT&gt; extends HttpServiceMethod&lt;ResponseT, ReturnT&gt; {<br>  private final CallAdapter&lt;ResponseT, ReturnT&gt; callAdapter;</p>
+<p>//这个CallAdapted是HttpServiceMethod的子类<br>  CallAdapted(<br>      RequestFactory requestFactory,<br>      okhttp3.Call.Factory callFactory,<br>      Converter&lt;ResponseBody, ResponseT&gt; responseConverter,<br>      CallAdapter&lt;ResponseT, ReturnT&gt; callAdapter) {<br>    super(requestFactory, callFactory, responseConverter);<br>    //这个callAdapter是个接口<br>    this.callAdapter = callAdapter;<br>  }</p>
+<p>  @Override<br>  protected ReturnT adapt(Call<ResponseT> call, Object[] args) {<br>    return callAdapter.adapt(call);<br>  }<br>}</p>
+<p>//执行invoke，具体实现类是上面的CallAdapted的adapt,OkHttpCall,注意这里的callFactory是配置的okhttpclient<br> final @Nullable ReturnT invoke(Object[] args) {<br>    Call<ResponseT> call = new OkHttpCall&lt;&gt;(requestFactory, args, callFactory, responseConverter);<br>    return adapt(call, args);<br>  }</p>
+<p>  //具体的实现类是callAdapter的子类，默认是DefaultCallAdapterFactory，正如前面分析，可自定义<br>  protected ReturnT adapt(Call<ResponseT> call, Object[] args) {<br>      return callAdapter.adapt(call);<br>    }  </p>
+<p> //DefaultCallAdapterFactory<br> public Call<Object> adapt(Call<Object> call) {<br>     return executor == null ? call : new ExecutorCallbackCall&lt;&gt;(executor, call);<br>  }</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ExecutorCallbackCall</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>static final class ExecutorCallbackCall<T> implements Call<T> {<br>  final Executor callbackExecutor;<br>  final Call<T> delegate;</p>
+<p>  ExecutorCallbackCall(Executor callbackExecutor, Call<T> delegate) {<br>    this.callbackExecutor = callbackExecutor;<br>    this.delegate = delegate;<br>  }</p>
+<p>  @Override<br>  public void enqueue(final Callback<T> callback) {<br>    Objects.requireNonNull(callback, “callback == null”);<br>        //代理类call发请求<br>    delegate.enqueue(<br>        new Callback<T>() {<br>          @Override<br>          public void onResponse(Call<T> call, final Response<T> response) {<br>            callbackExecutor.execute(<br>                () -&gt; {<br>                  if (delegate.isCanceled()) {<br>                    // Emulate OkHttp’s behavior of throwing/delivering an IOException on<br>                    // cancellation.<br>                    callback.onFailure(ExecutorCallbackCall.this, new IOException(“Canceled”));<br>                  } else {<br>                    callback.onResponse(ExecutorCallbackCall.this, response);<br>                  }<br>                });<br>          }</p>
+<pre><code>      @Override
+      public void onFailure(Call&lt;T&gt; call, final Throwable t) &#123;
+        callbackExecutor.execute(() -&gt; callback.onFailure(ExecutorCallbackCall.this, t));
+      &#125;
+    &#125;);</code></pre>
+<p>  }</p>
+<p>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 这里的call具体实现类是OkHttpCall，所示真正执行的是OkHttpCall的enqueue</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>public void enqueue(final Callback<T> callback) {<br>  Objects.requireNonNull(callback, “callback == null”);</p>
+<p>  okhttp3.Call call;<br>  Throwable failure;</p>
+<p>  synchronized (this) {<br>    if (executed) throw new IllegalStateException(“Already executed.”);<br>    executed = true;</p>
+<pre><code>call = rawCall;
+failure = creationFailure;
+if (call == null &amp;&amp; failure == null) &#123;
+  try &#123;
+    call = rawCall = createRawCall();
+  &#125; catch (Throwable t) &#123;
+    throwIfFatal(t);
+    failure = creationFailure = t;
+  &#125;
+&#125;</code></pre>
+<p>  }</p>
+<p>  if (failure != null) {<br>    callback.onFailure(this, failure);<br>    return;<br>  }</p>
+<p>  if (canceled) {<br>    call.cancel();<br>  }</p>
+<p>  call.enqueue(<br>      new okhttp3.Callback() {<br>        @Override<br>        public void onResponse(okhttp3.Call call, okhttp3.Response rawResponse) {<br>          Response<T> response;<br>          try {<br>            response = parseResponse(rawResponse);<br>          } catch (Throwable e) {<br>            throwIfFatal(e);<br>            callFailure(e);<br>            return;<br>          }</p>
+<pre><code>      try &#123;
+        callback.onResponse(OkHttpCall.this, response);
+      &#125; catch (Throwable t) &#123;
+        throwIfFatal(t);
+        t.printStackTrace(); // TODO this is not great
+      &#125;
+    &#125;
+
+    @Override
+    public void onFailure(okhttp3.Call call, IOException e) &#123;
+      callFailure(e);
+    &#125;
+
+    private void callFailure(Throwable e) &#123;
+      try &#123;
+        callback.onFailure(OkHttpCall.this, e);
+      &#125; catch (Throwable t) &#123;
+        throwIfFatal(t);
+        t.printStackTrace(); // TODO this is not great
+      &#125;
+    &#125;
+  &#125;);</code></pre>
+<p>}</p>
+<p>```</p>
+<ul>
+<li>这里的callfactory就是我们最初开始配置的okhttpclient。<code>okhttp3.Call.Factory callFactory = retrofit.callFactory;</code></li>
+<li>通过okhttp发起了网络请求。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>retrofit通过更加简便的书写方式封装了okhttp请求方式。JDK动态代理及大量注解的运用，类型自动转换是其最大的特色。</p>
+<p><strong>builder</strong></p>
+<ol>
+<li>platform</li>
+</ol>
+<blockquote>
+<p>单例获取不同平台Android平台中MainthreadExecutor</p>
+</blockquote>
+<p><strong>converterFactory</strong>数据解析Converter，将response通过converterFactory转换成对应的数据形式，GsonConverterFactory，FastJsonConverterFactory。</p>
+<p><strong>callAdapterFactory</strong>经过converter转换的数据形势，通过calladapter转换成其他数据方式。如rxjavaCallFactory对应的Observable。</p>
+<p><strong>Retrofit</strong>Retrofit核心类，对外提供接口。通过retrofit.create()创建retrofit实例，外观模式。在create()方法中，使用动态代理模式对请求的接口中方法进行封装(ServiceMethod)，初始化OkhttpCall。</p>
+<p><strong>ServiceMethod</strong>核心处理类，解析方法和注解，toRequest()方法中生成HttpRequest。创建responseConverter(将response流转换为String或实体)，创建callAdapter</p>
+<p><strong>OkhttpCall</strong>是对okhttp3.Call的封装调用。</p>
+
   
   
     
@@ -479,10 +1115,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-05-06T23:40:52+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-05-16T00:29:36+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：May 6, 2021</p>
+    <p>更新于：May 16, 2021</p>
   </a>
 </div>
 
@@ -490,6 +1126,9 @@
       
         
           
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E6%A1%86%E6%9E%B6/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>框架</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E7%BD%91%E7%BB%9C/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>网络</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/okhttp/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>okhttp</p></a></div>
+
 
         
       
@@ -501,7 +1140,7 @@
       
         <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2021/05/06/android%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E5%8F%8Aokhttp/&title=android网络相关及okhttp - YOUNG BLOG&summary="
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2021/05/06/android%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E5%8F%8Aokhttp/&title=okhttp及retrofit封装 - YOUNG BLOG&summary="
           
           >
           
@@ -513,7 +1152,7 @@
       
         <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://yoursite.com/2021/05/06/android%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E5%8F%8Aokhttp/&title=android网络相关及okhttp - YOUNG BLOG&summary="
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://yoursite.com/2021/05/06/android%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E5%8F%8Aokhttp/&title=okhttp及retrofit封装 - YOUNG BLOG&summary="
           
           >
           
@@ -525,7 +1164,7 @@
       
         <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
           
-          target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2021/05/06/android%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E5%8F%8Aokhttp/&title=android网络相关及okhttp - YOUNG BLOG&summary="
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2021/05/06/android%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E5%8F%8Aokhttp/&title=okhttp及retrofit封装 - YOUNG BLOG&summary="
           
           >
           
@@ -591,6 +1230,20 @@
 
 
 
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#okhttp"><span class="toc-text">okhttp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OkHttpClient"><span class="toc-text">OkHttpClient</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Request"><span class="toc-text">Request</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#newCall"><span class="toc-text">newCall</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#chain-%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F"><span class="toc-text">chain 责任链模式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li></ol>
+    </div>
+  </section>
+
 
   
 
@@ -607,7 +1260,7 @@
 <script>
   window.pdata={}
   pdata.ispage=true;
-  pdata.postTitle="android网络相关及okhttp";
+  pdata.postTitle="okhttp及retrofit封装";
   pdata.commentPath="";
   pdata.commentPlaceholder="";
 
@@ -646,7 +1299,7 @@
       
     
       
-        <div><p>博客內容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW">姓名標示-非商業性-相同方式分享 4.0 國際 (CC BY-NC-SA 4.0) 協議</a></p>
+        <div><p>Blog content follows the <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License</a></p>
 </div>
       
     
@@ -658,9 +1311,9 @@
       
     
       
-        本站使用
+        Use
         <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6" target="_blank" class="codename">Volantis</a>
-        作為主題
+        as theme
       
     
       
