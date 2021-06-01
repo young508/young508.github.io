@@ -488,6 +488,93 @@
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Glide.with(this).load(url_1).into(mImageView_1);</span><br><span class="line">Glide.with(this).load(url_2).into(mImageView_2);</span><br></pre></td></tr></table></figure>
 
 <p>比如我们在执行这两行代码时，加载mImageView_1提交Fragment时，fm.findFragmentByTag(FRAGMENT_TAG)可能还未null，此时handler.obtainMessage肯定也还未执行，所以pendingSupportRequestManagerFragments的缓存中肯定有加载mImageView_1时的无UI的Fragment，所以双重空判断保证了无UI Fragment的唯一性。</p>
+<h3 id="SupportRequestManagerFragment"><a href="#SupportRequestManagerFragment" class="headerlink" title="SupportRequestManagerFragment"></a>SupportRequestManagerFragment</h3><p>Glide内部创建无UI的fragment，会与当前Activity绑定，与RequestManager绑定，传递页面的生命周期。其中SupportRequestManagerFragment是v4包下的Fragment，RequestManagerFragment：Glide是android.app.Fragment。</p>
+<p>我们看下其中关键的成员变量</p>
+<ul>
+<li><p><strong>rootRequestManagerFragment</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void onAttach(Context context) &#123;</span><br><span class="line">  super.onAttach(context);</span><br><span class="line">  &#x2F;&#x2F;得到根FragmentManager</span><br><span class="line">  FragmentManager rootFragmentManager &#x3D; getRootFragmentManager(this);</span><br><span class="line">  if (rootFragmentManager &#x3D;&#x3D; null) &#123;</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line">  try &#123;</span><br><span class="line">  	&#x2F;&#x2F;注册rootFragmentManager</span><br><span class="line">    registerFragmentWithRoot(getContext(), rootFragmentManager);</span><br><span class="line">  &#125; catch (IllegalStateException e) &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">private void registerFragmentWithRoot(</span><br><span class="line">    @NonNull Context context, @NonNull FragmentManager fragmentManager) &#123;</span><br><span class="line">  </span><br><span class="line">  unregisterFragmentWithRoot();</span><br><span class="line">  &#x2F;&#x2F;得到rootRequestManagerFragment</span><br><span class="line">  rootRequestManagerFragment &#x3D;</span><br><span class="line">      Glide.get(context)</span><br><span class="line">          .getRequestManagerRetriever()</span><br><span class="line">          .getSupportRequestManagerFragment(context, fragmentManager);</span><br><span class="line">  &#x2F;&#x2F;如果当前 SupportRequestManagerFragment不是 rootRequestManagerFragment，那么添加到数组中   </span><br><span class="line">  if (!equals(rootRequestManagerFragment)) &#123;</span><br><span class="line">    rootRequestManagerFragment.addChildRequestManagerFragment(this);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;如果rootRequestManagerFragment存在，先移除当前fragment，并root制为null</span><br><span class="line">private void unregisterFragmentWithRoot() &#123;</span><br><span class="line">  if (rootRequestManagerFragment !&#x3D; null) &#123;</span><br><span class="line">    rootRequestManagerFragment.removeChildRequestManagerFragment(this);</span><br><span class="line">    rootRequestManagerFragment &#x3D; null;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;添加到childRequestManagerFragments</span><br><span class="line">private void addChildRequestManagerFragment(SupportRequestManagerFragment child) &#123;</span><br><span class="line">  childRequestManagerFragments.add(child);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>可以看到，不管当前的RequestManagerFragment是通过何种方式创建的，都会在OnAttach时，拿到当前所绑定的Activity的FragmentManager来初始化一个RequestManagerFragment，这个RequestManagerFragment有可能是自身，有可能已经被初始化过了，比如是通过with(Activity activity)的方式初始化的，那么很显然<code>RequestManagerRetriever.get().getRequestManagerFragment(getActivity().getFragmentManager());</code>这句代码拿到的会是自己本身</li>
+<li>如果是通过with(Fragment fragment)的形式创建的，rootRequestManagerFragment将指向当前fragment绑定到Activity所绑定的RequestManagerFragment，如果该Activity没有绑定过，那么会开启事务绑定一个RequestManagerFragment。并且如果自己不是rootRequestManagerFragment的话，那么将会把自己保存到rootRequestManagerFragment中的一个集合.</li>
+<li>简而言之，Glide会为Activity创建一个RequestManagerFragment做为rootFragment，并保存该Activity底下所有Fragment（如果有的话）所创建的RequestManagerFragment。</li>
+</ul>
+</li>
+<li><p><strong>RequestManagerTreeNode</strong></p>
+<p>RequestManagerTreeNode用来获取绑定该RequestManagerFragment的Fragment的所有子Fragment所绑定的RequestManagerFragment所绑定的RequestManager</p>
+</li>
+<li></li>
+</ul>
+<h3 id="RequestManager"><a href="#RequestManager" class="headerlink" title="RequestManager"></a>RequestManager</h3><p>RequestManager是一个非常核心的类，并且还实现了LifecycleListener来处理请求的生命周期。上述代码在创建RequestManager时，传递了3个参数，分别是context，前面分析过的初始化RequestManagerFragment所创建的LifeCycle和RequestManagerTreeNode。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">RequestManager(</span><br><span class="line">    Glide glide,</span><br><span class="line">    Lifecycle lifecycle,</span><br><span class="line">    RequestManagerTreeNode treeNode,</span><br><span class="line">    RequestTracker requestTracker,</span><br><span class="line">    ConnectivityMonitorFactory factory,</span><br><span class="line">    Context context) &#123;</span><br><span class="line">  this.glide &#x3D; glide;</span><br><span class="line">  this.lifecycle &#x3D; lifecycle;</span><br><span class="line">  this.treeNode &#x3D; treeNode;</span><br><span class="line">  this.requestTracker &#x3D; requestTracker;</span><br><span class="line">  this.context &#x3D; context;</span><br><span class="line">  </span><br><span class="line">  connectivityMonitor &#x3D;</span><br><span class="line">      factory.build(</span><br><span class="line">          context.getApplicationContext(),</span><br><span class="line">          new RequestManagerConnectivityListener(requestTracker));</span><br><span class="line"></span><br><span class="line">  if (Util.isOnBackgroundThread()) &#123;</span><br><span class="line">    mainHandler.post(addSelfToLifecycle);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    lifecycle.addListener(this);</span><br><span class="line">  &#125;</span><br><span class="line">  lifecycle.addListener(connectivityMonitor);</span><br><span class="line"></span><br><span class="line">  defaultRequestListeners &#x3D;</span><br><span class="line">      new CopyOnWriteArrayList&lt;&gt;(glide.getGlideContext().getDefaultRequestListeners());</span><br><span class="line">  setRequestOptions(glide.getGlideContext().getDefaultRequestOptions());</span><br><span class="line"></span><br><span class="line">  glide.registerRequestManager(this);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>构建函数传递了glide，lifecycle，treeNode等相关信息，<code>lifecycle.addListener(this)</code>进行了正式的回调。</p>
+<p>RequestTracker即所有请求操作的真正处理者，所有Request的暂停取消执行操作都由RequestTracker来完成，如RequestManager暂停请求的实现：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public void pauseRequests() &#123;</span><br><span class="line">    Util.assertMainThread();</span><br><span class="line">    requestTracker.pauseRequests();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>至此，我们可以清晰的了解到Glide是如何在加载图片时进行Activity/Fragment的生命周期的关联。</li>
+</ul>
+<h2 id="缓存策略"><a href="#缓存策略" class="headerlink" title="缓存策略"></a>缓存策略</h2><blockquote>
+<p>在缓存这一功能上，Glide将它分成了两个模块，一个是内存缓存，一个是硬盘缓存。同时内存缓存又分为两级，一级是LruCache缓存，一级是弱引用缓存。</p>
+</blockquote>
+<p>内存缓存的作用：防止应用重复将图片数据读取到内存当中。</p>
+<blockquote>
+<p>LruCache缓存：不在使用中的图片使用LruCache来进行缓存。</p>
+<p>弱引用缓存：把正在使用中的图片使用弱引用来进行缓存。<br>【这样的目的保护正在使用的资源不会被LruCache算法回收。】</p>
+</blockquote>
+<p>硬盘缓存的作用：防止应用重复从网络或其他地方重复下载和读取数据。</p>
+<p>默认情况下，Glide 会在开始一个新的图片请求之前检查以下多级的缓存：</p>
+<blockquote>
+<p>内存缓存 (Memory cache) - 该图片是否最近被加载过并仍存在于内存中？即LruCache缓存。</p>
+<p>活动资源 (Active Resources) - 现在是否有另一个 View 正在展示这张图片？也就是弱引用缓存。</p>
+<p>资源类型（Resource） - 该图片是否之前曾被解码、转换并写入过磁盘缓存？</p>
+<p>数据来源 (Data) - 构建这个图片的资源是否之前曾被写入过文件缓存？<br>前两步检查图片是否在内存中，如果是则直接返回图片。后两步则检查图片是否在磁盘上，以便快速但异步地返回图片。<br>如果四个步骤都未能找到图片，则Glide会返回到原始资源以取回数据（原始文件，Uri, Url等）</p>
+</blockquote>
+<h3 id="内存缓存"><a href="#内存缓存" class="headerlink" title="内存缓存"></a>内存缓存</h3><p>Engine 的 load 方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public &lt;R&gt; LoadStatus load(</span><br><span class="line">    ...) &#123;</span><br><span class="line">  long startTime &#x3D; VERBOSE_IS_LOGGABLE ? LogTime.getLogTime() : 0;</span><br><span class="line">	&#x2F;&#x2F;缓存的key</span><br><span class="line">  EngineKey key &#x3D;</span><br><span class="line">      keyFactory.buildKey(...);</span><br><span class="line">  EngineResource&lt;?&gt; memoryResource;</span><br><span class="line">  synchronized (this) &#123;</span><br><span class="line">  	&#x2F;&#x2F;根据key获取缓存</span><br><span class="line">    memoryResource &#x3D; loadFromMemory(key, isMemoryCacheable, startTime);</span><br><span class="line"></span><br><span class="line">    if (memoryResource &#x3D;&#x3D; null) &#123;</span><br><span class="line">      return waitForExistingOrStartNewJob(...);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  cb.onResourceReady(memoryResource, DataSource.MEMORY_CACHE);</span><br><span class="line">  return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>EngineKey</code>:作为缓存的key，由图片大小，路径，key，option等综合生成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">private EngineResource&lt;?&gt; loadFromMemory(</span><br><span class="line">    EngineKey key, boolean isMemoryCacheable, long startTime) &#123;</span><br><span class="line">  if (!isMemoryCacheable) &#123;</span><br><span class="line">    return null;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;弱引用内存缓存</span><br><span class="line">  EngineResource&lt;?&gt; active &#x3D; loadFromActiveResources(key);</span><br><span class="line">  if (active !&#x3D; null) &#123;</span><br><span class="line">    if (VERBOSE_IS_LOGGABLE) &#123;</span><br><span class="line">      logWithTimeAndKey(&quot;Loaded resource from active resources&quot;, startTime, key);</span><br><span class="line">    &#125;</span><br><span class="line">    return active;</span><br><span class="line">  &#125;</span><br><span class="line">&#x2F;&#x2F;Lru内存缓存</span><br><span class="line">  EngineResource&lt;?&gt; cached &#x3D; loadFromCache(key);</span><br><span class="line">  if (cached !&#x3D; null) &#123;</span><br><span class="line">    if (VERBOSE_IS_LOGGABLE) &#123;</span><br><span class="line">      logWithTimeAndKey(&quot;Loaded resource from cache&quot;, startTime, key);</span><br><span class="line">    &#125;</span><br><span class="line">    return cached;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要实现类是：<code>LruResourceCache</code></p>
+<h4 id="LruCache的实现原理"><a href="#LruCache的实现原理" class="headerlink" title="LruCache的实现原理"></a>LruCache的实现原理</h4><p>LruCache的核心思想很好理解，就是要维护一个缓存对象列表，其中对象列表的排列方式是按照访问顺序实现的，即一直没访问的对象，将放在队尾，即将被淘汰。而最近访问的对象将放在队头，最后被淘汰。底层实现的数据结构是LinkedHashMap.</p>
+<h4 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h4><p>LinkedHashMap是由数组+双向链表的数据结构来实现的。其中双向链表的结构可以实现访问顺序和插入顺序，使得LinkedHashMap中的&lt;key,value&gt;对按照一定顺序排列起来。</p>
+<p><img src="../../../../images/12/31.png" class="lazyload" data-srcset="../../../../images/12/31.png" srcset="data:image/png;base64,666" alt="Image text"></p>
+<ul>
+<li><p>弱引用缓存作用？</p>
+<ul>
+<li>代表正在被加载的图片缓存，新加载到图片会加入到该缓存中</li>
+<li>如果图片进入到了销毁阶段，会进入到lru缓存中</li>
+<li>如果图片被gc了，也会进入到lru缓存中</li>
+</ul>
+</li>
+<li><p>lru缓存作用</p>
+<ul>
+<li>表示最近最少使用过该图片</li>
+</ul>
+</li>
+</ul>
+<h3 id="磁盘缓存"><a href="#磁盘缓存" class="headerlink" title="磁盘缓存"></a>磁盘缓存</h3><p>在 Engine 的 load 方法中，如果在弱引用的 HashMap 和 LruCache 中都获取不到资源，则调用 waitForExistingOrStartNewJob 方法</p>
+<p>磁盘缓存即是内容保存在本地磁盘中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">private &lt;R&gt; LoadStatus waitForExistingOrStartNewJob(...) &#123;</span><br><span class="line"></span><br><span class="line">  EngineJob&lt;?&gt; current &#x3D; jobs.get(key, onlyRetrieveFromCache);</span><br><span class="line">  if (current !&#x3D; null) &#123;</span><br><span class="line">    current.addCallback(cb, callbackExecutor);</span><br><span class="line">    if (VERBOSE_IS_LOGGABLE) &#123;</span><br><span class="line">      logWithTimeAndKey(&quot;Added to existing load&quot;, startTime, key);</span><br><span class="line">    &#125;</span><br><span class="line">    return new LoadStatus(cb, current);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  EngineJob&lt;R&gt; engineJob &#x3D;</span><br><span class="line">      engineJobFactory.build(...);</span><br><span class="line"></span><br><span class="line">  DecodeJob&lt;R&gt; decodeJob &#x3D;</span><br><span class="line">      decodeJobFactory.build(...);</span><br><span class="line"></span><br><span class="line">  jobs.put(key, engineJob);</span><br><span class="line"></span><br><span class="line">  engineJob.addCallback(cb, callbackExecutor);</span><br><span class="line">  engineJob.start(decodeJob);</span><br><span class="line"></span><br><span class="line">  return new LoadStatus(cb, engineJob);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>glide4 缓存主要分为三个 activiteResources(弱引用缓存) MemoryCache(Lru缓存) DiskCache(磁盘缓存) 还有一个http网络缓存, 不多做介绍</p>
+<p>首先弱引用缓存代表的是当前正在使用的缓存, 请求图片之后 会分为两个步骤, 1.进入磁盘缓存,2进入弱引用缓存。 在弱引用缓存中使用一个计数器来维护当前资源的是否被使用,如果计数器=0说明当前资源已经不被使用了,则进入Lru缓存,Lru缓存是glide使用linkhashmap来维护的,如果lru满了则删除最长时间未使用的。<br>如果一个资源加载的时候在弱引用缓存中找不到,就会到lru缓存中查找,如果没找到就去磁盘缓存找,不管在lru中找到 还是在磁盘中找到, 都会把命中的缓存,放在弱引用缓存中.</p>
+<p>glide设计的三层缓存模型, 其中内存缓存 减轻了磁盘缓存的压力,避免io操作,而弱引用缓存则减轻了 lru缓存的压力,避免lru过满导致频繁gc,并且提高查找效率</p>
+<p>另外再说下 glide4 五种缓存策略 data source all no automic<br>data则是缓存住原始图片资源, source则是缓存住变换后的资源(glide 会针对imageview的大小对图片预先变换,避免小imageview加载大图片浪费内存)<br>all 就是两种都缓存, no就是不缓存 ,automiic 则比较特殊,会缓存data 根据图片的编码 自行判断是否缓存resource</p>
+<h2 id="面试总结"><a href="#面试总结" class="headerlink" title="面试总结"></a>面试总结</h2><ul>
+<li>为什么使用Glide？<ul>
+<li>使用简单，功能丰富</li>
+<li>管理生命周期</li>
+<li>多级缓存</li>
+</ul>
+</li>
+</ul>
 
   
   
@@ -522,10 +609,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-05-26T11:19:36+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-06-01T23:05:47+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：May 26, 2021</p>
+    <p>更新于：Jun 1, 2021</p>
   </a>
 </div>
 
@@ -647,7 +734,7 @@
 
 
     <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#supportFragmentGet"><span class="toc-text">supportFragmentGet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getSupportRequestManagerFragment"><span class="toc-text">getSupportRequestManagerFragment</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#supportFragmentGet"><span class="toc-text">supportFragmentGet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getSupportRequestManagerFragment"><span class="toc-text">getSupportRequestManagerFragment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SupportRequestManagerFragment"><span class="toc-text">SupportRequestManagerFragment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RequestManager"><span class="toc-text">RequestManager</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E7%AD%96%E7%95%A5"><span class="toc-text">缓存策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%BC%93%E5%AD%98"><span class="toc-text">内存缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#LruCache%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-text">LruCache的实现原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LinkedHashMap"><span class="toc-text">LinkedHashMap</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E7%BC%93%E5%AD%98"><span class="toc-text">磁盘缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93"><span class="toc-text">面试总结</span></a></li></ol>
     </div>
   </section>
 
@@ -706,7 +793,7 @@
       
     
       
-        <div><p>Blog content follows the <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License</a></p>
+        <div><p>博客内容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
 </div>
       
     
@@ -718,9 +805,9 @@
       
     
       
-        Use
+        本站使用
         <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6" target="_blank" class="codename">Volantis</a>
-        as theme
+        作为主题
       
     
       
