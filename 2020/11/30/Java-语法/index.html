@@ -21,7 +21,7 @@
   
   <title>Java 基础 - YOUNG BLOG</title>
   
-    <meta name="keywords" content="范型,注解,反射,异常">
+    <meta name="keywords" content="语法">
   
 
   
@@ -415,7 +415,7 @@
   <div class='new-meta-item category'>
     <a class='notlink'>
       <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
-      <a class="category-link" href="/categories/Java/">Java</a><span class="sep"></span><a class="category-link" href="/categories/Java/Java%E8%AF%AD%E6%B3%95/">Java语法</a>
+      <a class="category-link" href="/categories/Java/">Java</a><span class="sep"></span><a class="category-link" href="/categories/Java/%E5%9F%BA%E7%A1%80/">基础</a>
     </a>
   </div>
 
@@ -457,7 +457,7 @@
   <p><strong>文章内容主要是学习笔记，来源：<a target="_blank" rel="noopener" href="https://www.pdai.tech/md/java/basic/java-basic-lan-basic.html">https://www.pdai.tech/md/java/basic/java-basic-lan-basic.html</a></strong></p>
 <h1 id="Java-基础-知识点"><a href="#Java-基础-知识点" class="headerlink" title="Java 基础 - 知识点"></a>Java 基础 - 知识点</h1><h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><h3 id="包装类型"><a href="#包装类型" class="headerlink" title="包装类型"></a>包装类型</h3><p>八个基本类型:</p>
 <ul>
-<li>boolean/？</li>
+<li>boolean/（java规范中，没有明确指出boolean的大小）</li>
 <li>byte/8</li>
 <li>char/16</li>
 <li>short/16</li>
@@ -515,7 +515,7 @@
 <p><strong>2. 线程安全</strong></p>
 <ul>
 <li>String 不可变，因此是线程安全的</li>
-<li>StringBuilder 不是线程安全的</li>
+<li>StringBuilder 快，不是线程安全的</li>
 <li>StringBuffer 是线程安全的，内部使用 synchronized 进行同步</li>
 </ul>
 <h3 id="String-intern"><a href="#String-intern" class="headerlink" title="String.intern()"></a>String.intern()</h3><p>使用 String.intern() 可以保证相同内容的字符串变量引用同一的内存对象。</p>
@@ -712,7 +712,7 @@
 
 <p><strong>3. 深拷贝</strong></p>
 <p>拷贝对象和原始对象的引用类型引用不同对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">public class Student implements Cloneable &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;引用类型</span><br><span class="line">    private Subject subject;</span><br><span class="line">    &#x2F;&#x2F;基础数据类型</span><br><span class="line">    private String name;</span><br><span class="line">    private int age;</span><br><span class="line"></span><br><span class="line">    public Subject getSubject() &#123;</span><br><span class="line">        return subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setSubject(Subject subject) &#123;</span><br><span class="line">        this.subject &#x3D; subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name &#x3D; name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getAge() &#123;</span><br><span class="line">        return age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setAge(int age) &#123;</span><br><span class="line">        this.age &#x3D; age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     *  重写clone()方法</span><br><span class="line">     * @return</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Override</span><br><span class="line">    public Object clone() &#123;</span><br><span class="line">        &#x2F;&#x2F;浅拷贝</span><br><span class="line">        try &#123;</span><br><span class="line">            &#x2F;&#x2F; 直接调用父类的clone()方法</span><br><span class="line">            return super.clone();</span><br><span class="line">        &#125; catch (CloneNotSupportedException e) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;[Student: &quot; + this.hashCode() + &quot;,subject:&quot; + subject + &quot;,name:&quot; + name + &quot;,age:&quot; + age + &quot;]&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">public class Student implements Cloneable &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;引用类型</span><br><span class="line">    private Subject subject;</span><br><span class="line">    &#x2F;&#x2F;基础数据类型</span><br><span class="line">    private String name;</span><br><span class="line">    private int age;</span><br><span class="line"></span><br><span class="line">    public Subject getSubject() &#123;</span><br><span class="line">        return subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setSubject(Subject subject) &#123;</span><br><span class="line">        this.subject &#x3D; subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name &#x3D; name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getAge() &#123;</span><br><span class="line">        return age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setAge(int age) &#123;</span><br><span class="line">        this.age &#x3D; age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     *  重写clone()方法</span><br><span class="line">     * @return</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Override</span><br><span class="line">    public Object clone() &#123;</span><br><span class="line">        &#x2F;&#x2F;浅拷贝</span><br><span class="line">        try &#123;</span><br><span class="line">            &#x2F;&#x2F; 直接调用父类的clone()方法,object的clone是一个native方法</span><br><span class="line">            return super.clone();</span><br><span class="line">        &#125; catch (CloneNotSupportedException e) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;[Student: &quot; + this.hashCode() + &quot;,subject:&quot; + subject + &quot;,name:&quot; + name + &quot;,age:&quot; + age + &quot;]&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>4. clone() 的替代方案</strong></p>
 <p>使用 clone() 方法来拷贝一个对象即复杂又有风险，它会抛出异常，并且还需要类型转换。Effective Java 书上讲到，最好不要去使用 clone()，可以使用拷贝构造函数或者拷贝工厂来拷贝一个对象。</p>
@@ -1760,10 +1760,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-12-02T00:11:55+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-06-02T21:36:57+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：Dec 2, 2020</p>
+    <p>更新于：Jun 2, 2021</p>
   </a>
 </div>
 
@@ -1772,7 +1772,7 @@
         
           
   
-  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E8%8C%83%E5%9E%8B/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>范型</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E6%B3%A8%E8%A7%A3/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>注解</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%8F%8D%E5%B0%84/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>反射</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E5%BC%82%E5%B8%B8/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>异常</p></a></div>
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E8%AF%AD%E6%B3%95/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>语法</p></a></div>
 
 
         
@@ -1956,7 +1956,7 @@
       
     
       
-        <div><p>博客内容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+        <div><p>Blog content follows the <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License</a></p>
 </div>
       
     
@@ -1968,9 +1968,9 @@
       
     
       
-        本站使用
+        Use
         <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6" target="_blank" class="codename">Volantis</a>
-        作为主题
+        as theme
       
     
       
