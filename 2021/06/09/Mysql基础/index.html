@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+  <title>Mysql基础 - YOUNG BLOG</title>
+  
+    <meta name="keywords" content="框架,mysql">
+  
+
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  
+
+  <!-- import link -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/first.css">
+
+  
+
+  
+  <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+  
+
+  <script id="loadcss"></script>
+
+</head>
+
+<body>
+  
+
+<header id="l_header" class="l_header auto shadow blur show" style='opacity: 0' >
+  <div class='container'>
+  <div id='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/Logo-NavBar@3x.png'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+  <div id="l_body">
+    <div id="l_cover">
+  
+    
+        <div id="full" class='cover-wrapper post dock' style="display: none;">
+          
+            <div class='cover-bg lazyload placeholder' data-bg="https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.jpg"></div>
+          
+          <div class='cover-body'>
+  <div class='top'>
+    
+    
+      <p class="title">Jax</p>
+    
+    
+      <p class="subtitle">Imagine if I had a real weapon!</p>
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+          
+            <a href="/v4/getting-started/"
+              
+              
+              id="v4getting-started">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f5c3.svg'><p>文档</p>
+            </a>
+          
+            <a href="/faqs/"
+              
+              
+              id="faqs">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f516.svg'><p>帮助</p>
+            </a>
+          
+            <a href="/examples/"
+              
+              
+              id="examples">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f396.svg'><p>示例</p>
+            </a>
+          
+            <a href="/contributors/"
+              
+              
+              id="contributors">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f389.svg'><p>社区</p>
+            </a>
+          
+            <a href="/archives/"
+              
+              
+              id="archives">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4f0.svg'><p>博客</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://github.com/volantis-x/hexo-theme-volantis/"
+              
+              
+              id="https:githubcomvolantis-xhexo-theme-volantis">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f9ec.svg'><p>源码</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+        </div>
+    
+  
+  </div>
+
+    <div id='safearea'>
+      <div class='body-wrapper' id="pjax-container">
+        
+
+<div class='l_main'>
+  <article class="article post white-box reveal md shadow article-type-post" id="post" itemscope itemprop="blogPost">
+  
+
+
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title">
+        Mysql基础
+      </h1>
+      <div class='new-meta-box'>
+        
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>请设置文章作者</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="sep"></span><a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：Jun 9, 2021</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="Mysql基础" data-path="/2021/06/09/Mysql%E5%9F%BA%E7%A1%80/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+      </div>
+    
+  </div>
+
+
+  
+  <h1 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><ul>
+<li>关系型数据库 sql，比如mysql，oracle，sql server，sqlite等</li>
+<li>非关系型数据库 no sql，比如redis，mongdb</li>
+</ul>
+<h3 id="基本的命令行操作"><a href="#基本的命令行操作" class="headerlink" title="基本的命令行操作"></a>基本的命令行操作</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;所有的sql命令，都需要;结尾，才表示一个语句结束</span><br><span class="line">&#x2F;&#x2F;连接数据库  mysql 用户名  密码</span><br><span class="line">mysql -uroot -p123456;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;查看数据库</span><br><span class="line">show databases;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;切换进该表</span><br><span class="line">use school;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;查看数据库中的表</span><br><span class="line">show tables;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;查看具体某个表,比如表student</span><br><span class="line">describe student;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;创建一个数据库，如school</span><br><span class="line">create database if not exist school;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;删除一个数据库</span><br><span class="line">drop database if exists school;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><blockquote>
+<p>数值型</p>
+</blockquote>
+<ul>
+<li>tinyint    1个字节，  最大255</li>
+<li>smallint     2个字节，最大65535</li>
+<li>mediumint    3个字节</li>
+<li><strong>int    4个字节</strong>，最大十几亿</li>
+<li>bigint     8个字节</li>
+</ul>
+<blockquote>
+<p>浮点型</p>
+</blockquote>
+<ul>
+<li>float   4个字节</li>
+<li>double   8个字节</li>
+<li>Decimal    字符串数值型，涉及钱的可以用该类型</li>
+</ul>
+<blockquote>
+<p>字符串</p>
+</blockquote>
+<ul>
+<li><p>char，最多存储255个字符，定长，一般设置了长度后，无论数据是否达到该长度，在内存中都是这么长，比如手机号，身份证号的存储，优点查询快，缺点，可能会浪费一些内存</p>
+</li>
+<li><p>varchar，最多65535个字符，不定长，优点，根据内容变动存储大小，缺点，查询相对慢些</p>
+</li>
+<li><p>tinytext，最多存储255个字符，无默认值</p>
+</li>
+<li><p>text，最多储存65535个字符，和varchar的区别是，varchar在超多255个字符后，会默认转成text来进行存储，超多65535，会自动转longtext，所以在使用的时候，varchar和text区别不大，建议使用varchar，毕竟会自动转</p>
+</li>
+</ul>
+<blockquote>
+<p>时间</p>
+</blockquote>
+<ul>
+<li>date ：格式为YYYY:MM:DD，表示日期</li>
+<li>time：格式为HH:mm:ss，表示时间</li>
+<li>datetime：格式为YYYY:MM:DD HH:mm:ss，最常用的时间格式</li>
+<li>tiemstamp：时间戳，</li>
+<li>year：表示年</li>
+<li>数据默认值可设置为：CURRENT_TIMESTAMP</li>
+</ul>
+<blockquote>
+<p>null表示没有</p>
+</blockquote>
+<ul>
+<li>没有值，未知</li>
+</ul>
+<h3 id="字段属性"><a href="#字段属性" class="headerlink" title="字段属性"></a>字段属性</h3><ul>
+<li><p>Unsigned</p>
+<ul>
+<li>无符号的整数，</li>
+<li>表示该列不能为负数</li>
+</ul>
+</li>
+<li><p>zerofill</p>
+<ul>
+<li>零填充</li>
+<li>不足的位数，用0填充，如int(3)，存储为0003</li>
+</ul>
+</li>
+<li><p>自增</p>
+<ul>
+<li>一般的主键需要，在上一列的基础上+1</li>
+<li>必须是整数类型</li>
+<li>可以自定义主键的起始值和步长</li>
+</ul>
+</li>
+<li><p>非空. null  /not null</p>
+<ul>
+<li><p>Null，如何不设置值，默认为null</p>
+</li>
+<li><p>not null，如果不设置值，会报错</p>
+</li>
+</ul>
+</li>
+<li><p>默认值</p>
+<ul>
+<li>没有设置值，取默认值</li>
+</ul>
+</li>
+</ul>
+<h2 id="mysql数据管理"><a href="#mysql数据管理" class="headerlink" title="mysql数据管理"></a>mysql数据管理</h2><h3 id="外键"><a href="#外键" class="headerlink" title="外键"></a>外键</h3><ul>
+<li>用于建立和加强两个表数据之间的一致性</li>
+<li>一个表的外键一般就是另一个表的主键，在删除一张表的主键的时候，一定要注意其他表是否把其作为外键</li>
+<li>这样表的外键引用是物理引用，不推荐使用这样方式</li>
+<li>可以通过代码的方式来实现，让数据库只存数据，不存逻辑关系</li>
+</ul>
+<h3 id="DML"><a href="#DML" class="headerlink" title="DML"></a>DML</h3><h4 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;插入一条记录</span><br><span class="line">insert into table(字段1，字段2...) values(值1，值2...)</span><br><span class="line">&#x2F;&#x2F;插入多条记录</span><br><span class="line">insert into table(字段1，字段2...) values(值1，值2...),(值1，值2...),(值1，值2...)</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;更新 update ...  set ...  where</span><br><span class="line">update table set value&#x3D;&#39;value1&#39;,value2&#x3D;&#39;value2&#39; where name&#x3D;&#39;name1&#39; </span><br></pre></td></tr></table></figure>
+
+<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;删除 delete from 表 条件</span><br><span class="line">delete from table where...</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;truncate 清空表,表的数据和索引不会变</span><br><span class="line">truncate student</span><br></pre></td></tr></table></figure>
+
+<h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select [all|distinct] *|table.field [as alian1].... </span><br><span class="line">from table [as table1]</span><br><span class="line">&#123;left|right|inner join table2 on &#125;</span><br><span class="line">&#123;where ...&#125;</span><br><span class="line">&#123;group by ...&#125;</span><br><span class="line">&#123;having ...&#125;</span><br><span class="line">&#123;order by ...&#125;</span><br><span class="line">&#123;limit [offset] , raw_count&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="where子句"><a href="#where子句" class="headerlink" title="where子句"></a>where子句</h4><h2 id="常见函数"><a href="#常见函数" class="headerlink" title="常见函数"></a>常见函数</h2><h3 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h3><h4 id="数学函数"><a href="#数学函数" class="headerlink" title="数学函数"></a>数学函数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select abs(-8)  绝对值</span><br><span class="line">select ceiling(4.5)  向上取整</span><br><span class="line">select floor(4.5) 向下取整</span><br><span class="line">select sign(x)  x的正负号，0-&gt;0；-10-&gt;-1；10-?1</span><br></pre></td></tr></table></figure>
+
+<h4 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">select char_length(&#39;你好，mysql&#39;)  字符串长度，8</span><br><span class="line">select concat(&#39;张三&#39;,&#39;利好&#39;，...)   字符串拼接</span><br><span class="line">select insert(&#39;123456&#39;,1,3,&#39;890&#39;)  字符串替换，位置1开始，数3个，结果890456，注意，下标从1开始</span><br><span class="line">select replace(&#39;12345353&#39;,&#39;3&#39;,&#39;00&#39;)  替换制定的字符串，用00替换3 结果：12004500500</span><br><span class="line">select substr(&#39;124456443&#39;,3,6)    返回子字符串，3，6表示坐标，结果：4456</span><br><span class="line">select instr(&#39;123424234&#39;,&#39;2&#39;)  返回子字符串第一次出现的索引，结果 2</span><br><span class="line">select lower(&#39;kang&#39;)   转小写</span><br><span class="line">select upper(&#39;kkk&#39;)   转大写</span><br><span class="line">select reverse(&#39;12345&#39;)   反转。结果：54321</span><br></pre></td></tr></table></figure>
+
+<h4 id="时间日期"><a href="#时间日期" class="headerlink" title="时间日期"></a>时间日期</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">select current_date()&#x2F;curdate()    返回当前日期，格式为2020-02-22</span><br><span class="line">select now()   获取当前时间, 格式为 2020-03-22 20:08:35，有时分秒</span><br><span class="line">select localtime()   获取本地时间, 格式为 2020-03-22 20:08:35，有时分秒</span><br><span class="line">select sysdate()   返回系统时间, 格式为 2020-03-22 20:08:35，有时分秒</span><br><span class="line"></span><br><span class="line">select year(localtime())  当前时间的年</span><br><span class="line">select month(localtime())  当前时间的月</span><br><span class="line">select day(localtime())  当前时间的日</span><br><span class="line">select hour(localtime())  当前时间的时</span><br><span class="line">select minter(localtime())  当前时间的分</span><br><span class="line">select second(localtime())  当前时间的秒</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="系统"><a href="#系统" class="headerlink" title="系统"></a>系统</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select system_user()&#x2F;user()  当前用户select version()  数据库的版本</span><br></pre></td></tr></table></figure>
+
+<h3 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h3><h4 id="count-计数"><a href="#count-计数" class="headerlink" title="count 计数"></a>count 计数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(&#39;name&#39;) from table_1   返回字段name的个数，为null的行不参与统计select count(*&#x2F;1) from table_1  返回table_1的行数，*或者1都可以，为null的也参与统计</span><br></pre></td></tr></table></figure>
+
+<h4 id="sum-求和"><a href="#sum-求和" class="headerlink" title="sum 求和"></a>sum 求和</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select sum(&#39;age&#39;) as totalAge from table_1  求所有age的总和</span><br></pre></td></tr></table></figure>
+
+<h4 id="Max-Min-最大-最小值"><a href="#Max-Min-最大-最小值" class="headerlink" title="Max/Min 最大/最小值"></a>Max/Min 最大/最小值</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select max&#x2F;min(&#39;age&#39;) as age from table_1  求age的最大&#x2F;最小值</span><br></pre></td></tr></table></figure>
+
+<h4 id="avg-平均值"><a href="#avg-平均值" class="headerlink" title="avg 平均值"></a>avg 平均值</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select avg(&#39;age&#39;) as age from table_1  求age的平均值</span><br></pre></td></tr></table></figure>
+
+<h4 id="分组和过滤-group-by-having"><a href="#分组和过滤-group-by-having" class="headerlink" title="分组和过滤 group by /   having"></a>分组和过滤 group by /   having</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select lessonName , count(1),sum(&#39;score&#39;),max(&#39;score&#39;),min(&#39;score&#39;),avg(&#39;score&#39;) as &#39;平均分&#39;from score group by lessonName having &#39;平均分&#39;&gt;80此时的聚合函数，都是在组的集合中进行远算，比较，一般会返回多行,同时，结合having对分组后的结果集进行条件筛选</span><br></pre></td></tr></table></figure>
+
+<h3 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from table where name&#x3D;md5(&#39;12345&#39;)  直接用md5函数</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><ul>
+<li>索引（index）是帮助mysql高效获取数据的<strong>数据结构</strong></li>
+</ul>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><blockquote>
+</blockquote>
+<ul>
+<li><p>主键索引 primary key</p>
+<ul>
+<li>唯一的标示，主键不可重复，只能有一个列作为主键</li>
+</ul>
+</li>
+<li><p>唯一索引 union key</p>
+<ul>
+<li>避免重复的列出现，可以有多个唯一索引，也就是可以多个列设置为union key</li>
+</ul>
+</li>
+<li><p>常规索引 key/index</p>
+<ul>
+<li>默认的是常规索引，设置为key/index</li>
+</ul>
+</li>
+<li><p>全文索引 fulltext</p>
+</li>
+<li><p>以前有些不支持，现在sql基本都是支持的</p>
+</li>
+<li><p>索引sql</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;显示索引show index from table&#x2F;&#x2F;添加索引alter table school.student add fulltext index indexname (fieldName)&#x2F;&#x2F;添加索引create index indexname on table(fieldName)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="索引的原则"><a href="#索引的原则" class="headerlink" title="索引的原则"></a>索引的原则</h3><ul>
+<li>索引不是越多越好</li>
+<li>不要对经常变动的数据加索引</li>
+<li>小数据量的表不需要加索引</li>
+<li>索引一般用在常查询的字段上</li>
+</ul>
+<h2 id="用户"><a href="#用户" class="headerlink" title="用户"></a>用户</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;创建用户  create user 姓名 identified by 密码create user username identified by password&#x2F;&#x2F;删除用户drop user username&#x2F;&#x2F;修改当前用户密码  set password&#x3D;password(密码)set password&#x3D;password(password)&#x2F;&#x2F;修改制定用户密码  set password for 用户名&#x3D;password(密码)set password for username&#x3D;password(password)&#x2F;&#x2F;重命名 rename user 姓名1 to 姓名2rename user name1 to name2&#x2F;&#x2F;用户权限授予 grant 权限(all privileges全部权限，除了不能给别人授权) on database.table(*.*表示所有的表) to 用户grant all privileges on *.* to username&#x2F;&#x2F;撤销权限revoke all privileges on *.* to username&#x2F;&#x2F;查询用户权限 show grants for 用户show grants for user</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据导出-导入"><a href="#数据导出-导入" class="headerlink" title="数据导出/导入"></a>数据导出/导入</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;导出 mysqldump -h 主机 -u 用户名 -p 密码 数据库 [表名1 表名2] &gt; 物理磁盘&#x2F;文件名mysqldump -hlocalhost -uroot -p123456 school student &gt; ~user&#x2F;a.sql&#x2F;&#x2F;导入,登陆的情况下 source 文件地址&#x2F;&#x2F;未登陆情况 mysql -uroot -p123456 库名 &lt; 文件地址</span><br></pre></td></tr></table></figure>
+
+<h2 id="高级部分"><a href="#高级部分" class="headerlink" title="高级部分"></a>高级部分</h2><h3 id="四层架构"><a href="#四层架构" class="headerlink" title="四层架构"></a>四层架构</h3><ul>
+<li>连接层</li>
+<li>服务层</li>
+<li>引擎层</li>
+<li>存储层</li>
+</ul>
+<h3 id="innodb和myisam"><a href="#innodb和myisam" class="headerlink" title="innodb和myisam"></a>innodb和myisam</h3><ul>
+<li>innodb支持主外键，事物，行锁，缓存索引和数据，多物理内存要求高，关注事务</li>
+<li>myisam不支持主外键，不支持事物，支持表锁，只支持索引，内存空间小，关注性能</li>
+</ul>
+<h3 id="七种join"><a href="#七种join" class="headerlink" title="七种join"></a>七种join</h3><h3 id="索引-1"><a href="#索引-1" class="headerlink" title="索引"></a>索引</h3><ul>
+<li>mysql中除了数据，在维护着一种满足特定查找算法的数据结构，这些数据结构以某种方式指向数据，这样就可以在这些数据结构的基础上实现高效查找算法。这种数据结构称为索引</li>
+<li>一般索引本身也很大，一般是存储在索引文件中，不会在内存里面</li>
+</ul>
+<h5 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h5><ul>
+<li>提高数据的检索效率，降低数据库IO成本</li>
+<li>降低数据的排序成本，降低CPU的消耗</li>
+</ul>
+<h5 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h5><ul>
+<li>索引是一种数据结构，会额外增加磁盘空间</li>
+<li>索引本身在数据的更新，插入等操作时，会有一定的性能消耗</li>
+<li>高质量的索引可以提高查询速度，低质量的索引会影响update，insert</li>
+</ul>
+<h4 id="加索引原则"><a href="#加索引原则" class="headerlink" title="加索引原则"></a>加索引原则</h4><ul>
+<li>主键自动建立唯一索引</li>
+<li>频繁作为查询条件的字段应该添加索引</li>
+<li>查询中与其他表关联的字段，外键关系添加索引</li>
+<li>频繁更新的字段不建议添加索引</li>
+<li>where条件中用不到的字段不添加索引</li>
+<li>查询中排序的字段可以添加索引</li>
+<li>查询中分组的字段可以添加索引</li>
+<li>表数据太少没必要加索引</li>
+<li>经常增删改的表建议不要加索引</li>
+<li>字段值重复性太高，比如性别，不要给该字段加索引</li>
+</ul>
+<h4 id="Btree-B-tree"><a href="#Btree-B-tree" class="headerlink" title="Btree/B+tree"></a>Btree/B+tree</h4><ul>
+<li>原理：</li>
+</ul>
+<h3 id="EXPLAIN调优"><a href="#EXPLAIN调优" class="headerlink" title="EXPLAIN调优"></a>EXPLAIN调优</h3><blockquote>
+<p>Id ,select_type , table, type,possible_key,key_key_len,ref</p>
+</blockquote>
+<ul>
+<li><p>id：查询的序列号，包含一组数字，表示查询中执行select子句或操作表的顺序</p>
+<ul>
+<li>id相同：表示查询顺序从上到下</li>
+<li>id不同：如果是子查询，id会自增，id越大对应的表，会先执行</li>
+<li>id相同，不同同时存在：id越大越先执行，相同的按照顺序执行</li>
+</ul>
+</li>
+<li><p>select_type:</p>
+<ul>
+<li>simple：最简单的select查询，不包含子查询或者union查询</li>
+<li>primary：子查询中若包含各种子查询，最外层的查询会被标记为primary</li>
+<li>subquery：在select或者where列表中包含了子查询</li>
+<li>derived：在from列表中包含的子查询会被标记为derived，mysql会递归这些子查询，把结果放在临时表中</li>
+<li>union：假若第二个select在union之后，则被标记为union</li>
+<li>union result：union之后的结果</li>
+</ul>
+</li>
+<li><p>table：操作的是哪张表</p>
+</li>
+<li><p>type：</p>
+<ul>
+<li><p>system：表只有一行记录，这是const的特例，一般很少出现，可以忽略不计</p>
+</li>
+<li><p>const：表示通过索引一次就能找到，一般是主键索引或者是唯一索引，一般一条记录，mysql可以将该查询快速转换为const常量,一般是单张表或者是连表查询</p>
+</li>
+<li><p>eq_ref：与const类似，也是匹配唯一索引或者是primary key，但是常见于多表一起查询时，比如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM sp_idai_make_idcard a,kaka_bak.sp_wechat_user b WHERE a.user_id&#x3D;b.id</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ref：非唯一性的索引值所匹配的多行结果，本质上也是索引匹配</p>
+</li>
+<li><p>range：只检索给定范围的行，key用的是索引，也就是where中用到了key值 in,&lt;,&gt;,between</p>
+</li>
+<li><p>index：对索引进行全遍历，比如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t1. &#x2F;&#x2F;如果此时的id是个索引键</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>all：全表所描，应该禁止</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from ti</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>possible_key：查询中涉及到的索引都会列出来，但是实际并不一定用到了</p>
+</li>
+<li><p>key：实际查询中用到的索引key</p>
+</li>
+<li><p>Key_len：表示索引中使用的字节数，在不损失精度的情况下，越短越好，大小是计算出来的长度，并不是实际使用的长度</p>
+</li>
+<li><p>ref：显示索引的哪一列被使用了，如果可能，是一个常数。这些列或者常量被用于查找索引key上的值。</p>
+</li>
+<li><p>rows：根据表统计信息，大致计算出找到所需要读取的行数</p>
+</li>
+<li><p>extra：包含不在其他列显示但是十分重要的信息</p>
+<ul>
+<li>Using filesort：mysql会使用一个外部的索引排序，而不是按照表内的索引顺序排序，建议优化</li>
+<li>Using temporary：外部维持一个临时排序表，强烈建议优化</li>
+<li>Using index：没有使用数据行，直接用的索引操作，效率不错，又称覆盖索引</li>
+<li>using where：使用了where</li>
+<li>using join buffer：使用了缓存</li>
+</ul>
+</li>
+</ul>
+
+  
+  
+    
+    <div class='footer'>
+      
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=http://yoursite.com/2021/06/09/Mysql%E5%9F%BA%E7%A1%80/>http://yoursite.com/2021/06/09/Mysql%E5%9F%BA%E7%A1%80/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-06-10T00:22:58+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：Jun 10, 2021</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E6%A1%86%E6%9E%B6/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>框架</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/mysql/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>mysql</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2021/06/09/Mysql%E5%9F%BA%E7%A1%80/&title=Mysql基础 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://yoursite.com/2021/06/09/Mysql%E5%9F%BA%E7%A1%80/&title=Mysql基础 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2021/06/09/Mysql%E5%9F%BA%E7%A1%80/&title=Mysql基础 - YOUNG BLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,666">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+      
+        <a class='next' href='/2021/06/08/Spring%E4%B9%8BIOC/'>
+          <p class='title'>Spring之IOC<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>SpringSpring利用现有的技术，让开发更加简单
+轻量级,非侵入式的框架
+
+Ioc控制反转/DI依赖注入：
+
+内容：对象和属性都由Spring容器来创建，传统的对象是由程序来创建的。
+
+反...</p>
+        </a>
+      
+    </div>
+  
+</article>
+
+
+  
+
+  <article class="post white-box reveal shadow" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+
+</div>
+<aside class='l_side'>
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C"><span class="toc-text">基本的命令行操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E6%AE%B5%E5%B1%9E%E6%80%A7"><span class="toc-text">字段属性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86"><span class="toc-text">mysql数据管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%96%E9%94%AE"><span class="toc-text">外键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DML"><span class="toc-text">DML</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%92%E5%85%A5"><span class="toc-text">插入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9"><span class="toc-text">修改</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-text">删除</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2"><span class="toc-text">查询</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#where%E5%AD%90%E5%8F%A5"><span class="toc-text">where子句</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0"><span class="toc-text">常见函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0"><span class="toc-text">内置函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="toc-text">数学函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-text">字符串</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E6%97%A5%E6%9C%9F"><span class="toc-text">时间日期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F"><span class="toc-text">系统</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0"><span class="toc-text">聚合函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#count-%E8%AE%A1%E6%95%B0"><span class="toc-text">count 计数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sum-%E6%B1%82%E5%92%8C"><span class="toc-text">sum 求和</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Max-Min-%E6%9C%80%E5%A4%A7-%E6%9C%80%E5%B0%8F%E5%80%BC"><span class="toc-text">Max&#x2F;Min 最大&#x2F;最小值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#avg-%E5%B9%B3%E5%9D%87%E5%80%BC"><span class="toc-text">avg 平均值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E7%BB%84%E5%92%8C%E8%BF%87%E6%BB%A4-group-by-having"><span class="toc-text">分组和过滤 group by &#x2F;   having</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86"><span class="toc-text">加密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1"><span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95"><span class="toc-text">索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E7%B1%BB"><span class="toc-text">分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8E%9F%E5%88%99"><span class="toc-text">索引的原则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7"><span class="toc-text">用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA-%E5%AF%BC%E5%85%A5"><span class="toc-text">数据导出&#x2F;导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E9%83%A8%E5%88%86"><span class="toc-text">高级部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E5%B1%82%E6%9E%B6%E6%9E%84"><span class="toc-text">四层架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#innodb%E5%92%8Cmyisam"><span class="toc-text">innodb和myisam</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%83%E7%A7%8Djoin"><span class="toc-text">七种join</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95-1"><span class="toc-text">索引</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-text">优点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="toc-text">缺点：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E7%B4%A2%E5%BC%95%E5%8E%9F%E5%88%99"><span class="toc-text">加索引原则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Btree-B-tree"><span class="toc-text">Btree&#x2F;B+tree</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EXPLAIN%E8%B0%83%E4%BC%98"><span class="toc-text">EXPLAIN调优</span></a></li></ol></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+        
+        
+          <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="Mysql基础";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+
+  var l_header=document.getElementById("l_header");
+  
+  l_header.classList.add("show");
+  
+</script>
+
+        
+      </div>
+      
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        <div><p>Blog content follows the <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License</a></p>
+</div>
+      
+    
+      
+        
+          <div><p><span id="lc-sv">本站总访问量为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 次</span> <span id="lc-uv">访客数为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 人</span></p>
+</div>
+        
+      
+    
+      
+        Use
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6" target="_blank" class="codename">Volantis</a>
+        as theme
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+      <a id="s-top" class="fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+  </div>
+  <div>
+    <script>
+window.volantis={};
+window.volantis.loadcss=document.getElementById("loadcss");
+/********************脚本懒加载函数********************************/
+function loadScript(src, cb) {
+var HEAD = document.getElementsByTagName('head')[0] || document.documentElement;
+var script = document.createElement('script');
+script.setAttribute('type','text/javascript');
+if (cb) script.onload = cb;
+script.setAttribute('src', src);
+HEAD.appendChild(script);
+}
+//https://github.com/filamentgroup/loadCSS
+var loadCSS = function( href, before, media, attributes ){
+	var doc = window.document;
+	var ss = doc.createElement( "link" );
+	var ref;
+	if( before ){
+		ref = before;
+	}
+	else {
+		var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+		ref = refs[ refs.length - 1];
+	}
+	var sheets = doc.styleSheets;
+	if( attributes ){
+		for( var attributeName in attributes ){
+			if( attributes.hasOwnProperty( attributeName ) ){
+				ss.setAttribute( attributeName, attributes[attributeName] );
+			}
+		}
+	}
+	ss.rel = "stylesheet";
+	ss.href = href;
+	ss.media = "only x";
+	function ready( cb ){
+		if( doc.body ){
+			return cb();
+		}
+		setTimeout(function(){
+			ready( cb );
+		});
+	}
+	ready( function(){
+		ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
+	});
+	var onloadcssdefined = function( cb ){
+		var resolvedHref = ss.href;
+		var i = sheets.length;
+		while( i-- ){
+			if( sheets[ i ].href === resolvedHref ){
+				return cb();
+			}
+		}
+		setTimeout(function() {
+			onloadcssdefined( cb );
+		});
+	};
+	function loadCB(){
+		if( ss.addEventListener ){
+			ss.removeEventListener( "load", loadCB );
+		}
+		ss.media = media || "all";
+	}
+	if( ss.addEventListener ){
+		ss.addEventListener( "load", loadCB);
+	}
+	ss.onloadcssdefined = onloadcssdefined;
+	onloadcssdefined( loadCB );
+	return ss;
+};
+</script>
+<script>
+  
+  loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css", window.volantis.loadcss);
+  
+  
+  
+  
+</script>
+<!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script>
+  function pjax_fancybox() {
+    $(".md .gallery").find("img").each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md .gallery").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  function SCload_fancybox() {
+    if ($(".md .gallery").find("img").length == 0) return;
+    loadCSS("https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css", document.getElementById("loadcss"));
+    setTimeout(function() {
+      loadScript('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', pjax_fancybox)
+    }, 1);
+  };
+  $(function () {
+    SCload_fancybox();
+  });
+</script>
+
+
+<!-- internal -->
+
+
+
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+  
+    <script>
+      window.FPConfig = {
+        delay: 0,
+        ignoreKeywords: [],
+        maxRPS: 5,
+        hoverDelay: 25
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/valine.min.js"></script>
+
+
+<script>
+  var GUEST_INFO = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link'.split(',').filter(function (item) {
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick', 'mail', 'link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function (item) {
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+
+    var valine = new Valine();
+    valine.init({
+      el: '#valine_container',
+      meta: meta,
+      placeholder: pagePlaceholder,
+      path: path,
+      appId: "",
+      appKey: "",
+      pageSize: '10',
+      avatar: 'robohash',
+      lang: 'zh-cn',
+      visitor: 'true',
+      highlight: 'true',
+      mathJax: 'false',
+      enableQQ: 'true',
+      recordIP: 'false',
+      requiredFields: requiredFields,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps
+    })
+  }
+
+  $(function () {
+    pjax_valine();
+  });
+</script>
+
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/app.min.js"></script>
+
+
+
+<!-- optional -->
+
+  <script>
+const SearchServiceimagePath="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/img/";
+const ROOT =  ("/" || "/").endsWith('/') ? ("/" || "/") : ("//" || "/" );
+
+$('.input.u-search-input').one('focus',function(){
+	
+		loadScript('https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/search/hexo.min.js',setSearchService);
+	
+})
+
+function listenSearch(){
+  
+    customSearch = new HexoSearch({
+      imagePath: SearchServiceimagePath
+    });
+  
+}
+function setSearchService() {
+	listenSearch();
+	
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'u9j57bwJod4EDmXWdxrwuqQT-MdYXbMMI',
+    app_key: 'jfHtEKVE24j0IVCGHbvuFClp',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'http://yoursite.com' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'http://yoursite.com' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'http://yoursite.com' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+
+
+
+
+<script>
+function listennSidebarTOC() {
+  const navItems = document.querySelectorAll(".toc li");
+  if (!navItems.length) return;
+  const sections = [...navItems].map((element) => {
+    const link = element.querySelector(".toc-link");
+    const target = document.getElementById(
+      decodeURI(link.getAttribute("href")).replace("#", "")
+    );
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({
+		top: target.offsetTop + 100,
+		
+		behavior: "smooth"
+		
+	  });
+    });
+    return target;
+  });
+
+  function activateNavByIndex(target) {
+    if (target.classList.contains("active-current")) return;
+
+    document.querySelectorAll(".toc .active").forEach((element) => {
+      element.classList.remove("active", "active-current");
+    });
+    target.classList.add("active", "active-current");
+    let parent = target.parentNode;
+    while (!parent.matches(".toc")) {
+      if (parent.matches("li")) parent.classList.add("active");
+      parent = parent.parentNode;
+    }
+  }
+
+  function findIndex(entries) {
+    let index = 0;
+    let entry = entries[index];
+    if (entry.boundingClientRect.top > 0) {
+      index = sections.indexOf(entry.target);
+      return index === 0 ? 0 : index - 1;
+    }
+    for (; index < entries.length; index++) {
+      if (entries[index].boundingClientRect.top <= 0) {
+        entry = entries[index];
+      } else {
+        return sections.indexOf(entry.target);
+      }
+    }
+    return sections.indexOf(entry.target);
+  }
+
+  function createIntersectionObserver(marginTop) {
+    marginTop = Math.floor(marginTop + 10000);
+    let intersectionObserver = new IntersectionObserver(
+      (entries, observe) => {
+        let scrollHeight = document.documentElement.scrollHeight + 100;
+        if (scrollHeight > marginTop) {
+          observe.disconnect();
+          createIntersectionObserver(scrollHeight);
+          return;
+        }
+        let index = findIndex(entries);
+        activateNavByIndex(navItems[index]);
+      },
+      {
+        rootMargin: marginTop + "px 0px -100% 0px",
+        threshold: 0,
+      }
+    );
+    sections.forEach((element) => {
+      element && intersectionObserver.observe(element);
+    });
+  }
+  createIntersectionObserver(document.documentElement.scrollHeight);
+}
+
+document.addEventListener("DOMContentLoaded", listennSidebarTOC);
+document.addEventListener("pjax:success", listennSidebarTOC);
+</script>
+
+<!-- more -->
+
+
+
+
+    
+      
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          "#l_cover",
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+      if (typeof $.fancybox != "undefined") {
+        $.fancybox.close();    // 关闭弹窗
+      }
+      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
+      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      volantis.$topBtn.unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+	  
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 关于百度统计对 SPA 页面的处理：
+      // 方案一：百度统计>管理>单页应用设置中，打开开启按钮即可对SPA进行统计。 https://tongji.baidu.com/web/help/article?id=324
+      // 方案二：取消注释下列代码。 https://tongji.baidu.com/web/help/article?id=235
+       
+
+      // 关于谷歌统计对 SPA 页面的处理：
+      // 当应用以动态方式加载内容并更新地址栏中的网址时，也应该更新通过 gtag.js 存储的网页网址。
+      // https://developers.google.cn/analytics/devguides/collection/gtagjs/single-page-applications?hl=zh-cn
+      
+	 
+
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+          if (typeof $.fancybox == "undefined") {
+            SCload_fancybox();
+          } else {
+            pjax_fancybox();
+          }
+        
+        
+        
+        
+        
+        
+          pjax_valine();
+        
+        
+        
+        
+      } catch (e) {
+        console.log(e);
+      }
+	  
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+	  
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+
+    
+  </div>
+</body>
+</html>
